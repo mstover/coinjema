@@ -94,7 +94,7 @@ td
 {
    font-size : 200%;
    font-weight: bold;
-   margin : 0 3em 0 1em;
+   margin : 2em 3em 0 1em;
    width : 100%;
 	overflow:hidden;
 	display:inline-block;

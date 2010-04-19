@@ -43,6 +43,9 @@
 	</div>
 	
 	<div class="news">
+<div class="item"><h4>Moved to Github</h4>
+			<div class="text">I've just moved Coinjema from Sourceforge to Github.  Long live Coinjema!</div>
+		</div>
 <a name="version-1.0"></a><div class="title">New In Version 1.0</div>
 		
 		<div class="item"><h4>groovySql</h4>
