@@ -82,10 +82,10 @@ function setLayerVisible(on,name)
    if(ILay != null)
    {
 	   if (on) {
-	      ILay.style.display = "block";
+	      ILay.style.visibility = "visible";
 	   }
 	   else {
-	      ILay.style.display = "none";
+	      ILay.style.visibility = "hidden";
 	   }
 	}
 }
