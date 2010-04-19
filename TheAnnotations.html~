@@ -6,11 +6,9 @@
 <body>
 	<div class="menubar_space_holder" style="width:100%;z-index:0;visibility:hidden">This space left intentionally blank</div>
 	<div id="menubar" class="menubar" style="position:fixed; width:100%; left:0px;top:0px;z-index:2">
-    	<div class="page-header"><div class="sourceforge_logo"><A href="https://sourceforge.net"> <IMG src="https://sourceforge.net/sflogo.php?group_id=140644&amp;type=5" width="210" height="62" border="0" alt="SourceForge.net Logo" /></A></div>
-    	    <div class="sourceforge_logo"><A href="http://www.yourkit.com"> <IMG src="/images/yjp.gif" border="0" alt="YourKit Logo" /></A></div>
-    	    
-    		<span class="title">Coinjema Home</span>		
-    	</div>
+    	<div class="page-header">
+			<span class="title">Coinjema Home</span>		
+    		</div>
 		<div id="Home_menu" onmouseover="javascript:enterMenu('Home')" onmouseout="javascript:exitMenu('Home')" class="menuHeader">
 			<a href="index.html">Home</a>
 		</div>
@@ -18,7 +16,7 @@
 			Project
 		</div>
 
-		<div id="Project" class="menu" style="position:fixed; left:9em; top:8em; z-index:5; visibility: hidden;" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')">
+		<div id="Project" class="menu" style="position:fixed; left:9.2em; top:6.1em; z-index:5; display:none;" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')">
 					<a class="item" href="https://sourceforge.net/projects/coinjema">Project Home</a>
 					<a class="item" href="https://sourceforge.net/project/showfiles.php?group_id=140644">Download</a>
 		</div>
@@ -27,7 +25,7 @@
 			Documentation
 		</div>
 
-		<div id="Documentation" class="menu" style="position:fixed; left:18em; top:8em; z-index:5; visibility: hidden;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')">
+		<div id="Documentation" class="menu" style="position:fixed; left:18.2em; top:6.1em; z-index:5; display:none;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')">
 			<a class="item" href="overview.html">Overview</a>
 			<a class="item" href="faq.html">FAQ</a>
 			<a class="item" href="whats_new.html">What's New</a>
