@@ -13,7 +13,7 @@
 			Project
 		</div>
 
-		<div id="Project" class="menu" style="position:fixed; left:9em; top:8em; z-index:5; visibility: hidden;" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')">
+		<div id="Project" class="menu" style="position:fixed; left:9em; top:8em; z-index:5; display:none;" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')">
 					<a class="item" href="https://sourceforge.net/projects/coinjema">Project Home</a>
 					<a class="item" href="https://sourceforge.net/project/showfiles.php?group_id=140644">Download</a>
 		</div>
@@ -22,7 +22,7 @@
 			Documentation
 		</div>
 
-		<div id="Documentation" class="menu" style="position:fixed; left:18em; top:8em; z-index:5; visibility: hidden;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')">
+		<div id="Documentation" class="menu" style="position:fixed; left:18em; top:8em; z-index:5; display:none;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')">
 			<a class="item" href="overview.html">Overview</a>
 			<a class="item" href="faq.html">FAQ</a>
 			<a class="item" href="whats_new.html">What's New</a>
