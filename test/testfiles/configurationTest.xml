@@ -1,0 +1,38 @@
+coinjemaConfig {
+    param1=value1
+    param2=value2
+    param3=value3
+    group1=Coinjema Developers {
+        param6=value6
+        param7=value7
+        param8=value8
+    }
+    param4=value4
+    group2 {
+        param9=value9
+        param10=value10
+    }
+    school {
+        announcement {
+            [[!
+This is a special announcement.
+Today is Thursday.
+            !]]
+            date=Thursday
+            title=[[!
+Way
+	to
+		go
+            !]]
+        }
+        subjects {
+            art
+            science
+            math
+            english
+        }
+    }
+    website {
+        url=http://mydomain.com/homepage.jsp
+    }
+}

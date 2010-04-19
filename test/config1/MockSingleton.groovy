@@ -1,0 +1,1 @@
+new org.coinjema.nontest.MockSingleton(mainValue:"Root Value")

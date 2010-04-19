@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<project name="diceOdds" default="compile" basedir=".">
+	
+	<!-- have to declare the aspect J compiler task -->
+	<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties"/>
+	<property name="coinjema-version" value="1.0"/>
+	
+	<!-- Classpath -->
+		<path id="classpath">
+		  <fileset dir="lib">
+		  	<include name="*.jar"/>
+		  	<include name="*.zip"/>
+		  </fileset>
+		</path>
+	
+	<path id="src">
+			<pathelement location="src"/>
+		</path>
+	
+	<target name="compile">
+		<delete>
+			<fileset dir="src">
+			  <exclude name="*.java"/>
+			</fileset>
+		</delete>
+		<iajc sourceRootsRef="src" classpathRef="classpath" 
+				      destdir="src" source="1.5" target="1.5" 
+		      aspectPath="lib/coinjema-core-${coinjema-version}.jar"/>
+		
+	</target>
+
+</project>

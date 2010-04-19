@@ -1,0 +1,13 @@
+Coinjema is Public Domain Software.
+
+But, Coinjema includes sourcecode from the Apache JMeter project that has been modified in
+Coinjema.  Those source files remain under the Apache Software License 2.0.  If you use Coinjema's
+source in your own projects, please note whether the code you use comes from one of these files
+(the files are clearly marked with the Apache Copyright notice). 
+
+All Coinjema source that doesn't contain the Apache license text you can take and use in any way you see fit with no restrictions.
+
+If you use Coinjema's binary only, you only need to indicate that your app makes use of Apache
+Software Foundation code, either in your app's startup or somewhere visible in the documentation
+(ie see this file you are currently reading).
+

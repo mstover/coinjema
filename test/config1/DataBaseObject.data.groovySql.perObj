@@ -1,0 +1,4 @@
+if(obj.context != null)
+	return "select data from coinjema where name='$obj.context'".toString()
+else
+	return "select data from coinjema".toString()

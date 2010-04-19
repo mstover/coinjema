@@ -1,0 +1,31 @@
+A class defines methods that are it's dependencies.  These methods will use the annotation:
+
+@Coinjema public void setX(XXX arg0);
+
+A dependency will be found using the following searches:
+
+1) In the current context, look for an existing dependency object previously created for the class
+2) If not found, look in current context for a file named:
+     <className>.<methodName>.groovy - a groovy script that creates the required object for the class, or
+     <className>.<methodName>.groovyClass - a groovy script that defines a class object to instantiate and use
+3) If not found, look in current context for a file named:
+     <annotationValue>.dynamic.groovy - a groovy script that can create objects using the value
+     of the annotation on the injection method injected as a dynamic variable (ie loggers would 
+     probably use this to create loggers for different classes)
+4) If not found, look in current context for a file named:
+     <injectedClassName>.dynamic.groovy - a groovy script that can create objects using the class to be
+     injected as a dynamic variable (ie loggers would probably use this to create loggers for
+     different classes)
+5) If not found, look for an existing shared dependency object in the context for the class injectedClassName
+6) If not found, examine method annotation for a set value.  If exists,
+	<annotationValue>.groovy - a groovy script that creates the required class - this would
+	essentially be a singleton used by all classes that don't have a more custom object defined 
+	for them that also define this shared object name.  Or
+	<annotationValue>.groovyClass - same, but the class is defined in the groovy file, not 
+	just created there.
+7) If not found, look in current context for a file named:
+    <injectedClassName>.groovy - a groovy script that creates the required class - this would essentially
+    be a singleton used by all classes that don't have a more custom object defined for them. or
+    <injectedClassName>.groovyClass - ... 
+8) If not found, repeat steps 1-6 for the parent context.  If no parent context, return null.
+    
