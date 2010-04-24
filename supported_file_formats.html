@@ -53,10 +53,10 @@
 		into a single object (if a single row and column are returned), or a List (if a single column but multiple rows), or
 		a Map&lt;String,Object&gt; (if multiple columns and a single row are returned) or a List of Map&lt;String,Object&gt;.</li>
 		<li><span class="term">.properties</span> - reads the file as a standard properties file and returns an object
-			of type java.util.Properties.  See also the <code>.inherit</code extension below.</li>
+			of type java.util.Properties.  See also the <code>.inherit</code> extension below.</li>
 		<li><span class="term">.gproperties</span> - reads the file as a standard properties file, but tries to interpret
 		each key and value as a groovy script that returns a String. Returns an object
-			of type java.util.Properties. See also the <code>.inherit</code extension below.</li>
+			of type java.util.Properties. See also the <code>.inherit</code> extension below.</li>
 		<li><span class="term">.txt</span> - reads the file contents as a String object</li>
 		<li><span class="term">.jser</span> - reads the file as a serialized Java object.  The object is deserialized, and automatically 
 		    dependency-injected by Coinjema<sup><a href="#jser-note">1</a></sup></li>
