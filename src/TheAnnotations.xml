@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webContent>
+	<div class="title">The Annotations</div>
+	<p class="text">There are three annotations that drive Coinjema:</p>
+	<ul>
+		<li>
+			<span class="term">
+				<span class="code">@CoinjemaObject</span>
+			</span>
+			- Annotate your class with
+			this and Coinjema will introduce the
+			<span class="code">ContextOriented</span>
+			interface to your class. The annotation has one optional attribute:
+			<ul>
+				<li>
+					<span class="term">type</span>
+					- Specify a substitute name in place of the class name for
+					Coinjema to use in finding the appropriate groovy script. ie
+					instead of
+					<span class="code">MyClass.setLogger.groovy</span>
+					you could use the
+					"type" field of the annotation for class
+					<b>MyClass</b>
+					to change it to
+					<span class="code">My.setLogger.groovy</span>
+				</li>
+			</ul>
+			<div class="snippet">
+				<span class="term">Alternatively:</span>
+				Setup your Coinjema objects in your own aspect:
+				<div class="codeblock">
+					<pre>
+						import org.coinjema.context.ContextOriented;
+
+						public aspect MakeContextOriented {
+						declare parents : ExampleClass implements ContextOriented;
+						declare parents : AnotherExampleClass implements ContextOriented;
+
+						}</pre>
+				</div>
+			</div>
+		</li>
+		<li>
+			<span class="term">
+				<span class="code">@CoinjemaDependency</span>
+			</span>
+			- Annotate the
+			dependency injection methods on your class with this. The method must
+			take one
+			parameter that represents the dependency. The annotation
+			has four
+			optional attributes:
+			<ul>
+				<li>
+					<span class="term">order</span>
+					- set to
+					<span class="code">CoinjemaDependency.ORDER.LAST</span>
+					to force Coinjema to call this dependency injection method
+					last.
+					This lets your class do initialization routines. This
+					is not
+					recommended as a replacement for a life-cycle-managing IoC
+					container -
+					it is provided as a convenience, and for when your needs are
+					very
+					simple.
+				</li>
+				<li>
+					<span class="term">method</span>
+					- Specify a string in place of the method
+					name for Coinjema to use
+					in finding the appropriate groovy
+					script. Defaults to the name of
+					the method. Ie, instead of the above
+					<span class="code">My.setLogger.groovy</span>
+					, you can change it to
+					<span class="code">My.logger.groovy</span>
+					.
+				</li>
+				<li>
+					<span class="term">type</span>
+					- Specify a string in place of the class name of
+					the injected object
+					for Coinjema to use in finding the
+					appropriate groovy script.
+					Defaults to the simple class name
+					of the injected object's type. For
+					shared object dependencies. Instead
+					of
+					<span class="code">LDAPServer.groovy</span>
+					you could change it to
+					<span class="code">ldap.groovy</span>
+				</li>
+				<li>
+					<span class="term">hasDefault</span>
+					- indicates whether the dependent method or class has a
+					default value for the dependency. If true, Coinjema will not report an
+					error if it
+					fails to find an associated script or dependency object.
+					Instead the method will be skipped.
+					By default,
+					<em>hasDefault</em>
+					is false.
+				</li>
+				<li>
+					<span class="term">alias</span>
+					- Create an alias to a very simple filename that holds the
+					dependency.
+					The alias plus extension will be the full filename for this
+					dependency. ie, instead
+					of the above
+					<span class="code">My.logger.groovy</span>
+					, you could specify it
+					to be
+					<span class="code">mylogger.groovy</span>
+					. Be aware that an alias cannot refer to a shared
+					dependency. If two classes use the same alias, they will get two different
+					instantiations of the
+					dependency.
+				</li>
+
+			</ul>
+			<div class="snippet">
+				<span class="term">Alternatively:</span>
+				Coinjema will treat any
+				<code>setXXX(..)</code>
+				method
+				as if it were annotated with
+				<code>@CoinjemaDependency</code>
+				, with default values for all attributes.
+			</div>
+		</li>
+		<li>
+			<span class="term">
+				<span class="code">@CoinjemaDynamic</span>
+			</span>
+			- Annotate a getter method that returns a dependency.
+			Coinjema will intercept the call and retrieve the right dependency from the
+			current context. The
+			current context is retrieved from the call stack - the deepest context found
+			in the stack. This means that
+			even if the dynamic dependency method is found in a class shared by
+			multiple contexts, if the
+			shared class is called from an object in context x/y/z, and the shared
+			class was defined by context x, then
+			the dynamic dependency will retrieved from context x/y/z. A class does
+			not have to be annotated
+			with
+			<span class="code">@CoinjemaObject</span>
+			to use this annotation. One of
+			<em>type</em>
+			,
+			<em>method</em>
+			,
+			or
+			<em>alias</em>
+			must be specified for this annotation.
+			<br />
+			There are 3 attributes:
+			<ul>
+				<li>
+					<span class="term">method</span>
+					- Just like for
+					<span class="code">@CoinjemaDependency</span>
+					, method
+					tells Coinjema what name to use in replace of the method name when
+					finding the right config file. Dynamic
+					script names are determined by the same rules as for the injected
+					dependencies. (ie, "class_name.method.***")
+				</li>
+				<li>
+					<span class="term">type</span>
+					- Specify a name of a shared dependency script to look for (ie
+					"type.***").
+				</li>
+				<li>
+					<span class="term">alias</span>
+					- A shortened name for a non-shared dependency config script file.
+				</li>
+				<li>
+					<span class="term">contextMethod</span>
+					- The name of a method that returns a String which represents the
+					name
+					of a context. This allows dynamic objects to be retrieved based on an
+					instance value of the class object that
+					owns the dynamic method. For instance, if I have a Customer class, and
+					on this class is a @Coinjemadynamic method
+					that retrieves a url for the Customer's website, that @CoinjemaDynamic
+					annotation can have a property "contextMethod"
+					that points to the method "getName", which returns the Customer's name.
+					In a configuration directory with the same
+					name, I can have a url.txt file that specifies the customer's url.
+					Different customer, new directory and new url.txt
+					file, and that's it.
+				</li>
+			</ul>
+		</li>
+		<li>
+			<span class="term">
+				<span class="code">@CoinjemaContextTrack</span>
+			</span>
+			- This annotation
+			indicates to Coinjema that the object or method
+			should be intercepted to allow
+			Coinjema to update the current context
+			for the current thread. Previously, Coinjema
+			tracked all calls into
+			CoinjemaObject objects, which was wasteful and slow. This annotation
+			allows developers to pinpoint for Coinjema where meaningful context
+			shifts will occur. The
+			primary benefit of this annotation is to speed up dynamic dependency
+			retrieval. There
+			are no options with this annotation. Simply annotate
+			your class and Coinjema will intercept
+			all public- and package-level
+			methods and remember the current context for that thread
+			or annotate
+			specific methods for Coinjema to track.
+			<b>
+				The annotation is unnecessary on objects created
+				with an explicit
+				<code>CoinjemaContext</code>
+				object in the constructor - such objects will be automatically
+				treated as if the entire class was annotated with
+				<code>@CoinjemaContextTrack</code>
+				.
+			</b>
+			This means
+			<code>@CoinjemaContextTrack</code>
+			is unnecessary 99.9% of the time.
+		</li>
+
+		<div class="snippet">
+			Context Tracking essentially works because you can create your
+			Coinjema
+			Objects with a specific CoinjemaContext by optionally
+			providing constructors in
+			your class in which the last parameter is a
+			CoinjemaContext object. Ie:
+			<div class="codeBlock">
+				<pre>
+					public MyObject(..,CoinjemaContext)
+					{
+					...
+					}
+                </pre>
+			</div>
+			This allows users of your class to create the class in a new context.
+			If the class
+			or a method within the class is being tracked, then that context will
+			"take over" until the thread flow
+			leaves the class or method. All objects created within that flow will be
+			created in
+			the context of the tracked class - without needing to pass the
+			CoinjemaContext into
+			their constructors.
+
+			<p class="text">
+				CoinjemaContext takes a string in its constructor that names a
+				context.
+				Contexts are organized hierarchically, and you can specify sub contexts in
+				your string
+				with a
+				<span class="code">"/"</span>
+				. Ie,
+				<span class="code">"topContext/subContext/subsubContext"</span>
+				.
+			</p>
+		</div>
+	</ul>
+
+</webContent>

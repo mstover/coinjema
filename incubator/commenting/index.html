@@ -24,39 +24,7 @@
          
       </div>
       <div class="content">
-         <div class="title">Coinjema Configuration Options</div>
-         <p class="text">By putting a <em>coinjema.properties</em> file into your context, you can 
-            		alter some basic behavior of coinjema:
-         </p>
-         <ul>
-            		
-            <li><span class="term">reconfigurable</span> - If <em>true</em>, Coinjema will keep track of
-               			all objects that have been configured (in a <code>WeakHashMap</code>) and allow a 
-               			programmatic call to <code>ContextFactory.refresh(CoinjemaContext)</code> that will
-               			dump all cached dependency info and re-configure all objects that have been configured
-               			previously that are still in memory.  This is not a thread-safe operation, and storing
-               			all this info adds significant overhead to Coinjema.  It is a development feature that
-               			allows a running system to reload changed dependency scripts without a restart.
-            </li>
-            		
-            <li><span class="term">excludeDirs</span> - Coinjema will automatically assume any child 
-               			directories of a context directory is also a context directory and Coinjema will create
-               			a context scope for it.  This allows a developer to set the root directory for Coinjema
-               			and let Coinjema add all subdirectories on its own.  But, a context, even an empty one, 
-               			costs memory, and if a filesystem is extensive, it is desirable to limit Coinjema in some
-               			way.  With a perl-like regex pattern, coinjema can be instructed to ignore certain directories.
-               			Currently only one pattern is supported.
-            </li>
-            		
-            <li><span class="term">log.level</span> - Coinjema logs using jdk1.4 logging.  Set the logging level
-               		for all of Coinjema to one of SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST 
-            </li>
-            		
-            <li><span class="term">log.file</span> - Name of the file to log to, relative to the context root
-               		directory.  If the context root is not a directory, it will be relative to the working directory.
-            </li>
-            	
-         </ul>
+         <h1>Commenting System</h1>
       </div>
    </body>
 </html>

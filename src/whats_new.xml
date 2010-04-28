@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webContent>
+
+	<div class="news">
+		<a name="version-1.0"></a>
+		<div class="title">New In Version 1.0</div>
+
+		<div class="item">
+			<h4>groovySql</h4>
+			<div class="text">Your config file can be a groovy string that is
+				processed and used as a SQL statement against a
+				database. Kind of a poor man's (very poor man's ) ORM, as your objects can
+				receive values from a database, either
+				lazily or up front.  </div>
+		</div>
+		<a name="version-0.6"></a>
+		<div class="title">New In Version 0.6</div>
+
+		<div class="item">
+			<h4>Optional Annotations</h4>
+			<div class="text">
+				The
+				<code>@CoinjemaObject</code>
+				annotation is now optional.
+				<a href="TheAnnotations.html">Instead
+					of annotating your classes</a>
+				, you can create a simple aspect in which you define all your
+				classes that Coinjema should handle like so:
+				<div class="oneLinerCodeBlock">declare parents : MyClass implements ContextOriented;
+				</div>
+				The
+				<code>@CoinjemaDependency</code>
+				is now also optional. Instead, all
+				"set" methods that take a single parameter will be treated as potential
+				injection sites into
+				your class, and coinjema will look for a resource named
+				[ClassName].[MethodName] or [injectedClassname].
+				Coinjema will assume a default value exists if it doesn't find the resource.
+			</div>
+		</div>
+		<div class="item">
+			<h4>Inheritable Property Files</h4>
+			<div class="text">
+				Property files will be able to
+				<a href="supported_file_formats.html">inherit from property files</a>
+				in
+				parent contexts, so rather than having to create property files with all
+				the same
+				properties for each context, each context can just have the properties that
+				they
+				want changed.
+			</div>
+		</div>
+		<div class="item">
+			<h4>Dependency Type Configurable</h4>
+			<div class="text">
+				Now all dependencies can be
+				<a href="supported_file_formats.html#file_endings">defined to be global, per Class, or per Object</a>
+				. By appending
+				.perClass or .perObj to the dependency name (ie, filename for a typical
+				setup), you can change
+				the way a dependency is treated.
+			</div>
+		</div>
+		<div class="item">
+			<h4>Logging</h4>
+			<div class="text">
+				Coinjema now uses jdk logging for message outputs, with some very
+				<a href="coinjema_properties.html">simple configuration options</a>
+				available from the coinjema.properties file.
+			</div>
+		</div>
+		<div class="item">
+			<h4>Auto Context Tracking</h4>
+			<div class="text">
+				Coinjema has an annotation that lets you tell it specific
+				methods/classes that should track context.
+				It used to automatically track contexts through all coinjema classes,
+				but that turned out to be a performance killer.
+				Now, Coinjema adds some
+				<a href="Coinjema_Contexts.html#tracking">auto tracking</a>
+				back in by tracking context through classes that are instantiated
+				with a
+				CoinjemaContext object because I have found that the only reason one creates
+				objects with specific context objects
+				is because it is a gateway object to a new context, and everything
+				underneath that object needs to be run
+				within the new context. This makes obsolete almost all uses of the
+				<span class="code">@CoinjemaContextTrack</span>
+				annotation.
+			</div>
+		</div>
+		<div class="item">
+			<h4>Thread-Based Context Setting</h4>
+			<div class="text">
+				The current context can be
+				<a href="Coinjema_Contexts.html#tracking">programmatically set on a thread</a>
+				now and works well so long as
+				programmers are careful to pop/push contexts correctly.
+			</div>
+		</div>
+		<div class="item">
+			<h4>Correct Ordering for Inheriting context objects</h4>
+			<div class="text">Coinjema intercepts constructor calls. Previously,
+				this meant that if your class inherits from
+				another coinjema object, that class would be initialized before it's
+				constructor function was even entered. This is now
+				fixed and Coinjema will wait for the end of the initially called
+				constructor before mucking about with your object. This means
+				you can correctly apply default dependency values by setting them in
+				your constructors.</div>
+		</div>
+
+		<a name="version-0.5"></a>
+		<div class="title">New In Version 0.5</div>
+		<div class="item">
+			<h4>Redirect to other Context</h4>
+			<div class="text">
+				The
+				<em>.redirect</em>
+				format now supports redirection to a specific
+				other context. For
+				instance, instead of just pointing to
+				<code>TemplateService</code>
+				, one can now point to
+				<code>contextA/contextB/TemplateService</code>
+				, if desired.
+			</div>
+		</div>
+		<div class="item">
+			<h4>New Registry API</h4>
+			<div class="text">
+				Groovy scripts can now access shared dependencies directly and the
+				context root
+				via the new
+				<a href="objectsProvided.html">Registry</a>
+				reference.
+			</div>
+		</div>
+		<div class="item">
+			<h4>Coinjema Properties</h4>
+			<div class="text">
+				Coinjema now offers some
+				<a href="coinjema_properties.html">basic
+					configuration options</a>
+				that effect how
+				Coinjema runs. A new
+				<em>coinjema.properties</em>
+				file can be placed in any context
+				directory. The properties will be inherited from parent contexts, so only
+				those
+				properties to be overridden need to be in the file.
+			</div>
+		</div>
+		<div class="item">
+			<h4>Context Tracking Annotation</h4>
+			<div class="text">Previously, Coinjema tracked the current context
+				through all your
+				Coinjema Objects. From experience using Coinjema, this appears highly
+				wasteful, as
+				most of your objects do not need to be tracked, and furthermore, an
+				application will
+				typically have a "gateway" that offers entrance into the guts of your code
+				where you
+				know what context you want to switch to. The new annotation allows
+				developers to
+				specify where Coinjema should watch for context changes.</div>
+		</div>
+
+	</div>
+</webContent>

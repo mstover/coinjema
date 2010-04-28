@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menu>
+	<item>
+		<name>Home</name>
+		<url>index.html</url>
+	</item>
+	<item>
+		<name>Project</name>
+		<url>http://github.com/mstover/coinjema</url>
+	</item>
+	<item>
+		<name>Documentation</name>
+		<menu>
+			<item>
+				<name>Overview</name>
+				<url>overview.html</url>
+			</item>
+			<item>
+				<name>FAQ</name>
+				<url>faq.html</url>
+			</item>
+			<item>
+				<name>What's New</name>
+				<url>whats_new.html</url>
+			</item>
+			<item>
+				<name>How To Use Coinjema</name>
+				<url>Coinjema_Contract.html</url>
+			</item>
+			<item>
+				<name>What is a Coinjema Context?</name>
+				<url>Coinjema_Contexts.html</url>
+			</item>
+			<item>
+				<name>The Annotations</name>
+				<url>TheAnnotations.html</url>
+			</item>
+			<item>
+				<name>The Redirect Evaluator</name>
+				<url>redirectEvaluator.html</url>
+			</item>
+			<item>
+				<name>Supported Config File Formats</name>
+				<url>supported_file_formats.html</url>
+			</item>
+			<item>
+				<name>Script Variables</name>
+				<url>objectsProvided.html</url>
+			</item>
+			<item>
+				<name>Base Configuration Options</name>
+				<url>coinjema_properties.html</url>
+			</item>
+			<item>
+				<name>Developer notes</name>
+				<url>developerNotes.html</url>
+			</item>
+			<item>
+				<name>JavaDocs</name>
+				<url>api/index.html</url>
+			</item>
+		</menu>
+	</item>
+	<item>
+		<name>Sub-Projects</name>
+		<menu>
+			<item>
+				<name>RPG</name>
+				<url>incubator/rpg/index.html</url>
+			</item>
+			<item>
+				<name>Commenting</name>
+				<url>incubator/commenting/index.html</url>
+			</item>
+			<item>
+				<name>Rotation Game</name>
+				<url>incubator/rotation/index.html</url>
+			</item>
+		</menu>
+	</item>
+</menu>

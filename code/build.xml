@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="website" default="build" basedir="..">
+	<description>
+    To build and test the COINJEMA website
+  </description>
+
+	<target name="build">
+		<delete>
+			<fileset dir="${basedir}">
+				<include name="**/*.html" />
+			</fileset>
+		</delete>
+		<xslt style="${basedir}/code/website.xsl" basedir="src" includes="**/*.xml" destdir="${basedir}" classpath="${SAXON_JAR}">
+			<param name="title" expression="Coinjema" />
+			<param name="menu" expression="${basedir}/code/menu.xml" />
+		</xslt>
+	</target>
+
+</project>

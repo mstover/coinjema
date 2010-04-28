@@ -1,51 +1,50 @@
-<html><head>
-		<link rel="StyleSheet" type="text/css" href="coinjema.css"/>
-		<link rel="StyleSheet" type="text/css" href="menu.css"/>
-	<script language="Javascript" src="functions.js" type="text/javascript"></script>
-		<title>Coinjema</title></head>
-<body>
-	<div class="menubar_space_holder" style="width:100%;z-index:0;visibility:hidden">This space left intentionally blank</div>
-	<div id="menubar" class="menubar" style="position:fixed; width:100%; left:0px;top:0px;z-index:2">
-    	<div class="page-header">
-			<span class="title">Coinjema Home</span>		
-    		</div>
-		<div id="Home_menu" onmouseover="javascript:enterMenu('Home')" onmouseout="javascript:exitMenu('Home')" class="menuHeader">
-			<a href="index.html">Home</a>
-		</div>
-		<div id="Project_menu" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')" class="menuHeader">
-			<a class="item" href="http://github.com/mstover/coinjema">Project</a>
-		</div>
-
-		<div id="Documentation_menu" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')" class="menuHeader">
-			Documentation
-		</div>
-
-		<div id="Documentation" class="menu" style="position:fixed; left:18.2em; top:6.1em; z-index:5; display:none;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')">
-			<a class="item" href="overview.html">Overview</a>
-			<a class="item" href="faq.html">FAQ</a>
-			<a class="item" href="whats_new.html">What's New</a>
-			<a class="item" href="https://sourceforge.net/docman/display_doc.php?docid=28814&group_id=140644">What You'll Need</a>
-    		<a class="item" href="Coinjema_Contract.html">How To Use Coinjema</a>
-    		<a class="item" href="Coinjema_Contexts.html">What is a Coinjema Context?</a>
-    		<a class="item" href="TheAnnotations.html">The Annotations
-    		<a class="item" href="redirectEvaluator.html">The Redirect Evaluator</a>
-    		<a class="item" href="supported_file_formats.html">Supported Config File Formats</a>
-    		<a class="item" href="objectsProvided.html">Script Variables</a>
-    		<a class="item" href="coinjema_properties.html">Base Configuration Options</a>
-    		<a class="item" href="developerNotes.html">Developer notes</a>
-			<a class="item" href="api/index.html">JavaDocs</a>
-		</div>
-	</div>
-	<div class="title">Provided Script Variables</div>
-	<p>When a script is found, it is run and the resulting object is cached.  Coinjema provides any groovy script with some
-variables to work with:</p>
-<ul>
-<li><span class="term">obj</span> - The object being configured.  This reference is null in the 
-	case of dynamic dependencies.
-<li><span class="term">objClass</span> - The class of the object being configured.
-<li><span class="term">registry</span> - The <a href="api/org/coinjema/context/Registry.html">Registry</a> object that provides access to shared dependency
-	information as well as information about the root context.
-<li><span class="term">injector</span> - The DependencyFunctor object that will inject the dependency into the object.
-</ul>
-	
-</body></html>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+      <base href="http://mstover.github.com/coinjema/">
+      <link rel="StyleSheet" type="text/css" href="coinjema.css">
+      <link rel="StyleSheet" type="text/css" href="menu.css"><script language="Javascript" src="functions.js" type="text/javascript"></script><title>Coinjema</title>
+   </head>
+   <body>
+      <div class="menubar_space_holder" style="width:100%;z-index:0;visibility:hidden">This space left
+         					intentionally blank
+      </div>
+      <div id="menubar" class="menubar" style="position:fixed; width:100%; left:0px;top:0px;z-index:2">
+         <div class="page-header"><span class="title">Coinjema Home</span></div>
+         	
+         <div id="Home_menu" onmouseover="javascript:enterMenu('Home')" onmouseout="javascript:exitMenu('Home')" class="menuHeader"><a href="index.html">Home</a></div>
+         	
+         <div id="Project_menu" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')" class="menuHeader"><a href="http://github.com/mstover/coinjema">Project</a></div>
+         	
+         <div id="Documentation_menu" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')" class="menuHeader"><a href="">Documentation</a></div>
+         <div id="Documentation" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')"><a class="item" href="overview.html">Overview</a><a class="item" href="faq.html">FAQ</a><a class="item" href="whats_new.html">What's New</a><a class="item" href="Coinjema_Contract.html">How To Use Coinjema</a><a class="item" href="Coinjema_Contexts.html">What is a Coinjema Context?</a><a class="item" href="TheAnnotations.html">The Annotations</a><a class="item" href="redirectEvaluator.html">The Redirect Evaluator</a><a class="item" href="supported_file_formats.html">Supported Config File Formats</a><a class="item" href="objectsProvided.html">Script Variables</a><a class="item" href="coinjema_properties.html">Base Configuration Options</a><a class="item" href="developerNotes.html">Developer notes</a><a class="item" href="api/index.html">JavaDocs</a></div>
+         	
+         <div id="Sub-Projects_menu" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')" class="menuHeader"><a href="">Sub-Projects</a></div>
+         <div id="Sub-Projects" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')"><a class="item" href="incubator/rpg/index.html">RPG</a><a class="item" href="incubator/commenting/index.html">Commenting</a><a class="item" href="incubator/rotation/index.html">Rotation Game</a></div>
+         
+      </div>
+      <div class="content">
+         <div class="title">Provided Script Variables</div>
+         <p>When a script is found, it is run and the resulting object is cached.  Coinjema provides any groovy script with some
+            variables to work with:
+         </p>
+         <ul>
+            
+            <li><span class="term">obj</span> - The object being configured.  This reference is null in the 
+               	case of dynamic dependencies.
+            </li>
+            
+            <li><span class="term">objClass</span> - The class of the object being configured.
+            </li>
+            
+            <li><span class="term">registry</span> - The <a href="api/org/coinjema/context/Registry.html">Registry</a> object that provides access to shared dependency
+               	information as well as information about the root context.
+            </li>
+            
+            <li><span class="term">injector</span> - The DependencyFunctor object that will inject the dependency into the object.
+            </li>
+            
+         </ul>
+      </div>
+   </body>
+</html>

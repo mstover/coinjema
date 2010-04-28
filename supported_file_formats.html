@@ -1,84 +1,186 @@
-<html><head>
-		<link rel="StyleSheet" type="text/css" href="coinjema.css"/>
-		<link rel="StyleSheet" type="text/css" href="menu.css"/>
-	<script language="Javascript" src="functions.js" type="text/javascript"></script>
-		<title>Coinjema</title></head>
-<body>
-	<div class="menubar_space_holder" style="width:100%;z-index:0;visibility:hidden">This space left intentionally blank</div>
-	<div id="menubar" class="menubar" style="position:fixed; width:100%; left:0px;top:0px;z-index:2">
-    	<div class="page-header">
-			<span class="title">Coinjema Home</span>		
-    		</div>
-		<div id="Home_menu" onmouseover="javascript:enterMenu('Home')" onmouseout="javascript:exitMenu('Home')" class="menuHeader">
-			<a href="index.html">Home</a>
-		</div>
-		<div id="Project_menu" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')" class="menuHeader">
-			<a class="item" href="http://github.com/mstover/coinjema">Project</a>
-		</div>
-
-		<div id="Documentation_menu" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')" class="menuHeader">
-			Documentation
-		</div>
-
-		<div id="Documentation" class="menu" style="position:fixed; left:18.2em; top:6.1em; z-index:5; display:none;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')">
-			<a class="item" href="overview.html">Overview</a>
-			<a class="item" href="faq.html">FAQ</a>
-			<a class="item" href="whats_new.html">What's New</a>
-			<a class="item" href="https://sourceforge.net/docman/display_doc.php?docid=28814&group_id=140644">What You'll Need</a>
-    		<a class="item" href="Coinjema_Contract.html">How To Use Coinjema</a>
-    		<a class="item" href="Coinjema_Contexts.html">What is a Coinjema Context?</a>
-    		<a class="item" href="TheAnnotations.html">The Annotations
-    		<a class="item" href="redirectEvaluator.html">The Redirect Evaluator</a>
-    		<a class="item" href="supported_file_formats.html">Supported Config File Formats</a>
-    		<a class="item" href="objectsProvided.html">Script Variables</a>
-    		<a class="item" href="coinjema_properties.html">Base Configuration Options</a>
-    		<a class="item" href="developerNotes.html">Developer notes</a>
-			<a class="item" href="api/index.html">JavaDocs</a>
-		</div>
-	</div>
-	<div class="content">
-	<div class="title">Supported Config File Formats</div>
-	<div class="text">
-	<p class="text">Coinjema allows for pluggable script "Evaluators" to be registered that Coinjema
-	then uses to create injection objects for your classes.  Currently there are 4 evaluators, and 
-	they are:</p>
-	<ul>
-		<li><span class="term">.groovy</span> - evaluates groovy script and returns the result object.  ".groovy" refers to
-		the file extension that triggers the use of this evaluator.</li>
-		<li><span class="term">.groovyClass</span> - evaluates a groovy file as a class defined in groovy.  Instantiates
-			the class and returns the new object.</li>
-		<li><span class="term">.groovySql</span> - evaluates a groovy script to a String which is then treated as an SQL
-		statement and executed.  A datasource is expected to be defined in a coinjema config file named "coinjema.dataSource".
-		Most likely using the groovy evaluator (ie "coinjema.dataSource.groovy").  The results of the SQL query are converted
-		into a single object (if a single row and column are returned), or a List (if a single column but multiple rows), or
-		a Map&lt;String,Object&gt; (if multiple columns and a single row are returned) or a List of Map&lt;String,Object&gt;.</li>
-		<li><span class="term">.properties</span> - reads the file as a standard properties file and returns an object
-			of type java.util.Properties.  See also the <code>.inherit</code> extension below.</li>
-		<li><span class="term">.gproperties</span> - reads the file as a standard properties file, but tries to interpret
-		each key and value as a groovy script that returns a String. Returns an object
-			of type java.util.Properties. See also the <code>.inherit</code> extension below.</li>
-		<li><span class="term">.txt</span> - reads the file contents as a String object</li>
-		<li><span class="term">.jser</span> - reads the file as a serialized Java object.  The object is deserialized, and automatically 
-		    dependency-injected by Coinjema<sup><a href="#jser-note">1</a></sup></li>
-		<li><span class="term">.compmap</span> - properties file format that is translated into a Map object with String keys 
-		    pointing to shared object dependencies.  Kind of like a collection of .redirect</li>
-		<li><span class="term">.redirect</span> - redirects to the injection object created by a different file. <a href="redirectEvaluator.html">See More Information</a></li>
-	</ul>	
-	</div>
-	
-	<div class="snippet">
-	<a name="jser-note"></a>
-	     <p class="text"><sup>1</sup> - There is a further requirement that your serialized class must override the
-	  	<span class="code">readObject(ObjectInputStream in)</span> method (even if only to call 
-	  	<span class="code">super.readObject(in)</span>.  Yes, kind of obnoxious.</p>
-	</div>
-	
-	<div class="title"><a name="file_endings"></a>Further File Extensions</div>
-	<div class="text">Script/Config files can have an extra extension tacked on after the above file format extension.  These extensions are
-	<ul>
-	<li><span class="term">.inherit</span> - .properties and .gproperties files can be inherited, meaning that a property file in a child context will first load the parent properties, and then overwrite them with the child properties.  The child properties file specifies the ".inherit" extension, and inheriting can be done through multiple levels.
-	<li><span class="term">.perClass</span> - Normally Coinjema caches one instance of a dependency for all objects that need it.  If the .perClass extension is used, then Coinjema will cache the dependency objects on a per class basis, so that two different classes can receive two different dependency objects, whereas two instances of the same class will receive the same dependency.
-	<li><span class="term">.perObject</span> - Like .perClass, but now Coinjema will make sure every object receives it's own instance of the dependency object.
-	</ul></div>
-	</div>
-</body></html>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+      <base href="http://mstover.github.com/coinjema/">
+      <link rel="StyleSheet" type="text/css" href="coinjema.css">
+      <link rel="StyleSheet" type="text/css" href="menu.css"><script language="Javascript" src="functions.js" type="text/javascript"></script><title>Coinjema</title>
+   </head>
+   <body>
+      <div class="menubar_space_holder" style="width:100%;z-index:0;visibility:hidden">This space left
+         					intentionally blank
+      </div>
+      <div id="menubar" class="menubar" style="position:fixed; width:100%; left:0px;top:0px;z-index:2">
+         <div class="page-header"><span class="title">Coinjema Home</span></div>
+         	
+         <div id="Home_menu" onmouseover="javascript:enterMenu('Home')" onmouseout="javascript:exitMenu('Home')" class="menuHeader"><a href="index.html">Home</a></div>
+         	
+         <div id="Project_menu" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')" class="menuHeader"><a href="http://github.com/mstover/coinjema">Project</a></div>
+         	
+         <div id="Documentation_menu" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')" class="menuHeader"><a href="">Documentation</a></div>
+         <div id="Documentation" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')"><a class="item" href="overview.html">Overview</a><a class="item" href="faq.html">FAQ</a><a class="item" href="whats_new.html">What's New</a><a class="item" href="Coinjema_Contract.html">How To Use Coinjema</a><a class="item" href="Coinjema_Contexts.html">What is a Coinjema Context?</a><a class="item" href="TheAnnotations.html">The Annotations</a><a class="item" href="redirectEvaluator.html">The Redirect Evaluator</a><a class="item" href="supported_file_formats.html">Supported Config File Formats</a><a class="item" href="objectsProvided.html">Script Variables</a><a class="item" href="coinjema_properties.html">Base Configuration Options</a><a class="item" href="developerNotes.html">Developer notes</a><a class="item" href="api/index.html">JavaDocs</a></div>
+         	
+         <div id="Sub-Projects_menu" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')" class="menuHeader"><a href="">Sub-Projects</a></div>
+         <div id="Sub-Projects" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')"><a class="item" href="incubator/rpg/index.html">RPG</a><a class="item" href="incubator/commenting/index.html">Commenting</a><a class="item" href="incubator/rotation/index.html">Rotation Game</a></div>
+         
+      </div>
+      <div class="content">
+         <div class="title">Supported Config File Formats</div>
+         <div class="text">
+            		
+            <p class="text">Coinjema allows for pluggable script "Evaluators" to be
+               			registered that Coinjema
+               			then uses to create injection objects for your classes. Currently there
+               			are 4 evaluators, and
+               			they are:
+            </p>
+            		
+            <ul>
+               			
+               <li>
+                  				<span class="term">.groovy</span>
+                  				- evaluates groovy script and returns the result object. ".groovy"
+                  				refers to
+                  				the file extension that triggers the use of this evaluator.
+                  			
+               </li>
+               			
+               <li>
+                  				<span class="term">.groovyClass</span>
+                  				- evaluates a groovy file as a class defined in groovy. Instantiates
+                  				the class and returns the new object.
+                  			
+               </li>
+               			
+               <li>
+                  				<span class="term">.groovySql</span>
+                  				- evaluates a groovy script to a String which is then treated as an
+                  				SQL
+                  				statement and executed. A datasource is expected to be defined in a coinjema
+                  				config file named "coinjema.dataSource".
+                  				Most likely using the groovy evaluator (ie
+                  				"coinjema.dataSource.groovy"). The results of the SQL query are
+                  				converted
+                  				into a single object (if a single row and column are returned), or a
+                  				List (if a single column but multiple rows), or
+                  				a Map&lt;String,Object&gt; (if multiple columns and a single row are
+                  				returned) or a List of Map&lt;String,Object&gt;.
+                  			
+               </li>
+               			
+               <li>
+                  				<span class="term">.properties</span>
+                  				- reads the file as a standard properties file and returns an object
+                  				of type java.util.Properties. See also the
+                  				<code>.inherit</code>
+                  				extension below.
+                  			
+               </li>
+               			
+               <li>
+                  				<span class="term">.gproperties</span>
+                  				- reads the file as a standard properties file, but tries to
+                  				interpret
+                  				each key and value as a groovy script that returns a String. Returns an
+                  				object
+                  				of type java.util.Properties. See also the
+                  				<code>.inherit</code>
+                  				extension below.
+                  			
+               </li>
+               			
+               <li>
+                  				<span class="term">.txt</span>
+                  				- reads the file contents as a String object
+                  			
+               </li>
+               			
+               <li>
+                  				<span class="term">.jser</span>
+                  				- reads the file as a serialized Java object. The object is
+                  				deserialized, and automatically
+                  				dependency-injected by Coinjema
+                  				<sup>
+                     					<a href="#jser-note">1</a>
+                     				</sup>
+                  			
+               </li>
+               			
+               <li>
+                  				<span class="term">.compmap</span>
+                  				- properties file format that is translated into a Map object with
+                  				String keys
+                  				pointing to shared object dependencies. Kind of like a collection of
+                  				.redirect
+                  			
+               </li>
+               			
+               <li>
+                  				<span class="term">.redirect</span>
+                  				- redirects to the injection object created by a different file.
+                  				<a href="redirectEvaluator.html">See More Information</a>
+                  			
+               </li>
+               		
+            </ul>
+            	
+         </div>
+         <div class="snippet">
+            		<a name="jser-note"></a>
+            		
+            <p class="text">
+               			<sup>1</sup>
+               			- There is a further requirement that your serialized class must
+               			override the
+               			<span class="code">readObject(ObjectInputStream in)</span>
+               			method (even if only to call
+               			<span class="code">super.readObject(in)</span>
+               			. Yes, kind of obnoxious.
+               		
+            </p>
+            	
+         </div>
+         <div class="title">
+            		<a name="file_endings"></a>
+            		Further File Extensions
+            	
+         </div>
+         <div class="text">
+            		Script/Config files can have an extra extension tacked on after the
+            		above file format extension. These extensions are
+            		
+            <ul>
+               			
+               <li>
+                  				<span class="term">.inherit</span>
+                  				- .properties and .gproperties files can be inherited, meaning that
+                  				a property file in a child context will first load the parent
+                  				properties, and then overwrite them with the child properties. The
+                  				child properties file specifies the ".inherit" extension, and
+                  				inheriting can be done through multiple levels.
+                  			
+               </li>
+               			
+               <li>
+                  				<span class="term">.perClass</span>
+                  				- Normally Coinjema caches one instance of a dependency for all
+                  				objects that need it. If the .perClass extension is used, then
+                  				Coinjema will cache the dependency objects on a per class basis, so
+                  				that two different classes can receive two different dependency
+                  				objects, whereas two instances of the same class will receive the
+                  				same dependency.
+                  			
+               </li>
+               			
+               <li>
+                  				<span class="term">.perObject</span>
+                  				- Like .perClass, but now Coinjema will make sure every object
+                  				receives it's own instance of the dependency object.
+                  			
+               </li>
+               		
+            </ul>
+            	
+         </div>
+      </div>
+   </body>
+</html>

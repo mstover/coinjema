@@ -46,6 +46,10 @@ function enterMenu(menu)
 	{
 		setLayerVisible(false,previousMenu);
 	}
+	menuel = document.getElementById(menu);
+	parentel = document.getElementById(menu+"_menu");
+	menuel.style.left=parentel.offsetLeft;
+	menuel.style.top=parentel.offsetTop+parentel.offsetHeight;
 	setLayerVisible(true,menu);
 	currentMenu = menu;
 	previousMenu = menu;
