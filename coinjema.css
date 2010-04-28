@@ -76,8 +76,8 @@ td
    margin-right : 0px;
    width : 100%;
    margin-top: 0px;
-   margin-bottom: .5em;
-   padding : 1em;
+   margin-bottom: 0px;
+   padding : .25em;
 	overflow:hidden;
 	display:inline-block;
 }
@@ -321,7 +321,7 @@ code
 }
 
 .menubar_space_holder {
-	margin-bottom:7em;
+	margin-bottom:5em;
 }
 
 .menu a.item:active
