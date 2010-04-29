@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webContent>
+	<div class="title">Provided Script Variables</div>
+	<p>When a script is found, it is run and the resulting object is cached.  Coinjema provides any groovy script with some
+variables to work with:</p>
+<ul>
+<li><span class="term">obj</span> - The object being configured.  This reference is null in the 
+	case of dynamic dependencies.</li>
+<li><span class="term">objClass</span> - The class of the object being configured.</li>
+<li><span class="term">registry</span> - The <a href="api/org/coinjema/context/Registry.html">Registry</a> object that provides access to shared dependency
+	information as well as information about the root context.</li>
+<li><span class="term">injector</span> - The DependencyFunctor object that will inject the dependency into the object.</li>
+</ul>
+	
+</webContent>

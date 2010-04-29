@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webContent>
+
+	<div class="title">Developer Notes</div>
+	<div class="content">
+		<div class="title">Tempations (March 24, 2006)</div>
+		<p class="text">I am continually tempted to implement lifecycle control
+			into coinjema -
+			ie,the ability to throw in annotations to your classes that allow coinjema
+			to notify
+			your objects of various lifecycle events - creation, finalization, etc.
+			But, I'm
+			resisting the urge because I think it's a problematic idea in the long run.
+			I'm
+			already noticing problems that happen when I get too aggressive about
+			calling
+			initialization routines in my constructors or dependency injection methods. Often
+			times, this results in problems with circular dependencies -
+			specifically when
+			dynamic dependencies are mixed with static. If I could resolve that, some of
+			these lifecycle issues would go away I think.</p>
+		<div class="title">Amusing Thought (March 24, 2006)</div>
+		<p class="text">JavaSpace ContextSource. Ie, store configuration data in a
+			JavaSpaces
+			service and let Coinjema automatically retrieve such objects and insert them
+			into
+			your objects. In general I'm thinking a lot about what it might
+			mean/enable if
+			Coinjema were fully jini-capable.</p>
+		<div class="title">Inheritable Property Files (March 24, 2006)</div>
+		<p class="text">
+			Several times I've run into the situation where I want a property
+			file that
+			gets default values from a property file in a base context,
+			but overrides just some of the
+			values in a sub-context. Right now,
+			you'd have to put all the values in every property
+			file. I get around
+			this currently by having my class depend on two property files, one
+			which holds the default values and another that holds the overriding
+			values and I call
+			<code>putAll()</code>
+			on my
+			<code>Properties</code>
+			object to override the values. A
+			little kludge that works well provided you only want/need a single default
+			set of
+			properties and a single overriding set of properties. I'd like to enable full
+			property
+			value inheritance from context to sub-context.
+			<span class="update">
+				This is done with the
+				<span class="code">.inherit</span>
+				file extension.
+			</span>
+		</p>
+		<div class="title">Coinjema Finally In Use</div>
+		<p class="text">
+			I've finally started using Coinjema in an actual project, which has
+			helped me find some weaknesses in
+			Coinjema. Most notably, working out circular dependencies. I've also done some
+			work to make Coinjema thread-safe.
+			The result of both of these actions is that Coinjema performance is back
+			in the toilet (after some nice previous improvements
+			in that area). To be specific, object creation is approximately 50
+			times slower than normal when using Coinjema.
+			<span class="update">performance has since been improved to about 25x
+				slower.</span>
+		</p>
+
+		<div class="title">Performance Issues</div>
+		<p class="text">25 times slower looks worse than it actually is. The
+			performance penalty is mostly restricted to object creation,
+			which is a small part of a system's performance to
+			begin with (discounting GC issues, which should not be affected by
+			Coinjema). Creating a normal object and setting a
+			couple of properties takes about 80 nanoseconds on my 1.8ghz centrino
+			laptop, and about 2000 nanoseconds for a Coinjema
+			configured object. There are 1 million nanoseconds in a millisecond - so you'd
+			have to create 1000 objects to decrease your
+			system's performance by ~2 milliseconds. It's a tradeoff that has to be
+			weighed against the advantages. Certainly one
+			wouldn't want DAO objects mapped to database table rows to be Coinjema
+			objects, but it probably wouldn't be too bad to
+			create a new Coinjema object or 3 or 10 for each http request to a servlet
+			engine. </p>
+
+		<div class="title">Thread Safety</div>
+		<p class="text">
+			A stickier problem is the issue of thread-safety. I've modified the
+			code to avoid obvious multi-threading
+			problems, but I remain concerned about the possibility of deadlocks if it were
+			used in a heavily multi-threaded
+			environment with very complex circular dependencies. I've not yet devised a test
+			case that reveals such a problem, but
+			I can imagine some that might. This is something I'll have to look
+			into soon.
+			<span class="update">Have since created tests that revealed deadlocks and
+				have reorganied the code to avoid this. A nice benefit
+				was the synchronization plan was greatly simplified and performance
+				enhanced.</span>
+		</p>
+
+		<div class="title">A More Dynamic Way</div>
+		<p class="text">
+			I'd like to play with the idea of using Coinjema to intercept calls
+			to getXXX() as opposed to
+			intercepting constructor calls and then configuring the objects at initialization
+			time. There would be three advantages
+			of doing so: Object construction would be quick; objects could be more
+			easily updated at runtime since every call
+			to getXXX() they make would go to Coinjema to retrieve the dependency;
+			and a single object could play in multiple
+			contexts rather than being fixed in a particular context at the moment of its
+			creation. The difficulty is figuring
+			out what the intended context is a the time of the call to getXXX().
+			<span class="update">
+				This is done and working with the new
+				<span class="code">@CoinjemaDynamic</span>
+				annotation.
+			</span>
+		</p>
+
+		<div class="title">Tiny Config File Hell</div>
+		<p class="text">Another desirable feature with redirects would be to
+			preserve the original context through the redirect.
+			What this means is, let's say there is the root context:</p>
+		<div class="codeBlock">
+			<pre>
+				root
+				singleton.groovy
+				myClass.singleton.redirect (points to "singleton")
+		</pre>
+		</div>
+		<p class="text">And there is a child context:</p>
+		<div class="codeBlock">
+			<pre>
+				child
+				singleton.groovy
+		</pre>
+		</div>
+		<p class="text">
+			The point of the
+			<span class="code">singleton.groovy</span>
+			entry in the child context is to supply
+			objects in that context with a separate instance of the singleton class -
+			could be a different implementation, could just
+			be configured differently. The problem here is, which instance of
+			singleton will
+			<span class="code">MyClass</span>
+			get
+			if it is created in the child context? Unfortunately, the answer is it
+			will get the root singleton because as Coinjema
+			searches for the
+			<span class="code">MyClass.singleton</span>
+			dependency, it finds it in the root context, and the redirect
+			therefore only searches
+			the root context. Therefore it is necessary to put another
+			<span class="code">Myclass.singleton.redirect</span>
+			into the child
+			context if it is desired that it find the context specific instance of
+			singleton (which seems like that natural
+			assumption to me). Removing this would remove some duplication in the config
+			files.
+			<span class="update">This is also done now.</span>
+		</p>
+
+		<p class="text">
+			Additionally, are both
+			<span class="code">singleton.groovy</span>
+			files really necessary if all they are
+			doing is creating context specific instances of the same class? Why can't
+			there be some way to tell Coinjema that the
+			root config file should be duplicated internally for each child context
+			that doesn't override it? This also would greatly
+			reduce the number of config files I have for my system, and I suspect for
+			many others. Maybe a new file format ".instance" is
+			needed to allow one to specify a class name that will be created for each
+			context.
+			<span class="update">This issue is thornier than expected, but also
+				partially mitigated by the new
+				dynamic dependencies and more targeted context tracking mechanism which
+				allows a single shared
+				service object to behave differently in different call contexts.</span>
+		</p>
+	</div>
+</webContent>

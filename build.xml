@@ -1,196 +1,200 @@
 <?xml version="1.0"?>
 <project name="coinjema" default="compile-core" basedir=".">
-  <description>
+	<description>
     To build and test the COINJEMA project
   </description>
 
-	<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties"/>
-	
+	<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties" />
+
 	<!-- Sources -->
-	<property name="java.src" location="src"/>
-	<property name="test.java.src" location="test/src"/>
-	
+	<property name="java.src" location="src" />
+	<property name="test.java.src" location="test/src" />
+	<property name="web.src" location="doc-src" />
+
 	<!-- Build locations -->
-	<property name="build" location="build"/>
-	<property name="build.classes" location="${build}/classes"/>
-	<property name="build.jarfile" location="${build}/coinjema.jar"/>
-	<property name="build.test.classes" location="${build}/testclasses"/>
-	<property name="build.api.dir" location="docs/api"/>
-	
+	<property name="build" location="build" />
+	<property name="build.classes" location="${build}/classes" />
+	<property name="build.jarfile" location="${build}/coinjema.jar" />
+	<property name="build.test.classes" location="${build}/testclasses" />
+	<property name="build.api.dir" location="docs/api" />
+	<property name="coinjema-website.proj" location="../coinjema-website" />
+	<property name="build.website" location="${coinjema-website.proj}" />
+	<property name="website.xsl" location="${coinjema-website.proj}/code/website.xsl" />
+
 	<!-- Dist locations -->
-	<property name="dist" location="dist"/>
-	<property file=".developer"/>
-	
+	<property name="dist" location="dist" />
+	<property file=".developer" />
+
 	<target name="init">
-		<tstamp/>
-		<property name="version.official" value="1.0"/>
-		<property name="version" value="${version.official}-${DSTAMP}"/>
-		<property name="dist.official.core.jar" value="${dist}/coinjema-core-${version.official}.jar"/>
-		<property name="dist.core.jar" value="${dist}/coinjema-core-${version}.jar"/>
+		<tstamp />
+		<property name="version.official" value="1.0" />
+		<property name="version" value="${version.official}-${DSTAMP}" />
+		<property name="dist.official.core.jar" value="${dist}/coinjema-core-${version.official}.jar" />
+		<property name="dist.core.jar" value="${dist}/coinjema-core-${version}.jar" />
 	</target>
-	
+
 	<!-- Classpath -->
 	<path id="classpath">
-	  <fileset dir="lib">
-	  	<include name="*.jar"/>
-	  	<include name="*.zip"/>
-	  </fileset>
-	  <fileset dir="dev_lib">
-	  	<include name="*.jar"/>
-	  	<include name="*.zip"/>
-	  </fileset>
+		<fileset dir="lib">
+			<include name="*.jar" />
+			<include name="*.zip" />
+		</fileset>
+		<fileset dir="dev_lib">
+			<include name="*.jar" />
+			<include name="*.zip" />
+		</fileset>
 	</path>
-	
+
 	<path id="classpath-test">
-		<path refid="classpath"/>
+		<path refid="classpath" />
 		<fileset dir="${dist}">
-			  	<include name="*.jar"/>
-		</fileset>	
+			<include name="*.jar" />
+		</fileset>
 	</path>
-	
+
 	<!-- source path -->
 	<path id="sources">
-		<pathelement location="${java.src}"/>
+		<pathelement location="${java.src}" />
 	</path>
-	
+
 	<!-- test sources -->
 	<path id="test-source">
-		<pathelement location="${test.java.src}"/>
+		<pathelement location="${test.java.src}" />
 	</path>
-	
+
+	<target name="build.website">
+		<delete>
+			<fileset dir="${build.website}">
+				<include name="*.html" />
+			</fileset>
+		</delete>
+		<xslt style="${website.xsl}" basedir="${web.src}" includes="**/*.xml" destdir="${build.website}">
+			<param name="title" expression="Coinjema" />
+			<param name="menu" expression="${basedir}/menu.xml" />
+		</xslt>
+	</target>
+
 	<target name="clean">
-		<delete dir="${build}"/>
-		<delete dir="${dist}"/>
-		<mkdir dir="${dist}"/>
-		<mkdir dir="${build}"/>
-		<delete dir="${build.api.dir}"/>
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${build}" />
+		<delete dir="${build.api.dir}" />
 	</target>
-		
+
 	<target name="dist-prepare">
-		<mkdir dir="${dist}"/>
-    </target>
-	
+		<mkdir dir="${dist}" />
+	</target>
+
 	<target name="compile-core" depends="clean">
-		<iajc sourceRootsRef="sources" classpathRef="classpath" 
-		      destdir="${build.classes}" source="1.5" target="1.5"/>
+		<iajc sourceRootsRef="sources" classpathRef="classpath" destdir="${build.classes}" source="1.5" target="1.5" />
 	</target>
-	
+
 	<target name="jar-core" depends="init,compile-core,dist-prepare">
-		<jar destfile="${dist.core.jar}" basedir="${build.classes}"/>
+		<jar destfile="${dist.core.jar}" basedir="${build.classes}" />
 	</target>
-	
+
 	<target name="jar-core-official" depends="init,compile-core,dist-prepare">
-		<jar destfile="${dist.official.core.jar}" basedir="${build.classes}"/>
+		<jar destfile="${dist.official.core.jar}" basedir="${build.classes}" />
 	</target>
-	
+
 	<target name="compile-tests" depends="jar-core">
-		<iajc sourceRootsRef="test-source" classpathRef="classpath-test" 
-			  aspectPath="${dist.core.jar}"
-		      destdir="${build.test.classes}"  source="1.5" target="1.5"/>
+		<iajc sourceRootsRef="test-source" classpathRef="classpath-test" aspectPath="${dist.core.jar}" destdir="${build.test.classes}" source="1.5" target="1.5" />
 	</target>
-	
+
 	<target name="test" depends="compile-tests">
-			<junit dir="${basedir}">
-			  <classpath>
-			    <path refid="classpath-test"/>
-			    <pathelement path="${build.test.classes}"/>
-			  </classpath>
+		<junit dir="${basedir}">
+			<classpath>
+				<path refid="classpath-test" />
+				<pathelement path="${build.test.classes}" />
+			</classpath>
 
-			  <formatter type="plain" usefile="no" />
+			<formatter type="plain" usefile="no" />
 
-			  <batchtest fork="yes">
-			    <fileset dir="${test.java.src}">
-			      <include name="**/*.java"/>
-			      <exclude name="**/nontest/*"/>
-			    </fileset>
-			  </batchtest>
-			</junit>
-		</target>
-	
+			<batchtest fork="yes">
+				<fileset dir="${test.java.src}">
+					<include name="**/*.java" />
+					<exclude name="**/nontest/*" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
 	<target name="test-quick" depends="compile-tests">
-			<junit dir="${basedir}">
-			  <classpath>
-			    <path refid="classpath-test"/>
-			    <pathelement path="${build.test.classes}"/>
-			  </classpath>
+		<junit dir="${basedir}">
+			<classpath>
+				<path refid="classpath-test" />
+				<pathelement path="${build.test.classes}" />
+			</classpath>
 
-			  <formatter type="plain" usefile="no" />
+			<formatter type="plain" usefile="no" />
 
-			  <batchtest fork="yes">
-			    <fileset dir="${test.java.src}">
-			      <include name="**/*.java"/>
-			      <exclude name="**/nontest/*"/>
-				      <exclude name="**/TestContextPerformance.java"/>
-			    </fileset>
-			  </batchtest>
-			</junit>
-		</target>
-				
+			<batchtest fork="yes">
+				<fileset dir="${test.java.src}">
+					<include name="**/*.java" />
+					<exclude name="**/nontest/*" />
+					<exclude name="**/TestContextPerformance.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
 	<target name="web_deploy" depends="docs-api">
 		<echo>${password}</echo>
-		<scp todir="mikevivi@mikeandvivi.org:./www/coinjema/" 
-					password="${password}">
+		<scp todir="mikevivi@mikeandvivi.org:./www/coinjema/" password="${password}">
 			<fileset dir="docs">
-				<include name="**/*.html"/>
-				<include name="**/*.css"/>
-				<include name="**/*.gif"/>
-				<include name="**/*.js"/>
+				<include name="**/*.html" />
+				<include name="**/*.css" />
+				<include name="**/*.gif" />
+				<include name="**/*.js" />
 			</fileset>
 		</scp>
 	</target>
-	
+
 	<target name="dist-makezip" depends="jar-core-official">
 		<zip destfile="dist/coinjema-${version.official}.zip">
-					<zipfileset prefix="coinjema-${version.official}" dir="dist">
-						<include name="coinjema-core-${version.official}.jar"/>
-					</zipfileset>
-					<zipfileset prefix="coinjema-${version.official}" dir="${basedir}">
-						<exclude name="**/CVS/**"/>
-						<exclude name="**/*.class"/>
-						<exclude name="**/*.jar"/>
-						<exclude name="**/junit*"/>
-						<exclude name="**/.*"/>
-						<exclude name="**/ajcore*"/>
-						<exclude name="**/core*"/>
-						<exclude name="**/*.ajproperties"/>
-						<exclude name="**/build/**"/>
-						<exclude name="**/bin/**"/>
-						<exclude name="**/dist/**"/>
-						<exclude name="**/dev_lib/**"/>
-						<exclude name="**/lib/**"/>
-						<exclude name="**/.settings/**"/>
-						<exclude name="**/*.log"/>
-						<exclude name="**/eclipse/**"/>
-						<exclude name="**/db/**"/>
-					</zipfileset>
-				</zip>
+			<zipfileset prefix="coinjema-${version.official}" dir="dist">
+				<include name="coinjema-core-${version.official}.jar" />
+			</zipfileset>
+			<zipfileset prefix="coinjema-${version.official}" dir="${basedir}">
+				<exclude name="**/CVS/**" />
+				<exclude name="**/*.class" />
+				<exclude name="**/*.jar" />
+				<exclude name="**/junit*" />
+				<exclude name="**/.*" />
+				<exclude name="**/ajcore*" />
+				<exclude name="**/core*" />
+				<exclude name="**/*.ajproperties" />
+				<exclude name="**/build/**" />
+				<exclude name="**/bin/**" />
+				<exclude name="**/dist/**" />
+				<exclude name="**/dev_lib/**" />
+				<exclude name="**/lib/**" />
+				<exclude name="**/.settings/**" />
+				<exclude name="**/*.log" />
+				<exclude name="**/eclipse/**" />
+				<exclude name="**/db/**" />
+			</zipfileset>
+		</zip>
 	</target>
-	
+
 	<target name="dist" depends="docs-api,test-quick,jar-core-official,dist-makezip">
-		
+
 	</target>
-	
-	  <!-- ================================================================================ -->
-	  <!-- Generate Javadocs                                                                -->
-	  <!-- ================================================================================ -->
-	  <target name="docs-api" depends="compile-core">
-		<delete dir="${build.api.dir}"/>
-			<mkdir dir="${build.api.dir}"/>
-		  <javadoc sourcepath="${java.src}"
-		  	     stylesheetfile="docs/coinjema.css"
-					  destdir="${build.api.dir}"
-					  Protected="no" author="yes" version="yes"
-					  doctitle="Coinjema Public API Specification"
-					  windowtitle="Coinjema Public API Specification"
-					  header="&lt;b&gt;&lt;a style='margin-right:20px;' target='_top' href='../index.html'&gt;Coinjema&lt;/a&gt;&lt;/b&gt;&lt;br&gt;&lt;font size='-1'&gt;1.7&lt;/font&gt;"
-					  bottom="Public Domain Software."
-					  packagenames="org.coinjema.*" Use="yes">
+
+	<!-- ================================================================================ -->
+	<!-- Generate Javadocs                                                                -->
+	<!-- ================================================================================ -->
+	<target name="docs-api" depends="compile-core">
+		<delete dir="${build.api.dir}" />
+		<mkdir dir="${build.api.dir}" />
+		<javadoc sourcepath="${java.src}" stylesheetfile="docs/coinjema.css" destdir="${build.api.dir}" Protected="no" author="yes" version="yes" doctitle="Coinjema Public API Specification" windowtitle="Coinjema Public API Specification" header="&lt;b&gt;&lt;a style='margin-right:20px;' target='_top' href='../index.html'&gt;Coinjema&lt;/a&gt;&lt;/b&gt;&lt;br&gt;&lt;font size='-1'&gt;1.7&lt;/font&gt;" bottom="Public Domain Software." packagenames="org.coinjema.*" Use="yes">
 			<classpath>
-	        	<path refid="classpath"/>
-	      	</classpath>
-			 <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
-		  </javadoc>
-		</target>
-	
-	
+				<path refid="classpath" />
+			</classpath>
+			<link href="http://java.sun.com/j2se/1.5.0/docs/api" />
+		</javadoc>
+	</target>
+
+
 </project>

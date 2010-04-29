@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<webContent>
+	<div class="snippet">Coinjema: A
+		small library that provides a powerful and container-less
+		Dependency-Injection mechanism, via AspectJ and Groovy. If you are
+		tired
+		of reams of XML configuration files, managing complex factories and
+		containers, this non-API solution may appeal to you.</div>
+	<div class="news">
+		<span class="title">News</span>
+		<div class="item">
+			<div class="date">April
+				19, 2010</div>
+			<div class="text">
+				Move Coinjema from
+				<a href="https://sourceforge.net/projects/coinjema">Sourceforge</a>
+				to
+				Github. Long live Coinjema!
+			</div>
+		</div>
+		<div class="item">
+			<div class="date">Dec
+				04, 2006</div>
+			<div class="text">
+				Coinjema version 1.0 is Released.
+				<br />
+				Version 1.0 contains little that's new, but has been stable for
+				nearly a
+				year since the last release. Some minor bug fixes have been made for
+				this production-ready release.
+			</div>
+		</div>
+		<div class="item">
+			<div class="date">May 31, 2006</div>
+			<div class="text">
+				Coinjema
+				version
+				<a href="https://sourceforge.net/project/showfiles.php?group_id=140644">0.6
+					is Released</a>
+				.
+				<br />
+				Version 0.6 contains several
+				<a href="whats_new.html#version-0.6">major enhancements and one major
+					bug fix</a>
+				. Version 0.6 represents the first Beta release for Coinjema.
+			</div>
+		</div>
+		<div class="item">
+			<div class="date">April 11, 2006</div>
+			<div class="text">
+				Coinjema version
+				<a href="https://sourceforge.net/project/showfiles.php?group_id=140644">0.5
+					is Released</a>
+				.
+				<br />
+				Version 0.5 contains multiple minor bug fixes as
+				well as a
+				<a href="whats_new.html#version-0.5">few major
+					changes/additions</a>
+				.
+			</div>
+		</div>
+		<div class="item">
+			<div class="date">February
+				3, 2006</div>
+			<div class="text">
+				Coinjema version
+				<a href="https://sourceforge.net/project/showfiles.php?group_id=140644">0.4
+					is Released</a>
+				.
+				<br />
+				Version 0.4 represents very significant
+				improvements over v0.3, including bug fixes, enhancements, and
+				performance improvements. v0.4 is now being used in at least one
+				production system.
+			</div>
+		</div>
+		<div class="item">
+			<div class="date">December
+				16, 2005</div>
+			<div class="text">
+				Coinjema Goes Alpha With
+				<a href="https://sourceforge.net/project/showfiles.php?group_id=140644">0.3
+					Release</a>
+				.
+				<br />
+				Coinjema goes alpha with release 0.3. Coinjema is an
+				aspect-oriented tool that provides your java objects, behind the scenes,
+				with everything they need to do their thing. No more wiring services and
+				components in XML. Yet Coinjema is powerful and flexible.
+			</div>
+		</div>
+		<div class="item">
+			<div class="date">June 28, 2005</div>
+			<div class="text">
+				Coinjema version 0.2 is
+				<a href="https://sourceforge.net/project/showfiles.php?group_id=140644">released</a>
+				.
+			</div>
+		</div>
+		<div class="item">
+			<div class="date">June 18, 2005</div>
+			<div class="text">
+				Coinjema version 0.1 is
+				<a href="https://sourceforge.net/project/showfiles.php?group_id=140644">released</a>
+				.
+			</div>
+		</div>
+		<div class="item">
+			<div class="date">June 17, 2005</div>
+			<div class="text">Coinjema Website is up and the first release of
+				Coinjema will be available soon. The first release will only
+				represent
+				an experimental release for developers to try out and play with to see
+				if they like the concept.</div>
+		</div>
+	</div>
+</webContent>
