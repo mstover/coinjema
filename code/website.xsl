@@ -15,9 +15,7 @@
 				<link rel="StyleSheet" type="text/css" href="coinjema.css" />
 				<link rel="StyleSheet" type="text/css" href="menu.css" />
 				<script language="Javascript" src="functions.js" type="text/javascript"></script>
-				<title>
-					<xsl:value-of select="$title"></xsl:value-of>
-				</title>
+				<title><xsl:value-of select="$title"/></title>
 			</head>
 			<body>
 				<div class="menubar_space_holder" style="width:100%;z-index:0;visibility:hidden">This space left
@@ -25,7 +23,7 @@
 				<div id="menubar" class="menubar"
 					style="position:fixed; width:100%; left:0px;top:0px;z-index:2">
 					<div class="page-header">
-						<span class="title">Coinjema Home</span>
+						<span class="title"><xsl:value-of select="$title"/></span>
 					</div>
 					<xsl:apply-templates select="document($menu)" mode="menu"></xsl:apply-templates>
 				</div>
