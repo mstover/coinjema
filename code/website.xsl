@@ -3,10 +3,9 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:param name="title"></xsl:param>
 	<xsl:param name="menu"></xsl:param>
-	
-	<xsl:output method="html" 
-            encoding="ISO-8859-1"/>
-	
+
+	<xsl:output method="html" encoding="ISO-8859-1" />
+
 
 	<xsl:template match="/">
 		<html>
@@ -27,9 +26,12 @@
 					<div class="page-header">
 						<span class="title">Coinjema Home</span>
 					</div>
-					<xsl:apply-templates select="document($menu)" mode="menu"></xsl:apply-templates>
+					<xsl:apply-templates select="document($menu)"
+						mode="menu"></xsl:apply-templates>
 				</div>
 				<div class="content">
+					<xsl:apply-templates select="xmlContent/*"
+						mode="xml_content" />
 					<xsl:apply-templates select="webContent/*"
 						mode="web_content"></xsl:apply-templates>
 				</div>
@@ -76,5 +78,39 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()" mode="web_content" />
 		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="section" mode="xml_content">
+		<blockquote>
+			<div class="section_header">
+				<xsl:value-of select="./title" />
+			</div>
+			<xsl:apply-templates select="*[not(name()='title')]"
+				mode="xml_content"></xsl:apply-templates>
+		</blockquote>
+	</xsl:template>
+
+	<xsl:template match="list" mode="xml_content">
+		<ol>
+			<xsl:apply-templates select="*" mode="xml_content" />
+		</ol>
+	</xsl:template>
+
+	<xsl:template match="item" mode="xml_content">
+		<li>
+			<xsl:value-of select="." />
+		</li>
+	</xsl:template>
+
+	<xsl:template match="text" mode="xml_content">
+		<p>
+			<xsl:value-of select="." />
+		</p>
+	</xsl:template>
+
+	<xsl:template match="title" mode="xml_content">
+		<h1>
+			<xsl:value-of select="."></xsl:value-of>
+		</h1>
 	</xsl:template>
 </xsl:stylesheet>

@@ -401,6 +401,13 @@ div.question {
 	padding:1em 0 1em 1em;
 }
 
+.section_header {
+    font-size:200%;
+    font-weight:bold;
+    width:100%;
+    background:#dd9;
+}
+
 	
 	
   
