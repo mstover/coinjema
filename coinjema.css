@@ -401,14 +401,14 @@ div.question {
 	padding:1em 0 1em 1em;
 }
 
-.section_header {
+blockquote .section_header {
     font-size:200%;
     font-weight:bold;
     width:100%;
     background:#cb4;
 }
 
-.section_header .section_header {
+blockquote blockquote .section_header {
     font-size:150%;
     font-weight:bold;
     width:100%;
