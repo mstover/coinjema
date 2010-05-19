@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0">
+    <info organisation="Coinjema" module="coinjema"/>
+    <dependencies>
+        <dependency org="org.codehaus.groovy" name="groovy-all" rev="1.7.2"/>
+        <dependency org="org.aspectj" name="aspectjrt" rev="1.6.8"/>
+        <dependency org="org.antlr" name="antlr-runtime" rev="3.2"/>
+    </dependencies>
+</ivy-module>

@@ -2,8 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/michael/eclipse/plugins/org.aspectj.runtime_1.6.9.20100416110000/aspectjrt.jar"/>
-	<classpathentry kind="lib" path="/home/michael/workspace/libs/groovy-all-1.7.2.jar"/>
-	<classpathentry kind="lib" path="/home/michael/workspace/libs/junit-4.8.2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.ajdt.core.ASPECTJRT_CONTAINER"/>
+	<classpathentry kind="var" path="ASPECTJRT_LIB"/>
+	<classpathentry kind="lib" path="lib/antlr-runtime-3.2.jar"/>
+	<classpathentry kind="lib" path="lib/aspectjrt-1.6.8.jar"/>
+	<classpathentry kind="lib" path="lib/groovy-all-1.7.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

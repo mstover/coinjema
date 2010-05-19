@@ -14,17 +14,15 @@ public class FileResource implements Resource {
 	String name;
 	Set<MetaType> types;
 	String format;
-	
-	public FileResource(File f,String resourceName)
-	{
+
+	public FileResource(File f, String resourceName) {
 		file = f;
 		name = resourceName;
 		types = MetaType.getIncludedTypes(f.getName());
 	}
-	
-	public FileResource(File f,String resourceName,String format)
-	{
-		this(f,resourceName);
+
+	public FileResource(File f, String resourceName, String format) {
+		this(f, resourceName);
 		this.format = format;
 	}
 
@@ -51,22 +49,24 @@ public class FileResource implements Resource {
 	public Collection<MetaType> getMetaTypes() {
 		return types;
 	}
-	
-	public synchronized String getFormat()
-	{
-		if(format == null)
-		{
+
+	public synchronized String getFormat() {
+		if (format == null) {
 			format = file.getName().substring(name.length());
 			format = MetaType.stripMetaTypes(format);
-			if(format.startsWith(".")) format = format.substring(1);
-			if(format.endsWith(".")) format = format.substring(0,format.length()-1);
+			if (format.startsWith(".")) {
+				format = format.substring(1);
+			}
+			if (format.endsWith(".")) {
+				format = format.substring(0, format.length() - 1);
+			}
 		}
 		return format;
 	}
-	
-	public String toString()
-	{
-		return "Resource(name=" + file.getAbsolutePath()+")";
+
+	@Override
+	public String toString() {
+		return "Resource(name=" + file.getAbsolutePath() + ")";
 	}
 
 }
