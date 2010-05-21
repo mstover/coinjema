@@ -1,0 +1,10 @@
+p1 = some text
+p2 {  p2.float:float = 4.55343
+  p2.one = some \{ special \} text
+  p2.5=this is a long \
+line of text that \
+actually spans two lines
+
+p3:int = 999
+                   p4:file= /Users/michaelstover/Documents/test.xml
+}
