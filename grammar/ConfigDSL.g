@@ -14,6 +14,23 @@ PROP_NAME;
 FLOAT_TYPE;
 FILE_TYPE;
 TEXT;
+PACKAGE;
+}
+
+@header {
+    package org.coinjema.grammar;
+}
+
+@members {
+	public boolean usesFile = false;
+	
+	private String fixID(String id) {
+		return id.replaceAll("\\.","_");
+	}
+}
+
+@lexer::header {
+    package org.coinjema.grammar;
 }
 
 @lexer::members {
@@ -27,17 +44,19 @@ TEXT;
 	
 main	:	pckg? config_tree+;
 
-pckg	:	'package' ID ('.' ID)* NEWLINE+
+pckg	:	'package' ID -> ^(PACKAGE ID)
 	;
 
 config_tree options {
                         k=3;
-                    }	:	ID OPEN_TREE config_tree* CLOSE_TREE -> ^({adaptor.create(TREE_PROP,$ID.text)} config_tree*)
-                    	|	(ID)=> a=ID COLON INTTYPE EQ INT -> ^({adaptor.create(INT_PROP,$a.text)} INT)
-                    	|	(ID)=> a=ID COLON FLOATTYPE EQ FLOAT -> ^({adaptor.create(FLOAT_TYPE,$a.text)} FLOAT)
-                      	|	(ID)=> a=ID COLON FILETYPE EQ (b+=ID|b+=INT|b+=FILE_SEP)* -> ^({adaptor.create(FILE_TYPE,$a.text)} $b* )
-	|	a=ID (COLON STRINGTYPE)? EQ rawtext -> ^({adaptor.create(STRING_PROP,$a.text)} {adaptor.create(TEXT,$rawtext.text.trim())})
+                    }	:	ID OPEN_TREE config_tree* CLOSE_TREE -> ^({adaptor.create(TREE_PROP,fixID($ID.text))} config_tree*)
+                    	|	(ID)=> a=ID COLON INTTYPE EQ INT -> ^({adaptor.create(INT_PROP,fixID($a.text))} INT)
+                    	|	(ID)=> a=ID COLON FLOATTYPE EQ FLOAT -> ^({adaptor.create(FLOAT_TYPE,fixID($a.text))} FLOAT)
+                      	|	(ID)=> a=ID COLON FILETYPE EQ filename {usesFile = true;} -> ^({adaptor.create(FILE_TYPE,fixID($a.text))} {adaptor.create(TEXT,$filename.text)})
+	|	a=ID (COLON STRINGTYPE)? EQ rawtext -> ^({adaptor.create(STRING_PROP,fixID($a.text))} {adaptor.create(TEXT,$rawtext.text.trim())})
 	;
+	
+filename:	(b+=ID|b+=INT|b+=FILE_SEP)*;
 	
 rawtext	:	 .* (NEWLINE|EOF)!;
 	

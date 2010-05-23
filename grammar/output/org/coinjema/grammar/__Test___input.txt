@@ -1,0 +1,18 @@
+package org.coinjema.config
+gibberish= aslkjlfjdljflj l j
+year:int = 65
+emailProperties {
+    ip:float = 5.444
+    emailText:file = /home/mstover/data.txt
+    body = some paragraph \
+            of text
+    header {
+    	to {
+    		port:int=44
+    		serverProps:file=/
+    	}
+    	subject=howdy
+    }
+    from = This \n is \n three lines
+}
+name=and

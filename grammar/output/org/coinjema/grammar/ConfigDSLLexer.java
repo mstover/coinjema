@@ -1,4 +1,7 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g 2010-05-21 13:41:41
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g 2010-05-22 22:30:02
+
+    package org.coinjema.grammar;
+
 
 import org.antlr.runtime.*;
 import java.util.Stack;
@@ -6,40 +9,40 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class ConfigDSLLexer extends Lexer {
+    public static final int PACKAGE=12;
     public static final int FLOAT_TYPE=9;
-    public static final int EXPONENT=28;
-    public static final int OTHER=34;
+    public static final int EXPONENT=29;
+    public static final int OTHER=35;
     public static final int CLOSE_TREE=15;
     public static final int FILETYPE=22;
-    public static final int UNICODE_ESC=25;
-    public static final int OCTAL_ESC=26;
-    public static final int CHAR=32;
+    public static final int UNICODE_ESC=26;
+    public static final int OCTAL_ESC=27;
+    public static final int CHAR=33;
     public static final int INT_PROP=5;
-    public static final int HEX_DIGIT=33;
+    public static final int HEX_DIGIT=34;
     public static final int FLOAT=21;
     public static final int INT=19;
     public static final int TEXT=11;
-    public static final int FILE_SEP=23;
-    public static final int ID=12;
     public static final int OPEN_TREE=14;
+    public static final int FILE_SEP=24;
+    public static final int ID=13;
     public static final int EOF=-1;
     public static final int COLON=16;
-    public static final int ESC_SEQ=27;
-    public static final int WS=30;
-    public static final int NEWLINE=13;
-    public static final int T__35=35;
+    public static final int ESC_SEQ=28;
+    public static final int WS=31;
+    public static final int NEWLINE=25;
     public static final int T__36=36;
     public static final int PROPERTY=7;
     public static final int TREE_PROP=6;
     public static final int FLOATTYPE=20;
-    public static final int STRINGTYPE=24;
+    public static final int STRINGTYPE=23;
     public static final int FILE_TYPE=10;
     public static final int STRING_PROP=4;
     public static final int EQ=18;
-    public static final int COMMENT=29;
+    public static final int COMMENT=30;
     public static final int INTTYPE=17;
     public static final int PROP_NAME=8;
-    public static final int STRING=31;
+    public static final int STRING=32;
 
     	private boolean inValue = false;
     	private String propType="string";
@@ -60,38 +63,18 @@ public class ConfigDSLLexer extends Lexer {
         super(input,state);
 
     }
-    public String getGrammarFileName() { return "/Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g"; }
-
-    // $ANTLR start "T__35"
-    public final void mT__35() throws RecognitionException {
-        try {
-            int _type = T__35;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:12:7: ( 'package' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:12:9: 'package'
-            {
-            match("package"); 
-
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end "T__35"
+    public String getGrammarFileName() { return "/home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g"; }
 
     // $ANTLR start "T__36"
     public final void mT__36() throws RecognitionException {
         try {
             int _type = T__36;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:13:7: ( '.' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:13:9: '.'
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:15:7: ( 'package' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:15:9: 'package'
             {
-            match('.'); 
+            match("package"); 
+
 
             }
 
@@ -108,7 +91,7 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = ESC_SEQ;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:45:5: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' | '\\n' | '\\r' | '{' | '}' | '/' ) | UNICODE_ESC | OCTAL_ESC )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:64:5: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' | '\\n' | '\\r' | '{' | '}' | '/' ) | UNICODE_ESC | OCTAL_ESC )
             int alt1=3;
             int LA1_0 = input.LA(1);
 
@@ -164,7 +147,7 @@ public class ConfigDSLLexer extends Lexer {
             }
             switch (alt1) {
                 case 1 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:45:9: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' | '\\n' | '\\r' | '{' | '}' | '/' )
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:64:9: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' | '\\n' | '\\r' | '{' | '}' | '/' )
                     {
                     match('\\'); 
                     if ( input.LA(1)=='\n'||input.LA(1)=='\r'||input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='/'||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||input.LA(1)=='t'||input.LA(1)=='{'||input.LA(1)=='}' ) {
@@ -180,14 +163,14 @@ public class ConfigDSLLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:46:9: UNICODE_ESC
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:65:9: UNICODE_ESC
                     {
                     mUNICODE_ESC(); 
 
                     }
                     break;
                 case 3 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:47:9: OCTAL_ESC
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:66:9: OCTAL_ESC
                     {
                     mOCTAL_ESC(); 
 
@@ -208,8 +191,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = EQ;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:50:4: ( '=' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:50:6: '='
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:69:4: ( '=' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:69:6: '='
             {
             match('='); 
             inValue=true;inType=false;
@@ -229,8 +212,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = STRINGTYPE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:52:12: ( 'string' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:52:14: 'string'
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:71:12: ( 'string' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:71:14: 'string'
             {
             match("string"); 
 
@@ -251,8 +234,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = INTTYPE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:54:8: ( 'int' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:54:10: 'int'
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:73:8: ( 'int' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:73:10: 'int'
             {
             match("int"); 
 
@@ -273,8 +256,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = FILETYPE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:56:9: ( 'file' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:56:11: 'file'
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:75:9: ( 'file' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:75:11: 'file'
             {
             match("file"); 
 
@@ -295,8 +278,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = FLOATTYPE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:59:3: ( 'float' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:59:5: 'float'
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:78:3: ( 'float' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:78:5: 'float'
             {
             match("float"); 
 
@@ -317,8 +300,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:61:5: ( ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )* )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:61:7: ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )*
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:80:5: ( ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )* )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:80:7: ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )*
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -329,7 +312,7 @@ public class ConfigDSLLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:61:31: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )*
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:80:31: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )*
             loop2:
             do {
                 int alt2=2;
@@ -342,7 +325,7 @@ public class ConfigDSLLexer extends Lexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:
+            	    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:
             	    {
             	    if ( input.LA(1)=='.'||(input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
             	        input.consume();
@@ -379,10 +362,10 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:64:5: ( ( '0' .. '9' )+ )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:64:7: ( '0' .. '9' )+
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:83:5: ( ( '0' .. '9' )+ )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:83:7: ( '0' .. '9' )+
             {
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:64:7: ( '0' .. '9' )+
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:83:7: ( '0' .. '9' )+
             int cnt3=0;
             loop3:
             do {
@@ -396,7 +379,7 @@ public class ConfigDSLLexer extends Lexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:64:7: '0' .. '9'
+            	    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:83:7: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -428,8 +411,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = OPEN_TREE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:68:2: ( '{' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:68:4: '{'
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:87:2: ( '{' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:87:4: '{'
             {
             match('{'); 
 
@@ -448,8 +431,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = CLOSE_TREE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:71:2: ( '}' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:71:4: '}'
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:90:2: ( '}' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:90:4: '}'
             {
             match('}'); 
             inValue=false;propType="string";
@@ -469,8 +452,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = COLON;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:73:7: ( ':' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:73:9: ':'
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:92:7: ( ':' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:92:9: ':'
             {
             match(':'); 
             if(!inValue) inType=true;
@@ -490,8 +473,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = FILE_SEP;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:75:9: ( '/' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:75:11: '/'
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:94:9: ( '/' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:94:11: '/'
             {
             match('/'); 
 
@@ -510,14 +493,14 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = FLOAT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:80:5: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )? | '.' ( '0' .. '9' )+ ( EXPONENT )? | ( '0' .. '9' )+ EXPONENT )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:99:5: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )? | '.' ( '0' .. '9' )+ ( EXPONENT )? | ( '0' .. '9' )+ EXPONENT )
             int alt10=3;
             alt10 = dfa10.predict(input);
             switch (alt10) {
                 case 1 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:80:9: ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )?
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:99:9: ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )?
                     {
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:80:9: ( '0' .. '9' )+
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:99:9: ( '0' .. '9' )+
                     int cnt4=0;
                     loop4:
                     do {
@@ -531,7 +514,7 @@ public class ConfigDSLLexer extends Lexer {
 
                         switch (alt4) {
                     	case 1 :
-                    	    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:80:10: '0' .. '9'
+                    	    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:99:10: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -548,7 +531,7 @@ public class ConfigDSLLexer extends Lexer {
                     } while (true);
 
                     match('.'); 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:80:25: ( '0' .. '9' )*
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:99:25: ( '0' .. '9' )*
                     loop5:
                     do {
                         int alt5=2;
@@ -561,7 +544,7 @@ public class ConfigDSLLexer extends Lexer {
 
                         switch (alt5) {
                     	case 1 :
-                    	    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:80:26: '0' .. '9'
+                    	    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:99:26: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -573,7 +556,7 @@ public class ConfigDSLLexer extends Lexer {
                         }
                     } while (true);
 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:80:37: ( EXPONENT )?
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:99:37: ( EXPONENT )?
                     int alt6=2;
                     int LA6_0 = input.LA(1);
 
@@ -582,7 +565,7 @@ public class ConfigDSLLexer extends Lexer {
                     }
                     switch (alt6) {
                         case 1 :
-                            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:80:37: EXPONENT
+                            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:99:37: EXPONENT
                             {
                             mEXPONENT(); 
 
@@ -595,10 +578,10 @@ public class ConfigDSLLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:81:9: '.' ( '0' .. '9' )+ ( EXPONENT )?
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:100:9: '.' ( '0' .. '9' )+ ( EXPONENT )?
                     {
                     match('.'); 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:81:13: ( '0' .. '9' )+
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:100:13: ( '0' .. '9' )+
                     int cnt7=0;
                     loop7:
                     do {
@@ -612,7 +595,7 @@ public class ConfigDSLLexer extends Lexer {
 
                         switch (alt7) {
                     	case 1 :
-                    	    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:81:14: '0' .. '9'
+                    	    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:100:14: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -628,7 +611,7 @@ public class ConfigDSLLexer extends Lexer {
                         cnt7++;
                     } while (true);
 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:81:25: ( EXPONENT )?
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:100:25: ( EXPONENT )?
                     int alt8=2;
                     int LA8_0 = input.LA(1);
 
@@ -637,7 +620,7 @@ public class ConfigDSLLexer extends Lexer {
                     }
                     switch (alt8) {
                         case 1 :
-                            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:81:25: EXPONENT
+                            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:100:25: EXPONENT
                             {
                             mEXPONENT(); 
 
@@ -650,9 +633,9 @@ public class ConfigDSLLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:82:9: ( '0' .. '9' )+ EXPONENT
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:101:9: ( '0' .. '9' )+ EXPONENT
                     {
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:82:9: ( '0' .. '9' )+
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:101:9: ( '0' .. '9' )+
                     int cnt9=0;
                     loop9:
                     do {
@@ -666,7 +649,7 @@ public class ConfigDSLLexer extends Lexer {
 
                         switch (alt9) {
                     	case 1 :
-                    	    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:82:10: '0' .. '9'
+                    	    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:101:10: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -701,7 +684,7 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:86:5: ( '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' | '/*' ( options {greedy=false; } : . )* '*/' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:105:5: ( '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' | '/*' ( options {greedy=false; } : . )* '*/' )
             int alt14=2;
             int LA14_0 = input.LA(1);
 
@@ -729,11 +712,11 @@ public class ConfigDSLLexer extends Lexer {
             }
             switch (alt14) {
                 case 1 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:86:9: '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:105:9: '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
                     {
                     match("//"); 
 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:86:14: (~ ( '\\n' | '\\r' ) )*
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:105:14: (~ ( '\\n' | '\\r' ) )*
                     loop11:
                     do {
                         int alt11=2;
@@ -746,7 +729,7 @@ public class ConfigDSLLexer extends Lexer {
 
                         switch (alt11) {
                     	case 1 :
-                    	    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:86:14: ~ ( '\\n' | '\\r' )
+                    	    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:105:14: ~ ( '\\n' | '\\r' )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -766,7 +749,7 @@ public class ConfigDSLLexer extends Lexer {
                         }
                     } while (true);
 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:86:28: ( '\\r' )?
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:105:28: ( '\\r' )?
                     int alt12=2;
                     int LA12_0 = input.LA(1);
 
@@ -775,7 +758,7 @@ public class ConfigDSLLexer extends Lexer {
                     }
                     switch (alt12) {
                         case 1 :
-                            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:86:28: '\\r'
+                            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:105:28: '\\r'
                             {
                             match('\r'); 
 
@@ -790,11 +773,11 @@ public class ConfigDSLLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:87:9: '/*' ( options {greedy=false; } : . )* '*/'
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:106:9: '/*' ( options {greedy=false; } : . )* '*/'
                     {
                     match("/*"); 
 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:87:14: ( options {greedy=false; } : . )*
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:106:14: ( options {greedy=false; } : . )*
                     loop13:
                     do {
                         int alt13=2;
@@ -819,7 +802,7 @@ public class ConfigDSLLexer extends Lexer {
 
                         switch (alt13) {
                     	case 1 :
-                    	    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:87:42: .
+                    	    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:106:42: .
                     	    {
                     	    matchAny(); 
 
@@ -852,8 +835,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:90:5: ( ( ' ' | '\\t' | '\\r' ) )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:90:9: ( ' ' | '\\t' | '\\r' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:109:5: ( ( ' ' | '\\t' | '\\r' ) )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:109:9: ( ' ' | '\\t' | '\\r' )
             {
             if ( input.LA(1)=='\t'||input.LA(1)=='\r'||input.LA(1)==' ' ) {
                 input.consume();
@@ -881,8 +864,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = NEWLINE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:97:4: ( '\\n' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:97:7: '\\n'
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:116:4: ( '\\n' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:116:7: '\\n'
             {
             match('\n'); 
             if(!isRaw()) {_channel=HIDDEN;} inValue=false;propType="string";
@@ -902,11 +885,11 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:100:5: ( '\"' ( ESC_SEQ | ~ ( '\\\\' | '\"' ) )* '\"' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:100:8: '\"' ( ESC_SEQ | ~ ( '\\\\' | '\"' ) )* '\"'
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:119:5: ( '\"' ( ESC_SEQ | ~ ( '\\\\' | '\"' ) )* '\"' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:119:8: '\"' ( ESC_SEQ | ~ ( '\\\\' | '\"' ) )* '\"'
             {
             match('\"'); 
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:100:12: ( ESC_SEQ | ~ ( '\\\\' | '\"' ) )*
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:119:12: ( ESC_SEQ | ~ ( '\\\\' | '\"' ) )*
             loop15:
             do {
                 int alt15=3;
@@ -922,14 +905,14 @@ public class ConfigDSLLexer extends Lexer {
 
                 switch (alt15) {
             	case 1 :
-            	    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:100:14: ESC_SEQ
+            	    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:119:14: ESC_SEQ
             	    {
             	    mESC_SEQ(); 
 
             	    }
             	    break;
             	case 2 :
-            	    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:100:24: ~ ( '\\\\' | '\"' )
+            	    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:119:24: ~ ( '\\\\' | '\"' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -966,11 +949,11 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = CHAR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:103:5: ( '\\'' ( ESC_SEQ | ~ ( '\\'' | '\\\\' ) ) '\\'' )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:103:8: '\\'' ( ESC_SEQ | ~ ( '\\'' | '\\\\' ) ) '\\''
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:122:5: ( '\\'' ( ESC_SEQ | ~ ( '\\'' | '\\\\' ) ) '\\'' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:122:8: '\\'' ( ESC_SEQ | ~ ( '\\'' | '\\\\' ) ) '\\''
             {
             match('\''); 
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:103:13: ( ESC_SEQ | ~ ( '\\'' | '\\\\' ) )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:122:13: ( ESC_SEQ | ~ ( '\\'' | '\\\\' ) )
             int alt16=2;
             int LA16_0 = input.LA(1);
 
@@ -988,14 +971,14 @@ public class ConfigDSLLexer extends Lexer {
             }
             switch (alt16) {
                 case 1 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:103:15: ESC_SEQ
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:122:15: ESC_SEQ
                     {
                     mESC_SEQ(); 
 
                     }
                     break;
                 case 2 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:103:25: ~ ( '\\'' | '\\\\' )
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:122:25: ~ ( '\\'' | '\\\\' )
                     {
                     if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                         input.consume();
@@ -1027,8 +1010,8 @@ public class ConfigDSLLexer extends Lexer {
     // $ANTLR start "EXPONENT"
     public final void mEXPONENT() throws RecognitionException {
         try {
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:107:10: ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:107:12: ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:126:10: ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:126:12: ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+
             {
             if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                 input.consume();
@@ -1039,7 +1022,7 @@ public class ConfigDSLLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:107:22: ( '+' | '-' )?
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:126:22: ( '+' | '-' )?
             int alt17=2;
             int LA17_0 = input.LA(1);
 
@@ -1048,7 +1031,7 @@ public class ConfigDSLLexer extends Lexer {
             }
             switch (alt17) {
                 case 1 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:
                     {
                     if ( input.LA(1)=='+'||input.LA(1)=='-' ) {
                         input.consume();
@@ -1065,7 +1048,7 @@ public class ConfigDSLLexer extends Lexer {
 
             }
 
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:107:33: ( '0' .. '9' )+
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:126:33: ( '0' .. '9' )+
             int cnt18=0;
             loop18:
             do {
@@ -1079,7 +1062,7 @@ public class ConfigDSLLexer extends Lexer {
 
                 switch (alt18) {
             	case 1 :
-            	    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:107:34: '0' .. '9'
+            	    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:126:34: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -1107,8 +1090,8 @@ public class ConfigDSLLexer extends Lexer {
     // $ANTLR start "HEX_DIGIT"
     public final void mHEX_DIGIT() throws RecognitionException {
         try {
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:110:11: ( ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:110:13: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:129:11: ( ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:129:13: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='F')||(input.LA(1)>='a' && input.LA(1)<='f') ) {
                 input.consume();
@@ -1131,7 +1114,7 @@ public class ConfigDSLLexer extends Lexer {
     // $ANTLR start "OCTAL_ESC"
     public final void mOCTAL_ESC() throws RecognitionException {
         try {
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:116:5: ( '\\\\' ( '0' .. '3' ) ( '0' .. '7' ) ( '0' .. '7' ) | '\\\\' ( '0' .. '7' ) ( '0' .. '7' ) | '\\\\' ( '0' .. '7' ) )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:135:5: ( '\\\\' ( '0' .. '3' ) ( '0' .. '7' ) ( '0' .. '7' ) | '\\\\' ( '0' .. '7' ) ( '0' .. '7' ) | '\\\\' ( '0' .. '7' ) )
             int alt19=3;
             int LA19_0 = input.LA(1);
 
@@ -1142,9 +1125,9 @@ public class ConfigDSLLexer extends Lexer {
                     int LA19_2 = input.LA(3);
 
                     if ( ((LA19_2>='0' && LA19_2<='7')) ) {
-                        int LA19_5 = input.LA(4);
+                        int LA19_4 = input.LA(4);
 
-                        if ( ((LA19_5>='0' && LA19_5<='7')) ) {
+                        if ( ((LA19_4>='0' && LA19_4<='7')) ) {
                             alt19=1;
                         }
                         else {
@@ -1177,25 +1160,25 @@ public class ConfigDSLLexer extends Lexer {
             }
             switch (alt19) {
                 case 1 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:116:9: '\\\\' ( '0' .. '3' ) ( '0' .. '7' ) ( '0' .. '7' )
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:135:9: '\\\\' ( '0' .. '3' ) ( '0' .. '7' ) ( '0' .. '7' )
                     {
                     match('\\'); 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:116:14: ( '0' .. '3' )
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:116:15: '0' .. '3'
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:135:14: ( '0' .. '3' )
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:135:15: '0' .. '3'
                     {
                     matchRange('0','3'); 
 
                     }
 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:116:25: ( '0' .. '7' )
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:116:26: '0' .. '7'
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:135:25: ( '0' .. '7' )
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:135:26: '0' .. '7'
                     {
                     matchRange('0','7'); 
 
                     }
 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:116:36: ( '0' .. '7' )
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:116:37: '0' .. '7'
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:135:36: ( '0' .. '7' )
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:135:37: '0' .. '7'
                     {
                     matchRange('0','7'); 
 
@@ -1205,18 +1188,18 @@ public class ConfigDSLLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:117:9: '\\\\' ( '0' .. '7' ) ( '0' .. '7' )
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:136:9: '\\\\' ( '0' .. '7' ) ( '0' .. '7' )
                     {
                     match('\\'); 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:117:14: ( '0' .. '7' )
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:117:15: '0' .. '7'
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:136:14: ( '0' .. '7' )
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:136:15: '0' .. '7'
                     {
                     matchRange('0','7'); 
 
                     }
 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:117:25: ( '0' .. '7' )
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:117:26: '0' .. '7'
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:136:25: ( '0' .. '7' )
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:136:26: '0' .. '7'
                     {
                     matchRange('0','7'); 
 
@@ -1226,11 +1209,11 @@ public class ConfigDSLLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:118:9: '\\\\' ( '0' .. '7' )
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:137:9: '\\\\' ( '0' .. '7' )
                     {
                     match('\\'); 
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:118:14: ( '0' .. '7' )
-                    // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:118:15: '0' .. '7'
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:137:14: ( '0' .. '7' )
+                    // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:137:15: '0' .. '7'
                     {
                     matchRange('0','7'); 
 
@@ -1250,8 +1233,8 @@ public class ConfigDSLLexer extends Lexer {
     // $ANTLR start "UNICODE_ESC"
     public final void mUNICODE_ESC() throws RecognitionException {
         try {
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:123:5: ( '\\\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:123:9: '\\\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:142:5: ( '\\\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:142:9: '\\\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
             {
             match('\\'); 
             match('u'); 
@@ -1273,8 +1256,8 @@ public class ConfigDSLLexer extends Lexer {
         try {
             int _type = OTHER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:126:7: ( . )
-            // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:126:9: .
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:145:7: ( . )
+            // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:145:9: .
             {
             matchAny(); 
 
@@ -1289,152 +1272,145 @@ public class ConfigDSLLexer extends Lexer {
     // $ANTLR end "OTHER"
 
     public void mTokens() throws RecognitionException {
-        // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:8: ( T__35 | T__36 | ESC_SEQ | EQ | STRINGTYPE | INTTYPE | FILETYPE | FLOATTYPE | ID | INT | OPEN_TREE | CLOSE_TREE | COLON | FILE_SEP | FLOAT | COMMENT | WS | NEWLINE | STRING | CHAR | OTHER )
-        int alt20=21;
+        // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:8: ( T__36 | ESC_SEQ | EQ | STRINGTYPE | INTTYPE | FILETYPE | FLOATTYPE | ID | INT | OPEN_TREE | CLOSE_TREE | COLON | FILE_SEP | FLOAT | COMMENT | WS | NEWLINE | STRING | CHAR | OTHER )
+        int alt20=20;
         alt20 = dfa20.predict(input);
         switch (alt20) {
             case 1 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:10: T__35
-                {
-                mT__35(); 
-
-                }
-                break;
-            case 2 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:16: T__36
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:10: T__36
                 {
                 mT__36(); 
 
                 }
                 break;
-            case 3 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:22: ESC_SEQ
+            case 2 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:16: ESC_SEQ
                 {
                 mESC_SEQ(); 
 
                 }
                 break;
-            case 4 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:30: EQ
+            case 3 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:24: EQ
                 {
                 mEQ(); 
 
                 }
                 break;
-            case 5 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:33: STRINGTYPE
+            case 4 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:27: STRINGTYPE
                 {
                 mSTRINGTYPE(); 
 
                 }
                 break;
-            case 6 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:44: INTTYPE
+            case 5 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:38: INTTYPE
                 {
                 mINTTYPE(); 
 
                 }
                 break;
-            case 7 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:52: FILETYPE
+            case 6 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:46: FILETYPE
                 {
                 mFILETYPE(); 
 
                 }
                 break;
-            case 8 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:61: FLOATTYPE
+            case 7 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:55: FLOATTYPE
                 {
                 mFLOATTYPE(); 
 
                 }
                 break;
-            case 9 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:71: ID
+            case 8 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:65: ID
                 {
                 mID(); 
 
                 }
                 break;
-            case 10 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:74: INT
+            case 9 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:68: INT
                 {
                 mINT(); 
 
                 }
                 break;
-            case 11 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:78: OPEN_TREE
+            case 10 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:72: OPEN_TREE
                 {
                 mOPEN_TREE(); 
 
                 }
                 break;
-            case 12 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:88: CLOSE_TREE
+            case 11 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:82: CLOSE_TREE
                 {
                 mCLOSE_TREE(); 
 
                 }
                 break;
-            case 13 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:99: COLON
+            case 12 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:93: COLON
                 {
                 mCOLON(); 
 
                 }
                 break;
-            case 14 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:105: FILE_SEP
+            case 13 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:99: FILE_SEP
                 {
                 mFILE_SEP(); 
 
                 }
                 break;
-            case 15 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:114: FLOAT
+            case 14 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:108: FLOAT
                 {
                 mFLOAT(); 
 
                 }
                 break;
-            case 16 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:120: COMMENT
+            case 15 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:114: COMMENT
                 {
                 mCOMMENT(); 
 
                 }
                 break;
-            case 17 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:128: WS
+            case 16 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:122: WS
                 {
                 mWS(); 
 
                 }
                 break;
-            case 18 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:131: NEWLINE
+            case 17 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:125: NEWLINE
                 {
                 mNEWLINE(); 
 
                 }
                 break;
-            case 19 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:139: STRING
+            case 18 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:133: STRING
                 {
                 mSTRING(); 
 
                 }
                 break;
-            case 20 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:146: CHAR
+            case 19 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:140: CHAR
                 {
                 mCHAR(); 
 
                 }
                 break;
-            case 21 :
-                // /Users/michaelstover/Documents/workspace/coinjema/grammar/ConfigDSL.g:1:151: OTHER
+            case 20 :
+                // /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g:1:145: OTHER
                 {
                 mOTHER(); 
 
@@ -1457,12 +1433,12 @@ public class ConfigDSLLexer extends Lexer {
     static final String DFA10_maxS =
         "\1\71\1\145\3\uffff";
     static final String DFA10_acceptS =
-        "\2\uffff\1\2\1\3\1\1";
+        "\2\uffff\1\2\1\1\1\3";
     static final String DFA10_specialS =
         "\5\uffff}>";
     static final String[] DFA10_transitionS = {
             "\1\2\1\uffff\12\1",
-            "\1\4\1\uffff\12\1\13\uffff\1\3\37\uffff\1\3",
+            "\1\3\1\uffff\12\1\13\uffff\1\4\37\uffff\1\4",
             "",
             "",
             ""
@@ -1498,95 +1474,94 @@ public class ConfigDSLLexer extends Lexer {
             this.transition = DFA10_transition;
         }
         public String getDescription() {
-            return "79:1: FLOAT : ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )? | '.' ( '0' .. '9' )+ ( EXPONENT )? | ( '0' .. '9' )+ EXPONENT );";
+            return "98:1: FLOAT : ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )? | '.' ( '0' .. '9' )+ ( EXPONENT )? | ( '0' .. '9' )+ EXPONENT );";
         }
     }
     static final String DFA20_eotS =
-        "\1\uffff\1\24\1\25\1\22\1\uffff\3\24\1\uffff\1\35\3\uffff\1\43\2"+
-        "\uffff\2\22\1\uffff\1\24\5\uffff\4\24\1\uffff\1\35\11\uffff\2\24"+
-        "\1\57\4\24\1\uffff\1\64\3\24\1\uffff\1\70\1\24\1\72\1\uffff\1\73"+
+        "\1\uffff\1\24\1\22\1\uffff\3\24\1\uffff\1\33\3\uffff\1\42\1\22\2"+
+        "\uffff\2\22\1\uffff\1\24\3\uffff\4\24\2\uffff\1\33\11\uffff\2\24"+
+        "\1\56\4\24\1\uffff\1\63\3\24\1\uffff\1\67\1\24\1\71\1\uffff\1\72"+
         "\2\uffff";
     static final String DFA20_eofS =
-        "\74\uffff";
+        "\73\uffff";
     static final String DFA20_minS =
-        "\1\0\1\141\1\60\1\12\1\uffff\1\164\1\156\1\151\1\uffff\1\56\3\uffff"+
-        "\1\52\2\uffff\2\0\1\uffff\1\143\5\uffff\1\162\1\164\1\154\1\157"+
-        "\1\uffff\1\56\11\uffff\1\153\1\151\1\56\1\145\2\141\1\156\1\uffff"+
+        "\1\0\1\141\1\12\1\uffff\1\164\1\156\1\151\1\uffff\1\56\3\uffff\1"+
+        "\52\1\60\2\uffff\2\0\1\uffff\1\143\3\uffff\1\162\1\164\1\154\1\157"+
+        "\2\uffff\1\56\11\uffff\1\153\1\151\1\56\1\145\2\141\1\156\1\uffff"+
         "\1\56\1\164\2\147\1\uffff\1\56\1\145\1\56\1\uffff\1\56\2\uffff";
     static final String DFA20_maxS =
-        "\1\uffff\1\141\1\71\1\175\1\uffff\1\164\1\156\1\154\1\uffff\1\145"+
-        "\3\uffff\1\57\2\uffff\2\uffff\1\uffff\1\143\5\uffff\1\162\1\164"+
-        "\1\154\1\157\1\uffff\1\145\11\uffff\1\153\1\151\1\172\1\145\2\141"+
-        "\1\156\1\uffff\1\172\1\164\2\147\1\uffff\1\172\1\145\1\172\1\uffff"+
-        "\1\172\2\uffff";
+        "\1\uffff\1\141\1\175\1\uffff\1\164\1\156\1\154\1\uffff\1\145\3\uffff"+
+        "\1\57\1\71\2\uffff\2\uffff\1\uffff\1\143\3\uffff\1\162\1\164\1\154"+
+        "\1\157\2\uffff\1\145\11\uffff\1\153\1\151\1\172\1\145\2\141\1\156"+
+        "\1\uffff\1\172\1\164\2\147\1\uffff\1\172\1\145\1\172\1\uffff\1\172"+
+        "\2\uffff";
     static final String DFA20_acceptS =
-        "\4\uffff\1\4\3\uffff\1\11\1\uffff\1\13\1\14\1\15\1\uffff\1\21\1"+
-        "\22\2\uffff\1\25\1\uffff\1\11\1\2\1\17\1\3\1\4\4\uffff\1\12\1\uffff"+
-        "\1\13\1\14\1\15\1\20\1\16\1\21\1\22\1\23\1\24\7\uffff\1\6\4\uffff"+
-        "\1\7\3\uffff\1\10\1\uffff\1\5\1\1";
+        "\3\uffff\1\3\3\uffff\1\10\1\uffff\1\12\1\13\1\14\2\uffff\1\20\1"+
+        "\21\2\uffff\1\24\1\uffff\1\10\1\2\1\3\4\uffff\1\11\1\16\1\uffff"+
+        "\1\12\1\13\1\14\1\17\1\15\1\20\1\21\1\22\1\23\7\uffff\1\5\4\uffff"+
+        "\1\6\3\uffff\1\7\1\uffff\1\4\1\1";
     static final String DFA20_specialS =
-        "\1\2\17\uffff\1\1\1\0\52\uffff}>";
+        "\1\2\17\uffff\1\1\1\0\51\uffff}>";
     static final String[] DFA20_transitionS = {
             "\11\22\1\16\1\17\2\22\1\16\22\22\1\16\1\22\1\20\4\22\1\21\6"+
-            "\22\1\2\1\15\12\11\1\14\2\22\1\4\3\22\32\10\1\22\1\3\2\22\1"+
-            "\10\1\22\5\10\1\7\2\10\1\6\6\10\1\1\2\10\1\5\7\10\1\12\1\22"+
-            "\1\13\uff82\22",
+            "\22\1\15\1\14\12\10\1\13\2\22\1\3\3\22\32\7\1\22\1\2\2\22\1"+
+            "\7\1\22\5\7\1\6\2\7\1\5\6\7\1\1\2\7\1\4\7\7\1\11\1\22\1\12\uff82"+
+            "\22",
             "\1\23",
-            "\12\26",
-            "\1\27\2\uffff\1\27\24\uffff\1\27\4\uffff\1\27\7\uffff\11\27"+
-            "\44\uffff\1\27\5\uffff\1\27\3\uffff\1\27\7\uffff\1\27\3\uffff"+
-            "\1\27\1\uffff\2\27\5\uffff\1\27\1\uffff\1\27",
+            "\1\25\2\uffff\1\25\24\uffff\1\25\4\uffff\1\25\7\uffff\11\25"+
+            "\44\uffff\1\25\5\uffff\1\25\3\uffff\1\25\7\uffff\1\25\3\uffff"+
+            "\1\25\1\uffff\2\25\5\uffff\1\25\1\uffff\1\25",
             "",
-            "\1\31",
-            "\1\32",
-            "\1\33\2\uffff\1\34",
+            "\1\27",
+            "\1\30",
+            "\1\31\2\uffff\1\32",
             "",
-            "\1\26\1\uffff\12\36\13\uffff\1\26\37\uffff\1\26",
-            "",
+            "\1\34\1\uffff\12\35\13\uffff\1\34\37\uffff\1\34",
             "",
             "",
-            "\1\42\4\uffff\1\42",
+            "",
+            "\1\41\4\uffff\1\41",
+            "\12\34",
             "",
             "",
-            "\0\46",
-            "\47\47\1\uffff\uffd8\47",
+            "\0\45",
+            "\47\46\1\uffff\uffd8\46",
+            "",
+            "\1\47",
+            "",
+            "",
             "",
             "\1\50",
-            "",
-            "",
-            "",
-            "",
-            "",
             "\1\51",
             "\1\52",
             "\1\53",
+            "",
+            "",
+            "\1\34\1\uffff\12\35\13\uffff\1\34\37\uffff\1\34",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
             "\1\54",
-            "",
-            "\1\26\1\uffff\12\36\13\uffff\1\26\37\uffff\1\26",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
             "\1\55",
-            "\1\56",
             "\1\24\1\uffff\12\24\7\uffff\32\24\4\uffff\1\24\1\uffff\32\24",
+            "\1\57",
             "\1\60",
             "\1\61",
             "\1\62",
-            "\1\63",
             "",
             "\1\24\1\uffff\12\24\7\uffff\32\24\4\uffff\1\24\1\uffff\32\24",
+            "\1\64",
             "\1\65",
             "\1\66",
-            "\1\67",
             "",
             "\1\24\1\uffff\12\24\7\uffff\32\24\4\uffff\1\24\1\uffff\32\24",
-            "\1\71",
+            "\1\70",
             "\1\24\1\uffff\12\24\7\uffff\32\24\4\uffff\1\24\1\uffff\32\24",
             "",
             "\1\24\1\uffff\12\24\7\uffff\32\24\4\uffff\1\24\1\uffff\32\24",
@@ -1624,7 +1599,7 @@ public class ConfigDSLLexer extends Lexer {
             this.transition = DFA20_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( T__35 | T__36 | ESC_SEQ | EQ | STRINGTYPE | INTTYPE | FILETYPE | FLOATTYPE | ID | INT | OPEN_TREE | CLOSE_TREE | COLON | FILE_SEP | FLOAT | COMMENT | WS | NEWLINE | STRING | CHAR | OTHER );";
+            return "1:1: Tokens : ( T__36 | ESC_SEQ | EQ | STRINGTYPE | INTTYPE | FILETYPE | FLOATTYPE | ID | INT | OPEN_TREE | CLOSE_TREE | COLON | FILE_SEP | FLOAT | COMMENT | WS | NEWLINE | STRING | CHAR | OTHER );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;
@@ -1634,7 +1609,7 @@ public class ConfigDSLLexer extends Lexer {
                         int LA20_17 = input.LA(1);
 
                         s = -1;
-                        if ( ((LA20_17>='\u0000' && LA20_17<='&')||(LA20_17>='(' && LA20_17<='\uFFFF')) ) {s = 39;}
+                        if ( ((LA20_17>='\u0000' && LA20_17<='&')||(LA20_17>='(' && LA20_17<='\uFFFF')) ) {s = 38;}
 
                         else s = 18;
 
@@ -1644,7 +1619,7 @@ public class ConfigDSLLexer extends Lexer {
                         int LA20_16 = input.LA(1);
 
                         s = -1;
-                        if ( ((LA20_16>='\u0000' && LA20_16<='\uFFFF')) ) {s = 38;}
+                        if ( ((LA20_16>='\u0000' && LA20_16<='\uFFFF')) ) {s = 37;}
 
                         else s = 18;
 
@@ -1656,29 +1631,29 @@ public class ConfigDSLLexer extends Lexer {
                         s = -1;
                         if ( (LA20_0=='p') ) {s = 1;}
 
-                        else if ( (LA20_0=='.') ) {s = 2;}
+                        else if ( (LA20_0=='\\') ) {s = 2;}
 
-                        else if ( (LA20_0=='\\') ) {s = 3;}
+                        else if ( (LA20_0=='=') ) {s = 3;}
 
-                        else if ( (LA20_0=='=') ) {s = 4;}
+                        else if ( (LA20_0=='s') ) {s = 4;}
 
-                        else if ( (LA20_0=='s') ) {s = 5;}
+                        else if ( (LA20_0=='i') ) {s = 5;}
 
-                        else if ( (LA20_0=='i') ) {s = 6;}
+                        else if ( (LA20_0=='f') ) {s = 6;}
 
-                        else if ( (LA20_0=='f') ) {s = 7;}
+                        else if ( ((LA20_0>='A' && LA20_0<='Z')||LA20_0=='_'||(LA20_0>='a' && LA20_0<='e')||(LA20_0>='g' && LA20_0<='h')||(LA20_0>='j' && LA20_0<='o')||(LA20_0>='q' && LA20_0<='r')||(LA20_0>='t' && LA20_0<='z')) ) {s = 7;}
 
-                        else if ( ((LA20_0>='A' && LA20_0<='Z')||LA20_0=='_'||(LA20_0>='a' && LA20_0<='e')||(LA20_0>='g' && LA20_0<='h')||(LA20_0>='j' && LA20_0<='o')||(LA20_0>='q' && LA20_0<='r')||(LA20_0>='t' && LA20_0<='z')) ) {s = 8;}
+                        else if ( ((LA20_0>='0' && LA20_0<='9')) ) {s = 8;}
 
-                        else if ( ((LA20_0>='0' && LA20_0<='9')) ) {s = 9;}
+                        else if ( (LA20_0=='{') ) {s = 9;}
 
-                        else if ( (LA20_0=='{') ) {s = 10;}
+                        else if ( (LA20_0=='}') ) {s = 10;}
 
-                        else if ( (LA20_0=='}') ) {s = 11;}
+                        else if ( (LA20_0==':') ) {s = 11;}
 
-                        else if ( (LA20_0==':') ) {s = 12;}
+                        else if ( (LA20_0=='/') ) {s = 12;}
 
-                        else if ( (LA20_0=='/') ) {s = 13;}
+                        else if ( (LA20_0=='.') ) {s = 13;}
 
                         else if ( (LA20_0=='\t'||LA20_0=='\r'||LA20_0==' ') ) {s = 14;}
 
