@@ -1,18 +1,14 @@
-package org.coinjema.config
-gibberish= aslkjlfjdljflj l j
-year:int = 65
-emailProperties {
-    ip:float = 5.444
-    emailText:file = /home/mstover/data.txt
-    body = some paragraph \
-            of text
-    header {
-    	to {
-    		port:int=44
-    		serverProps:file=/
-    	}
-    	subject=howdy
-    }
-    from = This \n is \n three lines
+ALL: hex [21,16] each 30 outline;
+
+[5,9]+[4,getY()]:#ff0000;
+
+[0,0]:repeat([+1,+1], graytile.jpg);
+
+proc repeat(base, off, act) {
+    base:act;
+    repeat(base+off, off, act);
 }
-name=and
+
+func getY() {
+    2+Y;
+}

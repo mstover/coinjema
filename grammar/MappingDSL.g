@@ -2,7 +2,7 @@ grammar MappingDSL;
 
 options {
 output=AST;
-k=100;
+k=4;
 backtrack=true;
 }
 
@@ -19,6 +19,8 @@ CIRCLE;
 RAW;
 PROCEDURE;
 FUNCTION;
+ARGLIST;
+BODY;
 }
 
 main	:	(context|areaAction|proc|func)*;
@@ -26,47 +28,28 @@ main	:	(context|areaAction|proc|func)*;
 context	:	ID ':' coordinateSystem a=('outline'|'inline')? ';' -> ^(CONTEXT[$ID.text] coordinateSystem $a? ) ;
 
 areaAction
-	:	areaExpr ':' action ';' -> ^(AREA_ACTION areaExpr action);
+	:	(expr ':')=> expr ':' action ';' -> ^(AREA_ACTION expr action);
 	
-action	:	image -> ^(IMAGE[$image.text])
-	|	COLOR
-	|	ID
-	|	procCall;
+action	:	(image)=> image -> ^(IMAGE[$image.text])
+	|	(COLOR)=> COLOR
+	|	(procCall)=> procCall
+	|	ID;
 	
-simpleExpr
-	:	INT ((DASH|PLUS|MULT|DIV|OP)^ simpleExpr)?
-	|	FLOAT ((DASH|PLUS|MULT|DIV)^ simpleExpr)?
-	|	STRING (PLUS^ simpleExpr)?
+expr
+	:	(coord)=> coord ((DASH|PLUS)^ expr)?
+	|	(offset)=> offset
+	|	(FLOAT)=> FLOAT ((DASH|PLUS|MULT|DIV)^ expr)?
+	|	(INT)=> INT ((DASH|PLUS|MULT|DIV|OP)^ expr)?
+	|	(STRING)=> STRING (PLUS^ expr)?
+	|	(procCall)=> procCall ((DASH|PLUS)^ expr)? 
+	|	('(')=> '(' expr ')'
+	|	ID ((DASH|PLUS|MULT|DIV)^ expr)?
 	;
 	
-procCall:	ID '(' (a+=areaExpr|a+=offset|a+=simpleExpr)* action? ')' -> ^(PROC_CALL[$ID.text] $a* action?)
-	;
-
-offset	:	(DASH|PLUS) INT ','^ (DASH|PLUS) INT; 
-	
-coord	:	a=INT ',' b=INT -> ^(COORD $a $b)
-	|	'raw' a=INT ',' b=INT  -> ^(COORD RAW $a $b)
+procCall:	ID '(' (expr (',' expr)*)? (',' action)? ')' -> ^(PROC_CALL[$ID.text] expr* action?)
 	;
 
 image	:	DIV? ID (DIV ID)* '.' ID;
-
-rectangle
-	:	coord DASH coord -> ^(RECTANGLE coord coord)
-	|	'raw' coord DASH coord -> ^(RECTANGLE RAW coord coord)
-	;
-	
-circle	:	coord MULT INT -> ^(CIRCLE coord INT)
-	|	'raw' coord MULT FLOAT -> ^(CIRCLE RAW coord FLOAT);
-	
-areaExpr:	area ((DASH|PLUS)^ areaExpr)? 
-	|	ID ((DASH|PLUS)^ areaExpr)? 
-	|	procCall ((DASH|PLUS)^ areaExpr)? 
-	;
-	
-area	:	(ID ':')? rectangle
-	|	(ID ':')? circle
-	|	(ID ':')? coord
-	;
 
 coordinateSystem
 	:	'hex' coord size? location?
@@ -77,17 +60,25 @@ coordinateSystem
 size	:	'size' coord
 	|	'each' INT;
 
-location	:	'within' ID area
+location	: 'within' ID expr
 	|	'beside' ID DIRECTION;
 
-proc	:	'proc' name=ID '(' ID* ')' '{' (a+=areaAction|a+=procCall ';')+ '}' -> ^(PROCEDURE[$name.text] $a+);
+proc	:	'proc' name=ID '(' (arg+=ID (',' arg+=ID)*)? ')' '{' (a+=areaAction|a+=procCall ';')+ '}' -> ^(PROCEDURE[$name.text] ^(ARGLIST $arg*) ^(BODY $a+));
 
-func	:	'func' name=ID '(' ID* ')' '{' a=(areaExpr|simpleExpr) ';'? '}' -> ^(FUNCTION[$name.text] $a);
+func	:	'func' name=ID '(' (arg+=ID (',' arg+=ID)*)? ')' '{' expr ';'? '}' -> ^(FUNCTION[$name.text] ^(ARGLIST $arg*) ^(BODY expr));
+
+
+coord :	 '[' (expr) ','^ (expr) ']' 
+	;
+
+offset  :	'[' ('+'|'-') (ID|INT) ','^ ('+'|'-') (ID|INT) ']'
+	;
+	
 
 DASH	:	'-'
 	;
 
-PLUS	:	'+'
+PLUS	:	'+' 
 	;
 	
 MULT	:	'*'

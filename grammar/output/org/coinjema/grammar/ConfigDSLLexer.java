@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g 2010-05-22 22:30:02
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 /home/michael/DevelopmentEnvironment/workspace/coinjema/grammar/ConfigDSL.g 2010-05-30 22:11:41
 
     package org.coinjema.grammar;
 
