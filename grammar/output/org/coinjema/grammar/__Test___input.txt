@@ -1,14 +1,16 @@
-ALL: hex [21,16] each 30 outline;
+ALL{
+hex [21,16] each 30 outline;
 
 [5,9]+[4,getY()]:#ff0000;
 
-[0,0]:repeat([+1,+1], graytile.jpg);
+[0,0]:repeat([1,-1], graytile.jpg);
 
 proc repeat(base, off, act) {
     base:act;
-    repeat(base+off, off, act);
+    base+off:repeat( off, act);
 }
 
 func getY() {
     2+Y;
+}
 }
