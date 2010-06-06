@@ -1,339 +1,355 @@
 <html>
-   <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-      <base href="http://mstover.github.com/coinjema/">
-      <link rel="StyleSheet" type="text/css" href="coinjema.css">
-      <link rel="StyleSheet" type="text/css" href="menu.css"><script language="Javascript" src="functions.js" type="text/javascript"></script><title>Coinjema</title>
-   </head>
-   <body>
-      <div class="menubar_space_holder" style="width:100%;z-index:0;visibility:hidden">This space left
-         					intentionally blank
-      </div>
-      <div id="menubar" class="menubar" style="position:fixed; width:100%; left:0px;top:0px;z-index:2">
-         <div class="page-header"><span class="title">Coinjema Home</span></div>
-         	
-         <div id="Home_menu" onmouseover="javascript:enterMenu('Home')" onmouseout="javascript:exitMenu('Home')" class="menuHeader"><a href="index.html">Home</a></div>
-         	
-         <div id="Project_menu" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')" class="menuHeader"><a href="http://github.com/mstover/coinjema">Project</a></div>
-         	
-         <div id="Documentation_menu" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')" class="menuHeader"><a href="">Documentation</a></div>
-         <div id="Documentation" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')"><a class="item" href="overview.html">Overview</a><a class="item" href="faq.html">FAQ</a><a class="item" href="whats_new.html">What's New</a><a class="item" href="Coinjema_Contract.html">How To Use Coinjema</a><a class="item" href="Coinjema_Contexts.html">What is a Coinjema Context?</a><a class="item" href="TheAnnotations.html">The Annotations</a><a class="item" href="redirectEvaluator.html">The Redirect Evaluator</a><a class="item" href="supported_file_formats.html">Supported Config File Formats</a><a class="item" href="objectsProvided.html">Script Variables</a><a class="item" href="coinjema_properties.html">Base Configuration Options</a><a class="item" href="developerNotes.html">Developer notes</a><a class="item" href="api/index.html">JavaDocs</a></div>
-         	
-         <div id="Sub-Projects_menu" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')" class="menuHeader"><a href="">Sub-Projects</a></div>
-         <div id="Sub-Projects" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')"><a class="item" href="incubator/rpg/index.html">RPG</a><a class="item" href="incubator/commenting/index.html">Commenting</a><a class="item" href="incubator/rotation/index.html">Rotation Game</a></div>
-         
-      </div>
-      <div class="content">
-         <div class="title">FAQ</div>
-         <div id="faq-questions">
-            			
-            <div class="title">The Basics</div>
-            			
-            <ol>
-               				
-               <li class="question"><span id="q1.1" onclick="javascript:showAnswer(&#34;a1.1&#34;,&#34;q1.1&#34;);">What is Coinjema?</span></li>
-               				
-               <li class="question"><span id="q1.2" onclick="javascript:showAnswer(&#34;a1.2&#34;,&#34;q1.2&#34;);">How is it similar to other frameworks?</span></li>
-               				
-               <li class="question"><span id="q1.3" onclick="javascript:showAnswer(&#34;a1.3&#34;,&#34;q1.3&#34;);">How is it different fom other frameworks?</span></li>
-               				
-               <li class="question"><span id="q1.4" onclick="javascript:showAnswer(&#34;a1.4&#34;,&#34;q1.4&#34;);">Boil it down for me, what can I do with Coinjema
-                     					that I can't do elsewhere?</span></li>
-               				
-               <li class="question"><span id="q1.5" onclick="javascript:showAnswer(&#34;a1.5&#34;,&#34;q1.5&#34;);">Will I be
-                     				tied to Coinjema?</span></li>
-               				
-               <li class="question"><span id="q1.6" onclick="javascript:showAnswer(&#34;a1.6&#34;,&#34;q1.6&#34;);">This faq is
-                     						cool, but when I click on answers far down on the list, I keep having to 
-                     						scroll back up to the top to see the answers.</span></li>			
-               			
-            </ol>
-            			
-            			
-            <div class="title">Getting Started</div>
-            			
-            <ol>
-               				
-               <li class="question"><span id="q2.1" onclick="javascript:showAnswer(&#34;a2.1&#34;,&#34;q2.1&#34;);">How do I get started?</span></li>				
-               				
-               <li class="question"><span id="q2.2" onclick="javascript:showAnswer(&#34;a2.2&#34;,&#34;q2.2&#34;);">Coinjema needs a "getting started" tutorial.</span></li>	
-               				
-               <li class="question"><span id="q2.3" onclick="javascript:showAnswer(&#34;a2.3&#34;,&#34;q2.3&#34;);">Ok, assume 
-                     						I've downloaded Coinjema and aspectj and groovy and added them to my project.  
-                     						What's the first thing I have to do to work with Coinjema?</span></li>	
-               				
-               <li class="question"><span id="q2.4" onclick="javascript:showAnswer(&#34;a2.4&#34;,&#34;q2.4&#34;);">What's a root context?</span></li>	
-               				
-               <li class="question"><span id="q2.5" onclick="javascript:showAnswer(&#34;a2.5&#34;,&#34;q2.5&#34;);">Backup, what's a context?</span></li>
-               				
-               <li class="question"><span id="q2.6" onclick="javascript:showAnswer(&#34;a2.6&#34;,&#34;q2.6&#34;);">Ok, I've created the root context.
-                     						What now?</span></li>
-               				
-               <li class="question"><span id="q2.7" onclick="javascript:showAnswer(&#34;a2.7&#34;,&#34;q2.7&#34;);">I ran it, but the setter
-                     				didn't get called and my class's instance variable is null.  Actually, it looks like nothing 
-                     				happened.  What's wrong?</span></li>
-               				
-               <li class="question"><span id="q2.8" onclick="javascript:showAnswer(&#34;a2.8&#34;,&#34;q2.8&#34;);">How do I write an ant target that
-                     				compiles my code with iajc?</span></li>
-               			
-            </ol>
-            		
-         </div>
-         <div id="answer_label_window"></div>
-         <div id="answer_window"></div>
-         <div id="answer_repository">
-            			
-            			
-            <div id="a1.6">
-               		
-               <p class="answer">You are probably using Internet Explorer which doesn't understand
-                  		the "fixed" value for position.  Try switching to a good browser.
-               </p>
-            </div>
-            			
-            			
-            <div id="a2.8">
-               		
-               <p class="answer">Your ant-home/lib directory has to have the <em>aspectjtools.jar</em> in it.
-                  		Then, put the following line somewhere near the beginning of your build file:
-                  		
-                  <div class="oneLinerCodeBlock">&lt;taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties"/&gt;</div>
-                  		Then write your iajc task like so:
-                  		
-                  <div class="codeBlock"><pre>&lt;iajc sourceRootsRef="sources" classpathRef="classpath" 
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href="http://mstover.github.com/coinjema/">
+<link rel="StyleSheet" type="text/css" href="coinjema.css">
+<link rel="StyleSheet" type="text/css" href="menu.css">
+<script language="Javascript" src="functions.js" type="text/javascript"></script>
+<title>Coinjema</title>
+</head>
+<body>
+<div class="menubar_space_holder" style="width:100%;z-index:0;visibility:hidden">This space left
+					intentionally blank</div>
+<div id="menubar" class="menubar" style="position:fixed; width:100%; left:0px;top:0px;z-index:2">
+<div class="page-header">
+<span class="title">Coinjema</span>
+</div>
+	
+<div id="Home_menu" onmouseover="javascript:enterMenu('Home')" onmouseout="javascript:exitMenu('Home')" class="menuHeader">
+<a href="index.html">Home</a>
+</div>
+	
+<div id="Project_menu" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')" class="menuHeader">
+<a href="http://github.com/mstover/coinjema">Project</a>
+</div>
+	
+<div id="Documentation_menu" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')" class="menuHeader">
+<a href="">Documentation</a>
+</div>
+<div id="Documentation" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')">
+<a class="item" href="overview.html">Overview</a><a class="item" href="faq.html">FAQ</a><a class="item" href="whats_new.html">What's New</a><a class="item" href="Coinjema_Contract.html">How To Use Coinjema</a><a class="item" href="Coinjema_Contexts.html">What is a Coinjema Context?</a><a class="item" href="TheAnnotations.html">The Annotations</a><a class="item" href="redirectEvaluator.html">The Redirect Evaluator</a><a class="item" href="supported_file_formats.html">Supported Config File Formats</a><a class="item" href="objectsProvided.html">Script Variables</a><a class="item" href="coinjema_properties.html">Base Configuration Options</a><a class="item" href="developerNotes.html">Developer notes</a><a class="item" href="api/index.html">JavaDocs</a>
+</div>
+	
+<div id="Sub-Projects_menu" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')" class="menuHeader">
+<a href="">Sub-Projects</a>
+</div>
+<div id="Sub-Projects" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')">
+<a class="item" href="rpg/index.html">RPG</a><a class="item" href="commenting/index.html">Commenting</a><a class="item" href="rotation/index.html">Rotation Game</a>
+</div>
+
+</div>
+<div class="content">
+<div class="title">FAQ</div>
+<div id="faq-questions">
+			
+<div class="title">The Basics</div>
+			
+<ol>
+				
+<li class="question">
+<span id="q1.1" onclick="javascript:showAnswer(&quot;a1.1&quot;,&quot;q1.1&quot;);">What is Coinjema?</span>
+</li>
+				
+<li class="question">
+<span id="q1.2" onclick="javascript:showAnswer(&quot;a1.2&quot;,&quot;q1.2&quot;);">How is it similar to other frameworks?</span>
+</li>
+				
+<li class="question">
+<span id="q1.3" onclick="javascript:showAnswer(&quot;a1.3&quot;,&quot;q1.3&quot;);">How is it different fom other frameworks?</span>
+</li>
+				
+<li class="question">
+<span id="q1.4" onclick="javascript:showAnswer(&quot;a1.4&quot;,&quot;q1.4&quot;);">Boil it down for me, what can I do with Coinjema
+					that I can't do elsewhere?</span>
+</li>
+				
+<li class="question">
+<span id="q1.5" onclick="javascript:showAnswer(&quot;a1.5&quot;,&quot;q1.5&quot;);">Will I be
+				tied to Coinjema?</span>
+</li>
+				
+<li class="question">
+<span id="q1.6" onclick="javascript:showAnswer(&quot;a1.6&quot;,&quot;q1.6&quot;);">This faq is
+						cool, but when I click on answers far down on the list, I keep having to 
+						scroll back up to the top to see the answers.</span>
+</li>			
+			
+</ol>
+			
+			
+<div class="title">Getting Started</div>
+			
+<ol>
+				
+<li class="question">
+<span id="q2.1" onclick="javascript:showAnswer(&quot;a2.1&quot;,&quot;q2.1&quot;);">How do I get started?</span>
+</li>				
+				
+<li class="question">
+<span id="q2.2" onclick="javascript:showAnswer(&quot;a2.2&quot;,&quot;q2.2&quot;);">Coinjema needs a "getting started" tutorial.</span>
+</li>	
+				
+<li class="question">
+<span id="q2.3" onclick="javascript:showAnswer(&quot;a2.3&quot;,&quot;q2.3&quot;);">Ok, assume 
+						I've downloaded Coinjema and aspectj and groovy and added them to my project.  
+						What's the first thing I have to do to work with Coinjema?</span>
+</li>	
+				
+<li class="question">
+<span id="q2.4" onclick="javascript:showAnswer(&quot;a2.4&quot;,&quot;q2.4&quot;);">What's a root context?</span>
+</li>	
+				
+<li class="question">
+<span id="q2.5" onclick="javascript:showAnswer(&quot;a2.5&quot;,&quot;q2.5&quot;);">Backup, what's a context?</span>
+</li>
+				
+<li class="question">
+<span id="q2.6" onclick="javascript:showAnswer(&quot;a2.6&quot;,&quot;q2.6&quot;);">Ok, I've created the root context.
+						What now?</span>
+</li>
+				
+<li class="question">
+<span id="q2.7" onclick="javascript:showAnswer(&quot;a2.7&quot;,&quot;q2.7&quot;);">I ran it, but the setter
+				didn't get called and my class's instance variable is null.  Actually, it looks like nothing 
+				happened.  What's wrong?</span>
+</li>
+				
+<li class="question">
+<span id="q2.8" onclick="javascript:showAnswer(&quot;a2.8&quot;,&quot;q2.8&quot;);">How do I write an ant target that
+				compiles my code with iajc?</span>
+</li>
+			
+</ol>
+		
+</div>
+<div id="answer_label_window"></div>
+<div id="answer_window"></div>
+<div id="answer_repository">
+			
+			
+<div id="a1.6">
+		
+<p class="answer">You are probably using Internet Explorer which doesn't understand
+		the "fixed" value for position.  Try switching to a good browser.</p>
+</div>
+			
+			
+<div id="a2.8">
+		
+<p class="answer">Your ant-home/lib directory has to have the <em>aspectjtools.jar</em> in it.
+		Then, put the following line somewhere near the beginning of your build file:
+		<div class="oneLinerCodeBlock">&lt;taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties"/&gt;</div>
+		Then write your iajc task like so:
+		<div class="codeBlock">
+<pre>&lt;iajc sourceRootsRef="sources" classpathRef="classpath" 
    	  	destdir="${build.classes.dir}" 
 		aspectPath="lib/coinjema-core-0.5.jar"/&gt;
-		</pre></div>
-               </p>
-            </div>
-            			
-            			
-            <div id="a2.7">
-               		
-               <p class="answer">You probably didn't use iajc to compile the code - your classes were never weaved with
-                  Coinjema's aspects.  If you use Ant, you'll have to update your build file to use iajc instead of javac.  If
-                  you use Eclipse, you can install the ajdt plugin and make your project an aspect project.
-               </p>
-            </div>
-            			
-            			
-            <div id="a2.6">
-               		
-               <p class="answer">Hopefully you have some configuration data you need to hand off to some object in
-                  		your system.  Find an object that you want to inject some dependencies.  Annotate the class with
-                  		<code>@CoinjemaObject</code>.  If the dependency object you have in mind to inject doesn't have a setter,
-                  create one for it and annotate the setter method with <code>@CoinjemaDependency</code>.
-               </p>
-               		
-               <p class="answer">Now, when you call <code>new MyObject()</code> on this class, Coinjema will intercept
-                  		the call and call that setter method with some appropriate object.  Go ahead and run it.
-               </p>
-            </div>
-            			
-            			
-            <div id="a2.5">
-               		
-               <p class="answer">A context has a name, such as "customerA/logging".  This name represents the
-                  		"logging" context which is inherits from the "customerA" context, which inherits from the root context 
-                  		(which is named "").  A context may be a file folder, or a set of rows in a database table.  It could be 
-                  		a directory on a website accessed via http.  Contexts can, in theory, be located anywhere, but it's simplest
-                  		to use a folder for examples.  The folder holds configuration files, and usually the term "context" refers
-                  to all the configuration data in a given folder.
-               </p>
-            </div>
-            			
-            <div id="a2.4">
-               		
-               <p class="answer">The root context is the starting point of all the contexts Coinjema
-                  		manages.  The contexts are structured heirarchically just like a file system, and in fact,
-                  		the easiest way to create the root context is to point Coinjema at some particular folder.
-                  		In that folder you will put most of your system's configuration data.  Subfolders will
-                  		automatically be treated as sub-contexts and coinjema will look within them for 
-                  more configuration data if appropriate at run-time.
-               </p>
-            </div>
-            			
-            <div id="a2.3">
-               			
-               <p class="answer">The startup routine for your application has to intialize a root context for Coinjema:
-                  			
-                  <div class="oneLinerCodeBlock">
-                     ContextFactory.createContext("newContext",new FileContextSource("/home/me/altApp"));
-                     
-                  </div>
-               </p>
-            </div>
-            			
-            <div id="a2.2">
-               			
-               <p class="answer">Yes, <em>badly</em>.
-               </p>
-            </div>
-            			
-            <div id="a2.1">
-               			
-               <p class="answer">Read about <a href="">what 
-                     					you'll need</a> (coinjema's dependencies).  Download coinjema 
-                  					and the dependencies - none of them
-                  			come with coinjema.  Start with <a href="Coinjema_Contract.html">How to use Coinjema</a>
-                  			to get instructions on the basics of what you'll have to do.
-               </p>
-            </div>
-            				
-            			
-            <div id="a1.1">
-               			
-               <p class="answer">Coinjema is a <a href="http://en.wikipedia.org/wiki/Dependency_injection">dependency injection</a> 
-                  				framework that uses AspectJ to intercept calls to constructors and inject 
-                  				dependencies into yourobjects before the constructor returns.
-                  				
-               </p>
-            </div>
-            				
-            			
-            <div id="a1.2">
-               			
-               <p class="answer">Coinjema does its work via setter injection like many other
-                  				frameworks, though your objects	can also receive dependencies via constructors 
-                  				programmatically.
-               </p>
-               			
-               			
-               <p class="answer">It injects dependency objects into your classes for you.  It 
-                  			doesn't seem to have a whole lot of striking similarities to how other containers
-                  			work.  Which is good, else why would it need to exist?
-               </p>
-            </div>
-            				
-            			
-            <div id="a1.3">
-               			
-               <p class="answer">
-                  <ul>
-                     				
-                     <li>There is no factory that you have to use to create your objects.  All objects
-                        				are created via <code>new YourObject()</code></li>
-                     				
-                     <li>Your object dependencies are declared in your class file.  Many feel the
-                        				resulting coupling between your objects and Coinjema's defined annotations is
-                        			    undesirable in a dependency-injection framework.  While I understand the reasons many
-                        			don't want that coupling, I think it's better than putting those declarations elsewhere,
-                        			such as in an xml configuration file.  It feels more natural to me for a Java class to
-                        			declare its own dependencies, even if that means it is required to differentiate
-                        			dependencies that may come from a container, and dependencies that are set 
-                        			programmatically by your other classes.
-                     </li>
-                     			
-                     <li>Declarations of dependencies is done via annotations - this is similar to the EJB 3.0
-                        			specs, with its <code>@inject</code> annotation.
-                     </li>
-                     			
-                     <li>You don't register dependency objects with the container, the way you might with some
-                        		    other frameworks.
-                     </li>
-                     			
-                     <li>Configuration information is defined using whatever format works best for that
-                        			particular bit of information.  You can use properties files, groovy scripts, groovy
-                        			classes, serialized java objects, plain text files, and more.  You can define your
-                        			own highly specialized file format very easily, if desired.
-                     </li>
-                     			
-                     <li>There is no xml used in this framework.  You can throw away xerces - I have.</li>
-                     			
-                     <li>Contexts allow you to define many <i>inheriting</i> sets of configuration
-                        			information.  The container automatically resolves which context your newly created
-                        			object belongs to, and loads it with the appropriate dependencies.
-                     </li>
-                     			
-                     <li>Coinjema has dynamic dependencies that can change depending on what context the
-                        			object is currently executing in.
-                     </li>
-                     			
-                     <li>More than any other framework I know of, Coinjema encourages <em>ubiquitous</em> use
-                        			of runtime configuration data, and makes it easy to do so.
-                     </li>
-                     			
-                     <li>Coinjema allows for configuration information to transparently come from a filesystem,
-                        			a database, a URL, email, JavaSpaces, etc.  ContextSources are simple to define, and 
-                        Coinjema comes with a file system source and a simple JDBC source.  Imagine putting your
-                        			object-relational mapping configuration info in the database to allow multiple clients
-                        			to use it?
-                     </li>
-                  </ul>
-               </p>
-            </div>
-            			
-            			
-            <div id="a1.4">
-               			
-               <p class="answer">Fair enough.  I doubt it's a question of being able to do something
-                  			that you can't do with Spring or Pico, but more a question of is it realistically simple
-                  			enough to do?  By letting you define multiple contexts that inherit from each other,
-                  			and because Coinjema always knows what the correct context is for the current thread,
-                  			you can easily inject highly customized data into your objects without any extra work
-                  			on your part.
-               </p>
-               			
-               <p class="answer">Here's an example.  Say you have a webapp that many different customers
-                  			of yours are using.  You have 13 different customer sites on the same servlet container, 
-                  			but each customer's interface and behavior differs in specific details.  Coinjema allows
-                  			you to create a system wherein each customer directory is automatically a different
-                  			context in which you can place configuration files that override the files from the 
-                  			default.  Customer B might even point to a different database - that's just a new 
-                  			"datasource.groovy" script that you placed into their directory - all else stays the same.
-                  			In your code, because Coinjema knows automatically that a given user is requesting a 
-                  			url from "/b", all the code that gets executed as a result of that request is automatically
-                  			given the right configuration, and gets pointed to the new database with no effort on your
-                  			part.  Objects that are configured one way for user A are transparently configured
-                  			another way for user B.
-               </p>
-               			
-               			
-               <p class="answer">Plus, no XML.  There's no need to write &lt;property name="name" 
-                  				value="value"&gt; anymore.  If what you need is a set of properties, write a simple
-                  				properties file.  If you need a bean, create it in a groovy script.  If you need
-                  				a string, just put that string in a plain-old-text-file. 
-               </p>
-               			
-            </div>
-            			
-            			
-            			
-            <div id="a1.5">
-               			
-               <p class="answer">A bit.  The annotations you put in your code will require that
-                  			the coinjema jar (currently about 92k) be present for compiling and running.  Optionally, Coinjema
-                  			can be used without referencing the annotations, but the annotations definitely make things more
-                  			convenient. But being optional, it is possible to turn coinjema-unaware third party code into
-                  			coinjema-aware jars and classes. Compiling
-                  			your code will require the use of <a href="http://www.eclipse.org/aspectj/">iajc</a> from aspectJ if you are going
-                  			to use Coinjema.  Your code will still compile fine without iajc, in which case it
-                  			will behave like normal java code and you can set your dependencies manually.
-               </p>
-               			
-               <p class="answer">All that is no big deal - your code, being in your control, it would
-                  			be easy to remove the annotations if you wanted, or just not weave the coinjema aspects
-                  			and ship with the coinjema jar without really using it.  The problem is really about
-                  			third-party jars - those that use coinjema and those that don't, but you would like them
-                  			to.
-               </p>
-               			
-               <p class="answer">If you create a library that uses Coinjema, you can distribute two 
-                  				binaries - a weaved binary and a non-weaved binary.  The non-weaved binary will 
-                  				require the coinjema jar to be present, but in all other ways will behave like
-                  				normal java code.  Your objects will need the user to provide dependencies
-                  				automatically.  The weaved binary would require that the user creates a 
-                  				coinjema context somewhere and provides configuration data.
-               </p>
-               			
-               <p class="answer">If you are using a library that doesn't use Coinjema but you wish
-                  			it did, then you can write some simple aspects that can weave the third-party binaries. 
-               </p>		
-               			
-            </div>
-            					
-            		
-         </div>
-      </div>
-   </body>
+		</pre>
+</div>
+</p>
+</div>
+			
+			
+<div id="a2.7">
+		
+<p class="answer">You probably didn't use iajc to compile the code - your classes were never weaved with
+        Coinjema's aspects.  If you use Ant, you'll have to update your build file to use iajc instead of javac.  If
+        you use Eclipse, you can install the ajdt plugin and make your project an aspect project.</p>
+</div>
+			
+			
+<div id="a2.6">
+		
+<p class="answer">Hopefully you have some configuration data you need to hand off to some object in
+		your system.  Find an object that you want to inject some dependencies.  Annotate the class with
+		<code>@CoinjemaObject</code>.  If the dependency object you have in mind to inject doesn't have a setter,
+        create one for it and annotate the setter method with <code>@CoinjemaDependency</code>.</p>
+		
+<p class="answer">Now, when you call <code>new MyObject()</code> on this class, Coinjema will intercept
+		the call and call that setter method with some appropriate object.  Go ahead and run it.</p>
+</div>
+			
+			
+<div id="a2.5">
+		
+<p class="answer">A context has a name, such as "customerA/logging".  This name represents the
+		"logging" context which is inherits from the "customerA" context, which inherits from the root context 
+		(which is named "").  A context may be a file folder, or a set of rows in a database table.  It could be 
+		a directory on a website accessed via http.  Contexts can, in theory, be located anywhere, but it's simplest
+		to use a folder for examples.  The folder holds configuration files, and usually the term "context" refers
+        to all the configuration data in a given folder.</p>
+</div>
+			
+<div id="a2.4">
+		
+<p class="answer">The root context is the starting point of all the contexts Coinjema
+		manages.  The contexts are structured heirarchically just like a file system, and in fact,
+		the easiest way to create the root context is to point Coinjema at some particular folder.
+		In that folder you will put most of your system's configuration data.  Subfolders will
+		automatically be treated as sub-contexts and coinjema will look within them for 
+        more configuration data if appropriate at run-time.</p>
+</div>
+			
+<div id="a2.3">
+			
+<p class="answer">The startup routine for your application has to intialize a root context for Coinjema:
+			<div class="oneLinerCodeBlock">
+   ContextFactory.createContext("newContext",new FileContextSource("/home/me/altApp"));
+</div>
+</p>
+</div>
+			
+<div id="a2.2">
+			
+<p class="answer">Yes, <em>badly</em>.</p>
+</div>
+			
+<div id="a2.1">
+			
+<p class="answer">Read about <a href="">what 
+					you'll need</a> (coinjema's dependencies).  Download coinjema 
+					and the dependencies - none of them
+			come with coinjema.  Start with <a href="Coinjema_Contract.html">How to use Coinjema</a>
+			to get instructions on the basics of what you'll have to do.</p>
+</div>
+				
+			
+<div id="a1.1">
+			
+<p class="answer">Coinjema is a <a href="http://en.wikipedia.org/wiki/Dependency_injection">dependency injection</a> 
+				framework that uses AspectJ to intercept calls to constructors and inject 
+				dependencies into yourobjects before the constructor returns.
+				</p>
+</div>
+				
+			
+<div id="a1.2">
+			
+<p class="answer">Coinjema does its work via setter injection like many other
+				frameworks, though your objects	can also receive dependencies via constructors 
+				programmatically.</p>
+			
+			
+<p class="answer">It injects dependency objects into your classes for you.  It 
+			doesn't seem to have a whole lot of striking similarities to how other containers
+			work.  Which is good, else why would it need to exist?</p>
+</div>
+				
+			
+<div id="a1.3">
+			
+<p class="answer">
+<ul>
+				
+<li>There is no factory that you have to use to create your objects.  All objects
+				are created via <code>new YourObject()</code>
+</li>
+				
+<li>Your object dependencies are declared in your class file.  Many feel the
+   				resulting coupling between your objects and Coinjema's defined annotations is
+			    undesirable in a dependency-injection framework.  While I understand the reasons many
+			don't want that coupling, I think it's better than putting those declarations elsewhere,
+			such as in an xml configuration file.  It feels more natural to me for a Java class to
+			declare its own dependencies, even if that means it is required to differentiate
+			dependencies that may come from a container, and dependencies that are set 
+			programmatically by your other classes.</li>
+			
+<li>Declarations of dependencies is done via annotations - this is similar to the EJB 3.0
+			specs, with its <code>@inject</code> annotation.</li>
+			
+<li>You don't register dependency objects with the container, the way you might with some
+		    other frameworks.</li>
+			
+<li>Configuration information is defined using whatever format works best for that
+			particular bit of information.  You can use properties files, groovy scripts, groovy
+			classes, serialized java objects, plain text files, and more.  You can define your
+			own highly specialized file format very easily, if desired.</li>
+			
+<li>There is no xml used in this framework.  You can throw away xerces - I have.</li>
+			
+<li>Contexts allow you to define many <i>inheriting</i> sets of configuration
+			information.  The container automatically resolves which context your newly created
+			object belongs to, and loads it with the appropriate dependencies.</li>
+			
+<li>Coinjema has dynamic dependencies that can change depending on what context the
+			object is currently executing in.</li>
+			
+<li>More than any other framework I know of, Coinjema encourages <em>ubiquitous</em> use
+			of runtime configuration data, and makes it easy to do so.</li>
+			
+<li>Coinjema allows for configuration information to transparently come from a filesystem,
+			a database, a URL, email, JavaSpaces, etc.  ContextSources are simple to define, and 
+            Coinjema comes with a file system source and a simple JDBC source.  Imagine putting your
+			object-relational mapping configuration info in the database to allow multiple clients
+			to use it?</li>
+</ul>
+</p>
+</div>
+			
+			
+<div id="a1.4">
+			
+<p class="answer">Fair enough.  I doubt it's a question of being able to do something
+			that you can't do with Spring or Pico, but more a question of is it realistically simple
+			enough to do?  By letting you define multiple contexts that inherit from each other,
+			and because Coinjema always knows what the correct context is for the current thread,
+			you can easily inject highly customized data into your objects without any extra work
+			on your part.</p>
+			
+<p class="answer">Here's an example.  Say you have a webapp that many different customers
+			of yours are using.  You have 13 different customer sites on the same servlet container, 
+			but each customer's interface and behavior differs in specific details.  Coinjema allows
+			you to create a system wherein each customer directory is automatically a different
+			context in which you can place configuration files that override the files from the 
+			default.  Customer B might even point to a different database - that's just a new 
+			"datasource.groovy" script that you placed into their directory - all else stays the same.
+			In your code, because Coinjema knows automatically that a given user is requesting a 
+			url from "/b", all the code that gets executed as a result of that request is automatically
+			given the right configuration, and gets pointed to the new database with no effort on your
+			part.  Objects that are configured one way for user A are transparently configured
+			another way for user B.</p>
+			
+			
+<p class="answer">Plus, no XML.  There's no need to write &lt;property name="name" 
+				value="value"&gt; anymore.  If what you need is a set of properties, write a simple
+				properties file.  If you need a bean, create it in a groovy script.  If you need
+				a string, just put that string in a plain-old-text-file. </p>
+			
+</div>
+			
+			
+			
+<div id="a1.5">
+			
+<p class="answer">A bit.  The annotations you put in your code will require that
+			the coinjema jar (currently about 92k) be present for compiling and running.  Optionally, Coinjema
+			can be used without referencing the annotations, but the annotations definitely make things more
+			convenient. But being optional, it is possible to turn coinjema-unaware third party code into
+			coinjema-aware jars and classes. Compiling
+			your code will require the use of <a href="http://www.eclipse.org/aspectj/">iajc</a> from aspectJ if you are going
+			to use Coinjema.  Your code will still compile fine without iajc, in which case it
+			will behave like normal java code and you can set your dependencies manually.</p>
+			
+<p class="answer">All that is no big deal - your code, being in your control, it would
+			be easy to remove the annotations if you wanted, or just not weave the coinjema aspects
+			and ship with the coinjema jar without really using it.  The problem is really about
+			third-party jars - those that use coinjema and those that don't, but you would like them
+			to.</p>
+			
+<p class="answer">If you create a library that uses Coinjema, you can distribute two 
+				binaries - a weaved binary and a non-weaved binary.  The non-weaved binary will 
+				require the coinjema jar to be present, but in all other ways will behave like
+				normal java code.  Your objects will need the user to provide dependencies
+				automatically.  The weaved binary would require that the user creates a 
+				coinjema context somewhere and provides configuration data.</p>
+			
+<p class="answer">If you are using a library that doesn't use Coinjema but you wish
+			it did, then you can write some simple aspects that can weave the third-party binaries. </p>		
+			
+</div>
+					
+		
+</div>
+</div>
+</body>
 </html>

@@ -1,134 +1,134 @@
 <html>
-   <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-      <base href="http://mstover.github.com/coinjema/">
-      <link rel="StyleSheet" type="text/css" href="coinjema.css">
-      <link rel="StyleSheet" type="text/css" href="menu.css"><script language="Javascript" src="functions.js" type="text/javascript"></script><title>Coinjema</title>
-   </head>
-   <body>
-      <div class="menubar_space_holder" style="width:100%;z-index:0;visibility:hidden">This space left
-         					intentionally blank
-      </div>
-      <div id="menubar" class="menubar" style="position:fixed; width:100%; left:0px;top:0px;z-index:2">
-         <div class="page-header"><span class="title">Coinjema Home</span></div>
-         	
-         <div id="Home_menu" onmouseover="javascript:enterMenu('Home')" onmouseout="javascript:exitMenu('Home')" class="menuHeader"><a href="index.html">Home</a></div>
-         	
-         <div id="Project_menu" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')" class="menuHeader"><a href="http://github.com/mstover/coinjema">Project</a></div>
-         	
-         <div id="Documentation_menu" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')" class="menuHeader"><a href="">Documentation</a></div>
-         <div id="Documentation" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')"><a class="item" href="overview.html">Overview</a><a class="item" href="faq.html">FAQ</a><a class="item" href="whats_new.html">What's New</a><a class="item" href="Coinjema_Contract.html">How To Use Coinjema</a><a class="item" href="Coinjema_Contexts.html">What is a Coinjema Context?</a><a class="item" href="TheAnnotations.html">The Annotations</a><a class="item" href="redirectEvaluator.html">The Redirect Evaluator</a><a class="item" href="supported_file_formats.html">Supported Config File Formats</a><a class="item" href="objectsProvided.html">Script Variables</a><a class="item" href="coinjema_properties.html">Base Configuration Options</a><a class="item" href="developerNotes.html">Developer notes</a><a class="item" href="api/index.html">JavaDocs</a></div>
-         	
-         <div id="Sub-Projects_menu" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')" class="menuHeader"><a href="">Sub-Projects</a></div>
-         <div id="Sub-Projects" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')"><a class="item" href="incubator/rpg/index.html">RPG</a><a class="item" href="incubator/commenting/index.html">Commenting</a><a class="item" href="incubator/rotation/index.html">Rotation Game</a></div>
-         
-      </div>
-      <div class="content">
-         <p class="text">Coinjema (<b>CO</b>ntext <b>INJE</b>ction <b>MA</b>chine)
-            		is an <i>experimental</i> Dependency Injection (DI) framework that uses AspectJ to 
-            		work behind the scenes.  Emphasis on experimental.
-            	
-         </p>
-         <div class="title">What It Does</div>
-         <p class="text">When you instantiate a Java class, Coinjema
-            		intercepts the call and supplies the object with its dependent objects before the
-            		constructor returns.  It does this via aop (AspectJ) and annotations. It can also 
-            		intercept getter calls to deliver just-in-time dynamic dependencies (though this is 
-            		somewhat slower).
-         </p>
-         <p class="text">Configuration files define these dependent objects. A large variety of file types
-            	    are supported, most notably groovy script files. Going through a series of
-            		possible locations for config files, Coinjema finds the appropriate script, executes
-            		it and passes the result into your new object.  Coinjema caches these results so that
-            		the scripts are only executed once (per context).
-         </p>
-         <p class="text">Flexibility is provided via the procedure of finding the right
-            		config/script file. Dependency objects can be specifically for the Java class in question, they
-            		can be specifically for a <i>context</i>, and contexts can inherit from other contexts, 
-            		or Dependency objects can be shared by all Java classes in a particular context (ie think 
-            		singletons).  
-         </p>
-         <p class="snippet">Coinjema uses AspectJ, Groovy, and Annotations from Java 5.0
-            		to do its work.
-         </p>
-         <div class="title">Goals for Coinjema</div>
-         <p class="text">
-            		
-            <ol>
-               			
-               <li>More powerful configuration options</li>
-               			
-               <li>Simplify</li>
-               			
-               <li>Streamline configuration data</li>
-               			
-               <li>Self-contained Java classes</li>
-               		
-            </ol>
-            	
-         </p>
-         <div class="title">Simplifying Your Java</div>
-         <p class="text">There are a lot of frameworks out there that we, as developers,
-            		learn to use.  When writing an app, we spend a lot of time writing code
-            		that has little to do with the problem domain our app addresses.  Service
-            	    Locators, framework Singletons, Factories clutter our code that's really
-            trying to be about a Pet Store (for example).  Coinjema is <i>almost</i>
-            without an API.  This means you get automatic DI usually with minimal procedural
-            		invokations of methods on Coinjema classes.  Although you will have to use some
-            		declarative annotations, your source only looks like a solution to your problem.
-         </p>
-         <p class="text">When you remove excess factories, service locators and static singletons and when
-            		it becomes simple again to just create new objects - even complex ones with complex
-            		dependencies - unit testing becomes much easier.  
-         </p>
-         <div class="title">More Powerful Configuration</div>
-         <p class="text">Using XML for configuration seems to result in gigantic
-            		files that are very hard for a human to read, that require MBs of xml
-            		support code and more coding by the developer to traverse the resulting DOM for
-            		the information of interest.  Maybe worst of all is that these monstrous
-            		XML configuration files appear to be evolving into programming languages
-            		in their own right as we begin to dump therein all
-            		our dynamic/deployment-specific logic.
-         </p>
-         <p class="text">Coinjema can use <a href="supported_file_formats.html">multiple file formats</a> 
-            	    out-of-the-box as its configuration language, including
-            	    Groovy, normal properties files, plain text, and even serialized java objects.  New formats can be
-            	    easily plugged in.  Thus Coinjema recognizes the legitimate desire to offload dynamic logic into an interpreted
-            		format, and yet without the pain of using XML as a programming language syntax, 
-            		for which it is awful.  Groovy is easier to learn for a Java programmer than
-            		an invented XML programming language, since its output is just a normal Java
-            		class or object - probably one defined by you.  Which is another advantage - no more
-            		manual retreival of untyped data from DOM trees to populate your objects.  
-            		Coinjema can supply your class with an precise arbitrary Java object it needs.
-         </p>
-         <p class="text">As you get more comfortable using Coinjema to configure and wire your objects, you'll find yourself
-            	offloading more and more deployment specific details to these configuration files.  Because it is easy and because
-            	Coinjema allows you to insert configurable data into the nooks and crannies of your source code.
-         </p>
-         <div class="title">Defining Your Context</div>
-         <p class="snippet">Coinjema was initially inspired by 
-            		<a href="http://www.theserverside.com/articles/article.tss?l=IOCandEJB">this article</a> 
-            		by Sony Mathew.
-         </p>
-         <p class="text">A Java class that is simple enough that everything it needs can be 
-            	    supplied in 2-3 constructor parameters is a developer's joy.  One of the reasons
-            	    IoC/DI is becoming so popular is that it makes it easier to write such classes. The
-            	    class can specify what it needs in its constructore or setters, and an IoC container
-            	    takes care of supplying it.  Any class that can so clearly state its dependencies will
-            	    be far easier to write and maintain than one that spends many lines of code going out 
-            	    and retrieving its own dependencies.
-         </p>
-         <p class="text">Coinjema doesn't do anything Spring or Plexus or Hivemind can't do, but it
-            		strives to make it a simpler process while at the same time providing powerful flexibility.  
-            		To use Coinjema, you will have to annotate your	classes and some methods (the annotations are now optional), and write tiny
-            little 
-            		scripts (Groovy or properties files or simple text) where Coinjema can find them.  
-         </p>
-         <p class="text">If Coinjema isn't a joy to use, then I've failed, because that's really my goal.  I love 
-            		the ideas behind projects like Spring and Avalon (before it died), but the implementations make
-            		me do a lot of tedious work.  And sometimes it seems like you do an awful lot of work, and then you
-            		sit back and realize just how little it got you.  
-         </p>
-      </div>
-   </body>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href="http://mstover.github.com/coinjema/">
+<link rel="StyleSheet" type="text/css" href="coinjema.css">
+<link rel="StyleSheet" type="text/css" href="menu.css">
+<script language="Javascript" src="functions.js" type="text/javascript"></script>
+<title>Coinjema</title>
+</head>
+<body>
+<div class="menubar_space_holder" style="width:100%;z-index:0;visibility:hidden">This space left
+					intentionally blank</div>
+<div id="menubar" class="menubar" style="position:fixed; width:100%; left:0px;top:0px;z-index:2">
+<div class="page-header">
+<span class="title">Coinjema</span>
+</div>
+	
+<div id="Home_menu" onmouseover="javascript:enterMenu('Home')" onmouseout="javascript:exitMenu('Home')" class="menuHeader">
+<a href="index.html">Home</a>
+</div>
+	
+<div id="Project_menu" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')" class="menuHeader">
+<a href="http://github.com/mstover/coinjema">Project</a>
+</div>
+	
+<div id="Documentation_menu" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')" class="menuHeader">
+<a href="">Documentation</a>
+</div>
+<div id="Documentation" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')">
+<a class="item" href="overview.html">Overview</a><a class="item" href="faq.html">FAQ</a><a class="item" href="whats_new.html">What's New</a><a class="item" href="Coinjema_Contract.html">How To Use Coinjema</a><a class="item" href="Coinjema_Contexts.html">What is a Coinjema Context?</a><a class="item" href="TheAnnotations.html">The Annotations</a><a class="item" href="redirectEvaluator.html">The Redirect Evaluator</a><a class="item" href="supported_file_formats.html">Supported Config File Formats</a><a class="item" href="objectsProvided.html">Script Variables</a><a class="item" href="coinjema_properties.html">Base Configuration Options</a><a class="item" href="developerNotes.html">Developer notes</a><a class="item" href="api/index.html">JavaDocs</a>
+</div>
+	
+<div id="Sub-Projects_menu" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')" class="menuHeader">
+<a href="">Sub-Projects</a>
+</div>
+<div id="Sub-Projects" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')">
+<a class="item" href="rpg/index.html">RPG</a><a class="item" href="commenting/index.html">Commenting</a><a class="item" href="rotation/index.html">Rotation Game</a>
+</div>
+
+</div>
+<div class="content">
+<p class="text">Coinjema (<b>CO</b>ntext <b>INJE</b>ction <b>MA</b>chine)
+		is an <i>experimental</i> Dependency Injection (DI) framework that uses AspectJ to 
+		work behind the scenes.  Emphasis on experimental.
+	</p>
+<div class="title">What It Does</div>
+<p class="text">When you instantiate a Java class, Coinjema
+		intercepts the call and supplies the object with its dependent objects before the
+		constructor returns.  It does this via aop (AspectJ) and annotations. It can also 
+		intercept getter calls to deliver just-in-time dynamic dependencies (though this is 
+		somewhat slower).</p>
+<p class="text">Configuration files define these dependent objects. A large variety of file types
+	    are supported, most notably groovy script files. Going through a series of
+		possible locations for config files, Coinjema finds the appropriate script, executes
+		it and passes the result into your new object.  Coinjema caches these results so that
+		the scripts are only executed once (per context).</p>
+<p class="text">Flexibility is provided via the procedure of finding the right
+		config/script file. Dependency objects can be specifically for the Java class in question, they
+		can be specifically for a <i>context</i>, and contexts can inherit from other contexts, 
+		or Dependency objects can be shared by all Java classes in a particular context (ie think 
+		singletons).  </p>
+<p class="snippet">Coinjema uses AspectJ, Groovy, and Annotations from Java 5.0
+		to do its work.</p>
+<div class="title">Goals for Coinjema</div>
+<p class="text">
+		
+<ol>
+			
+<li>More powerful configuration options</li>
+			
+<li>Simplify</li>
+			
+<li>Streamline configuration data</li>
+			
+<li>Self-contained Java classes</li>
+		
+</ol>
+	
+</p>
+<div class="title">Simplifying Your Java</div>
+<p class="text">There are a lot of frameworks out there that we, as developers,
+		learn to use.  When writing an app, we spend a lot of time writing code
+		that has little to do with the problem domain our app addresses.  Service
+	    Locators, framework Singletons, Factories clutter our code that's really
+        trying to be about a Pet Store (for example).  Coinjema is <i>almost</i>
+        without an API.  This means you get automatic DI usually with minimal procedural
+		invokations of methods on Coinjema classes.  Although you will have to use some
+		declarative annotations, your source only looks like a solution to your problem.</p>
+<p class="text">When you remove excess factories, service locators and static singletons and when
+		it becomes simple again to just create new objects - even complex ones with complex
+		dependencies - unit testing becomes much easier.  </p>
+<div class="title">More Powerful Configuration</div>
+<p class="text">Using XML for configuration seems to result in gigantic
+		files that are very hard for a human to read, that require MBs of xml
+		support code and more coding by the developer to traverse the resulting DOM for
+		the information of interest.  Maybe worst of all is that these monstrous
+		XML configuration files appear to be evolving into programming languages
+		in their own right as we begin to dump therein all
+		our dynamic/deployment-specific logic.</p>
+<p class="text">Coinjema can use <a href="supported_file_formats.html">multiple file formats</a> 
+	    out-of-the-box as its configuration language, including
+	    Groovy, normal properties files, plain text, and even serialized java objects.  New formats can be
+	    easily plugged in.  Thus Coinjema recognizes the legitimate desire to offload dynamic logic into an interpreted
+		format, and yet without the pain of using XML as a programming language syntax, 
+		for which it is awful.  Groovy is easier to learn for a Java programmer than
+		an invented XML programming language, since its output is just a normal Java
+		class or object - probably one defined by you.  Which is another advantage - no more
+		manual retreival of untyped data from DOM trees to populate your objects.  
+		Coinjema can supply your class with an precise arbitrary Java object it needs.</p>
+<p class="text">As you get more comfortable using Coinjema to configure and wire your objects, you'll find yourself
+	offloading more and more deployment specific details to these configuration files.  Because it is easy and because
+	Coinjema allows you to insert configurable data into the nooks and crannies of your source code.</p>
+<div class="title">Defining Your Context</div>
+<p class="snippet">Coinjema was initially inspired by 
+		<a href="http://www.theserverside.com/articles/article.tss?l=IOCandEJB">this article</a> 
+		by Sony Mathew.</p>
+<p class="text">A Java class that is simple enough that everything it needs can be 
+	    supplied in 2-3 constructor parameters is a developer's joy.  One of the reasons
+	    IoC/DI is becoming so popular is that it makes it easier to write such classes. The
+	    class can specify what it needs in its constructore or setters, and an IoC container
+	    takes care of supplying it.  Any class that can so clearly state its dependencies will
+	    be far easier to write and maintain than one that spends many lines of code going out 
+	    and retrieving its own dependencies.</p>
+<p class="text">Coinjema doesn't do anything Spring or Plexus or Hivemind can't do, but it
+		strives to make it a simpler process while at the same time providing powerful flexibility.  
+		To use Coinjema, you will have to annotate your	classes and some methods (the annotations are now optional), and write tiny little 
+		scripts (Groovy or properties files or simple text) where Coinjema can find them.  </p>
+<p class="text">If Coinjema isn't a joy to use, then I've failed, because that's really my goal.  I love 
+		the ideas behind projects like Spring and Avalon (before it died), but the implementations make
+		me do a lot of tedious work.  And sometimes it seems like you do an awful lot of work, and then you
+		sit back and realize just how little it got you.  </p>
+</div>
+</body>
 </html>

@@ -1,84 +1,92 @@
 <html>
-   <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-      <base href="http://mstover.github.com/coinjema/">
-      <link rel="StyleSheet" type="text/css" href="coinjema.css">
-      <link rel="StyleSheet" type="text/css" href="menu.css"><script language="Javascript" src="functions.js" type="text/javascript"></script><title>Coinjema</title>
-   </head>
-   <body>
-      <div class="menubar_space_holder" style="width:100%;z-index:0;visibility:hidden">This space left
-         					intentionally blank
-      </div>
-      <div id="menubar" class="menubar" style="position:fixed; width:100%; left:0px;top:0px;z-index:2">
-         <div class="page-header"><span class="title">Coinjema Home</span></div>
-         	
-         <div id="Home_menu" onmouseover="javascript:enterMenu('Home')" onmouseout="javascript:exitMenu('Home')" class="menuHeader"><a href="index.html">Home</a></div>
-         	
-         <div id="Project_menu" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')" class="menuHeader"><a href="http://github.com/mstover/coinjema">Project</a></div>
-         	
-         <div id="Documentation_menu" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')" class="menuHeader"><a href="">Documentation</a></div>
-         <div id="Documentation" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')"><a class="item" href="overview.html">Overview</a><a class="item" href="faq.html">FAQ</a><a class="item" href="whats_new.html">What's New</a><a class="item" href="Coinjema_Contract.html">How To Use Coinjema</a><a class="item" href="Coinjema_Contexts.html">What is a Coinjema Context?</a><a class="item" href="TheAnnotations.html">The Annotations</a><a class="item" href="redirectEvaluator.html">The Redirect Evaluator</a><a class="item" href="supported_file_formats.html">Supported Config File Formats</a><a class="item" href="objectsProvided.html">Script Variables</a><a class="item" href="coinjema_properties.html">Base Configuration Options</a><a class="item" href="developerNotes.html">Developer notes</a><a class="item" href="api/index.html">JavaDocs</a></div>
-         	
-         <div id="Sub-Projects_menu" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')" class="menuHeader"><a href="">Sub-Projects</a></div>
-         <div id="Sub-Projects" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')"><a class="item" href="incubator/rpg/index.html">RPG</a><a class="item" href="incubator/commenting/index.html">Commenting</a><a class="item" href="incubator/rotation/index.html">Rotation Game</a></div>
-         
-      </div>
-      <div class="content">
-         <div class="title">How To Use Coinjema</div>
-         <div class="text">
-            		
-            <p></p>
-            		First of all, read the
-            		<a href="">Coinjema Dependencies Document</a>
-            		for how to setup your project to use Coinjema.
-            		
-            <p></p>
-            		For Coinjema to work, it must be initialized with information about
-            		where to find
-            		context configuration. This means making a call to:
-            		
-            <div class="oneLinerCodeBlock">
-               			org.coinjema.context.
-               			<u>ContextFactory</u>
-               			.createRootContext(ContextSource)
-               		
-            </div>
-            
-            		A
-            		<span class="code">ContextSource</span>
-            		defines a location at which configuration information is located -
-            		ie
-            		a directory. So, a real call might look like:
-            		
-            <div class="oneLinerCodeBlock">ContextFactory.createRootContext(new
-               			FileContextSource("/home/me/appConfig"));
-            </div>
-            
-            		This is all that's required to initialize Coinjema for basic use.
-            		Other contexts
-            		can be created in other locations:
-            
-            		
-            <div class="oneLinerCodeBlock">
-               			ContextFactory.createContext("newContext",new FileContextSource("/home/me/altApp"));
-               
-            </div>
-            
-            		<em>Coinjema will create a hierarchy of contexts using the given
-               			directory as the starting point.  </em>
-            		Any sub-directories will represent sub-contexts.
-            		
-            <p class="text">
-               			To write a class that will be handled by
-               			Coinjema, use the
-               			<span class="code">@CoinjemaObject</span>
-               			class-level annotation:
-               		
-            </p>
-            
-            		
-            <div class="codeBlock">
-               			<pre>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href="http://mstover.github.com/coinjema/">
+<link rel="StyleSheet" type="text/css" href="coinjema.css">
+<link rel="StyleSheet" type="text/css" href="menu.css">
+<script language="Javascript" src="functions.js" type="text/javascript"></script>
+<title>Coinjema</title>
+</head>
+<body>
+<div class="menubar_space_holder" style="width:100%;z-index:0;visibility:hidden">This space left
+					intentionally blank</div>
+<div id="menubar" class="menubar" style="position:fixed; width:100%; left:0px;top:0px;z-index:2">
+<div class="page-header">
+<span class="title">Coinjema</span>
+</div>
+	
+<div id="Home_menu" onmouseover="javascript:enterMenu('Home')" onmouseout="javascript:exitMenu('Home')" class="menuHeader">
+<a href="index.html">Home</a>
+</div>
+	
+<div id="Project_menu" onmouseover="javascript:enterMenu('Project')" onmouseout="javascript:exitMenu('Project')" class="menuHeader">
+<a href="http://github.com/mstover/coinjema">Project</a>
+</div>
+	
+<div id="Documentation_menu" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')" class="menuHeader">
+<a href="">Documentation</a>
+</div>
+<div id="Documentation" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Documentation')" onmouseout="javascript:exitMenu('Documentation')">
+<a class="item" href="overview.html">Overview</a><a class="item" href="faq.html">FAQ</a><a class="item" href="whats_new.html">What's New</a><a class="item" href="Coinjema_Contract.html">How To Use Coinjema</a><a class="item" href="Coinjema_Contexts.html">What is a Coinjema Context?</a><a class="item" href="TheAnnotations.html">The Annotations</a><a class="item" href="redirectEvaluator.html">The Redirect Evaluator</a><a class="item" href="supported_file_formats.html">Supported Config File Formats</a><a class="item" href="objectsProvided.html">Script Variables</a><a class="item" href="coinjema_properties.html">Base Configuration Options</a><a class="item" href="developerNotes.html">Developer notes</a><a class="item" href="api/index.html">JavaDocs</a>
+</div>
+	
+<div id="Sub-Projects_menu" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')" class="menuHeader">
+<a href="">Sub-Projects</a>
+</div>
+<div id="Sub-Projects" class="menu" style="position:fixed; z-index:5;display:none;" onmouseover="javascript:enterMenu('Sub-Projects')" onmouseout="javascript:exitMenu('Sub-Projects')">
+<a class="item" href="rpg/index.html">RPG</a><a class="item" href="commenting/index.html">Commenting</a><a class="item" href="rotation/index.html">Rotation Game</a>
+</div>
+
+</div>
+<div class="content">
+<div class="title">How To Use Coinjema</div>
+<div class="text">
+		
+<p></p>
+		First of all, read the
+		<a href="">Coinjema Dependencies Document</a>
+		for how to setup your project to use Coinjema.
+		<p></p>
+		For Coinjema to work, it must be initialized with information about
+		where to find
+		context configuration. This means making a call to:
+		<div class="oneLinerCodeBlock">
+			org.coinjema.context.
+			<u>ContextFactory</u>
+			.createRootContext(ContextSource)
+		</div>
+
+		A
+		<span class="code">ContextSource</span>
+		defines a location at which configuration information is located -
+		ie
+		a directory. So, a real call might look like:
+		<div class="oneLinerCodeBlock">ContextFactory.createRootContext(new
+			FileContextSource("/home/me/appConfig"));</div>
+
+		This is all that's required to initialize Coinjema for basic use.
+		Other contexts
+		can be created in other locations:
+
+		<div class="oneLinerCodeBlock">
+			ContextFactory.createContext("newContext",new FileContextSource("/home/me/altApp"));
+</div>
+
+		
+<em>Coinjema will create a hierarchy of contexts using the given
+			directory as the starting point.  </em>
+		Any sub-directories will represent sub-contexts.
+		<p class="text">
+			To write a class that will be handled by
+			Coinjema, use the
+			<span class="code">@CoinjemaObject</span>
+			class-level annotation:
+		</p>
+
+		
+<div class="codeBlock">
+			
+<pre>
 				@CoinjemaObject
 				public class ExampleClass {
 				public ExampleClass()
@@ -87,47 +95,47 @@
 				}
 				}
 </pre>
-               		</div>
-            
-            		Coinjema will introduce an interface (
-            		<span class="code">ContextOriented</span>
-            		)
-            		and implementation to this class. This interface and implementation
-            		lets Coinjema store
-            		a small bit of information in each object of your class - information
-            		about which context
-            		the object is part of.
-            		
-            <p></p>
-            		Alternatively, you can forego the class-level annotation and
-            		instead write a simple Aspect like so:
-            		
-            <div class="codeblock">
-               			<pre>
+		
+</div>
+
+		Coinjema will introduce an interface (
+		<span class="code">ContextOriented</span>
+		)
+		and implementation to this class. This interface and implementation
+		lets Coinjema store
+		a small bit of information in each object of your class - information
+		about which context
+		the object is part of.
+		<p></p>
+		Alternatively, you can forego the class-level annotation and
+		instead write a simple Aspect like so:
+		<div class="codeblock">
+			
+<pre>
 				import org.coinjema.context.ContextOriented;
 
 				public aspect MakeContextOriented {
 				declare parents : ExampleClass implements ContextOriented;
 
 				}</pre>
-               		</div>
-            		
-            <p></p>
-            		You can include as many "declare parent..." lines as you like in
-            		the one aspect.
-            		
-            <p></p>
-            		When the above
-            		<span class="code">ExampleClass</span>
-            		is instantiated, Coinjema will intercept the
-            		constructor call and will look for methods that are annotated with
-            		<span class="code">@CoinjemaDependency</span>
-            		.
-            		These methods are the means by which Coinjema hands your object its
-            		dependencies. For instance:
-            		
-            <div class="codeBlock">
-               			<pre>
+		
+</div>
+		
+<p></p>
+		You can include as many "declare parent..." lines as you like in
+		the one aspect.
+		<p></p>
+		When the above
+		<span class="code">ExampleClass</span>
+		is instantiated, Coinjema will intercept the
+		constructor call and will look for methods that are annotated with
+		<span class="code">@CoinjemaDependency</span>
+		.
+		These methods are the means by which Coinjema hands your object its
+		dependencies. For instance:
+		<div class="codeBlock">
+			
+<pre>
 				@CoinjemaObject
 				public class ExampleClass {
 				Log log;
@@ -144,114 +152,111 @@
 				}
 				}
 </pre>
-               		</div>
-            
-            		A
-            		<span class="code">@CoinjemaDependency</span>
-            		method must take exactly one parameter. The
-            		<span class="code">@CoinjemaDependency</span>
-            		annotation has several attributes, and is entirely optional.
-            		Coinjema will assume any "setXXX" method that takes one parameter
-            		is a
-            		dependency injection method and will look for an appropriate match in the
-            		config files as if the method had a simple
-            		<span class="code">@CoinjemaDependency</span>
-            		attached. The attributes provide greater flexibility and
-            		convenience, however.
-            		
-            <p></p>
-            		Coinjema will search the current context for a file that matches
-            		the
-            		<span class="code">setLogger(Log)</span>
-            		method. It goes through a series of possibilities that
-            		essentially move from more specific to
-            		more general. An outline of the steps is:
-            		
-            <ol>
-               			
-               <li>
-                  				First, find the already created Log instance for
-                  				<span class="code">ExampleClass</span>
-                  				in the
-                  				current context. Coinjema only runs the configuration scripts once
-                  				and caches
-                  				the result for the class.
-                  			
-               </li>
-               			
-               <li>
-                  				Look for a file named
-                  				<span class="code">ExampleClass.setLogger.***</span>
-                  				and "evaluate"
-                  				it to a Java object.
-                  				<span class="code">***</span>
-                  				represents a file extension that Coinjema understands.
-                  				Out-of-the-box, Coinjema understands .groovy, .groovyClass,
-                  				.properties, .txt, .jser, .compmap, and
-                  				<a href="redirectEvaluator.html">.redirect</a>
-                  				(for
-                  				groovy script, groovy class, and properties, plain text, serialized
-                  				java classes, component sets, and
-                  				redirection files respectively). More can be
-                  				registered with Coinjema as implementations of the
-                  				<span class="code">Evaluator</span>
-                  				interface.
-                  				
-                  <p></p>
-                  				To summarize, Coinjema will look for files named
-                  				<br>
-                  				<span class="code">ExampleClass.setLogger.groovy</span>
-                  				,
-                  				<br>
-                  				<span class="code">ExampleClass.setLogger.groovyClass</span>
-                  				<br>
-                  				<span class="code">ExampleClass.setLogger.properties</span>
-                  				<br>
-                  				etc...
-                  			
-               </li>
-               			
-               <div class="snippet">
-                  				<span class="code">@CoinjemaDependency</span>
-                  				and
-                  				<span class="code">@CoinjemaObject</span>
-                  				have
-                  				<a href="TheAnnotations.html">options</a>
-                  				that can be set to modify the name of the config file that
-                  				will be searched for.
-                  			
-               </div>
-               			
-               <li>If none are found, Coinjema looks for a cached object of
-                  				the
-                  				type of the injected class (Log, in our case). This would
-                  				represent a "shared
-                  				dependency" (Coinjema's version of a singleton).  
-               </li>
-               			
-               <li>
-                  				If no such shared dependency can be found in memory, Coinjema
-                  				searches again for a
-                  				file named
-                  				<span class="code">Log.***</span>
-                  				.
-                  			
-               </li>
-               			
-               <li>If still no dependency is found, repeat the entire process
-                  				for the parent context of the
-                  				current context. In other words, your configuration contexts inherit
-                  				their settings from each other.
-               </li>
-               			
-               <li>If no dependency found, Coinjema will throw an runtime
-                  				exception.
-               </li>
-               		
-            </ol>
-            
-            	
-         </div>
-      </div>
-   </body>
+		
+</div>
+
+		A
+		<span class="code">@CoinjemaDependency</span>
+		method must take exactly one parameter. The
+		<span class="code">@CoinjemaDependency</span>
+		annotation has several attributes, and is entirely optional.
+		Coinjema will assume any "setXXX" method that takes one parameter
+		is a
+		dependency injection method and will look for an appropriate match in the
+		config files as if the method had a simple
+		<span class="code">@CoinjemaDependency</span>
+		attached. The attributes provide greater flexibility and
+		convenience, however.
+		<p></p>
+		Coinjema will search the current context for a file that matches
+		the
+		<span class="code">setLogger(Log)</span>
+		method. It goes through a series of possibilities that
+		essentially move from more specific to
+		more general. An outline of the steps is:
+		<ol>
+			
+<li>
+				First, find the already created Log instance for
+				<span class="code">ExampleClass</span>
+				in the
+				current context. Coinjema only runs the configuration scripts once
+				and caches
+				the result for the class.
+			</li>
+			
+<li>
+				Look for a file named
+				<span class="code">ExampleClass.setLogger.***</span>
+				and "evaluate"
+				it to a Java object.
+				<span class="code">***</span>
+				represents a file extension that Coinjema understands.
+				Out-of-the-box, Coinjema understands .groovy, .groovyClass,
+				.properties, .txt, .jser, .compmap, and
+				<a href="redirectEvaluator.html">.redirect</a>
+				(for
+				groovy script, groovy class, and properties, plain text, serialized
+				java classes, component sets, and
+				redirection files respectively). More can be
+				registered with Coinjema as implementations of the
+				<span class="code">Evaluator</span>
+				interface.
+				<p></p>
+				To summarize, Coinjema will look for files named
+				<br>
+				
+<span class="code">ExampleClass.setLogger.groovy</span>
+				,
+				<br>
+				
+<span class="code">ExampleClass.setLogger.groovyClass</span>
+				
+<br>
+				
+<span class="code">ExampleClass.setLogger.properties</span>
+				
+<br>
+				etc...
+			</li>
+			
+<div class="snippet">
+				
+<span class="code">@CoinjemaDependency</span>
+				and
+				<span class="code">@CoinjemaObject</span>
+				have
+				<a href="TheAnnotations.html">options</a>
+				that can be set to modify the name of the config file that
+				will be searched for.
+			</div>
+			
+<li>If none are found, Coinjema looks for a cached object of
+				the
+				type of the injected class (Log, in our case). This would
+				represent a "shared
+				dependency" (Coinjema's version of a singleton).  </li>
+			
+<li>
+				If no such shared dependency can be found in memory, Coinjema
+				searches again for a
+				file named
+				<span class="code">Log.***</span>
+				.
+			</li>
+			
+<li>If still no dependency is found, repeat the entire process
+				for the parent context of the
+				current context. In other words, your configuration contexts inherit
+				their settings from each other.</li>
+			
+<li>If no dependency found, Coinjema will throw an runtime
+				exception.</li>
+		
+</ol>
+
+	
+</div>
+</div>
+</body>
 </html>
