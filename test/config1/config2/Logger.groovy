@@ -1,1 +1,0 @@
-java.util.logging.Logger.getLogger(obj.getClass().getName() + "_log");

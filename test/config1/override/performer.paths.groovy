@@ -1,1 +1,0 @@
-["path3","path4"] as String[]

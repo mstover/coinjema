@@ -1,1 +1,0 @@
-new org.coinjema.nontest.CyclicalDynamic()

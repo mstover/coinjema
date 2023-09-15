@@ -373,7 +373,6 @@ li.question span {
 	float:left;
 	margin:3.5em 5px 5px 35%;
 	padding:1px 1em;
-	position:fixed;
 	overflow:auto;
 	width:60%;
 	height:600px;
@@ -384,7 +383,6 @@ li.question span {
 #answer_label_window {
 	margin-left:35%;
 	width:60%;
-	position:fixed;
 	padding-bottom:1em;
 	font-size:110%;
 	font-weight:bold;

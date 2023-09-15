@@ -1,1 +1,0 @@
-["custom/units/elf","custom/units/orc"] as String[]
