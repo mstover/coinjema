@@ -49,12 +49,12 @@ final public class SpiceRack implements Registry {
         this.directory = directory;
         depObjects = new ConcurrentHashMap<>(101);
         parent = null;
-        contextMap = new HashMap<CoinjemaContext, SpiceRack>();
+        contextMap = new HashMap<>();
         created = true;
         root = this;
         contextMap.put(context, this);
         setProperties();
-        children = new HashSet<SpiceRack>();
+        children = new HashSet<>();
         createChildren();
     }
 
@@ -68,7 +68,7 @@ final public class SpiceRack implements Registry {
         created = true;
         contextMap.put(context, this);
         setProperties();
-        children = new HashSet<SpiceRack>();
+        children = new HashSet<>();
         createChildren();
     }
 
@@ -87,8 +87,7 @@ final public class SpiceRack implements Registry {
         createRootContext(new FileContextSource(System.getProperty("user.dir")));
     }
 
-    public static synchronized void createRootContext(ContextSource directory)
-            throws Exception {
+    public static synchronized void createRootContext(ContextSource directory) {
         new SpiceRack(directory);
     }
 
@@ -198,7 +197,7 @@ final public class SpiceRack implements Registry {
         return null;
     }
 
-    final public Object addContext(final Resource res, Class<?> objClass,
+    public Object addContext(final Resource res, Class<?> objClass,
                                    Object obj, final Object dep) {
         if (res == null) {
             return dep; // safeDepStorage(dep, res.getName());
@@ -218,7 +217,7 @@ final public class SpiceRack implements Registry {
 
     private Object safeDepStorage(final Object dep, Object key) {
         synchronized (depObjects) {
-            Object ret = null;
+            Object ret;
             if ((ret = depObjects.get(key)) != null) {
                 return ret;
             } else {
@@ -263,7 +262,7 @@ final public class SpiceRack implements Registry {
         List<ContextOriented> l = null;
         if (redo) {
             synchronized (contextObjects) {
-                l = new LinkedList<ContextOriented>(contextObjects.map.keySet());
+                l = new LinkedList<>(contextObjects.map.keySet());
             }
         }
         depObjects.clear();
@@ -283,18 +282,18 @@ final public class SpiceRack implements Registry {
      *
      * @see org.coinjema.context.NamedContext#getContext()
      */
-    final public CoinjemaContext getContext() {
+     public CoinjemaContext getContext() {
         return context;
     }
 
-    final public void setContext(final CoinjemaContext context) {
+     public void setContext(final CoinjemaContext context) {
         this.context = context;
     }
 
     /**
      * @return Returns the directory.
      */
-    final public ContextSource getDirectory() {
+     public ContextSource getDirectory() {
         return directory;
     }
 
@@ -334,11 +333,11 @@ final public class SpiceRack implements Registry {
         final Map<String,Object> values = new HashMap<>();
         int x = contextPath.lastIndexOf("/");
         String path = null;
-        String depName = null;
+        String depName ;
         if (x > -1) {
             path = contextPath.substring(0, x);
             depName = contextPath.substring(x + 1);
-        } else {;
+        } else {
             depName = contextPath;
         }
         SpiceRack sub = Recipe.findBaseContext(this.getContext(),
