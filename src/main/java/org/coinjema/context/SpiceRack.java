@@ -26,7 +26,7 @@ import java.util.*;
  */
 final public class SpiceRack implements Registry {
 
-    public static WeakPool contextObjects = new WeakPool();
+    static WeakPool contextObjects = new WeakPool();
 
     static SpiceRack root;
 

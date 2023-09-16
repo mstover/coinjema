@@ -13,37 +13,30 @@ import java.util.Properties;
 
 class PropertiesEvaluator implements Evaluator {
 
-    public Object evaluate(Resource source, Map<String,Object> params) {
+    public Object evaluate(Resource source, Map<String, Object> params) {
         Properties props = new Properties();
         if (source.getMetaTypes().contains(MetaType.inherit)) {
             Properties parentProps = getParentProperties(source, params);
             props.putAll(parentProps);
         }
-        InputStream scriptBytes = source.getInputStream();
-        try {
+        try (InputStream scriptBytes = source.getInputStream()) {
             Properties tempLoad = new Properties();
             tempLoad.load(scriptBytes);
             props.putAll(tempLoad);
         } catch (IOException e) {
             throw new DependencyInjectionException(
                     "Couldn't evaluate script: " + source, e);
-        } finally {
-            try {
-                scriptBytes.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to close config file: " + source, e);
-            }
         }
         return processProps(props, params);
     }
 
-    protected Properties processProps(Properties props, Map<String,Object> params) {
+    protected Properties processProps(Properties props, Map<String, Object> params) {
         return props;
     }
 
     protected Properties getParentProperties(final Resource res, final Map params) {
         SpiceRack parent = ((SpiceRack) params.get("registry")).getParent();
-        final Map<String,Object> tempParams = new HashMap<>();
+        final Map<String, Object> tempParams = new HashMap<>();
         tempParams.putAll(params);
         final SimpleStringResolver resolver = new SimpleStringResolver(res.getName());
         Object props = RackLoop.loop(parent, rack -> Recipe.captureDep(tempParams, resolver, rack)).dep;

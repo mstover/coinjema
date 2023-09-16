@@ -3,7 +3,6 @@ package org.coinjema.context;
 import org.coinjema.context.source.Resource;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -19,20 +18,13 @@ class RedirectionEvaluator {
         Resource redirect = rack.getDirectory().getResource(scriptName, "redirect");
         log.fine("Redirect resource found( " + rack.getContext().getName() + ") " + redirect + " scriptname = " + scriptName);
         if (redirect == null || !redirect.getFormat().equals("redirect")) return null;
-        InputStream stream = redirect.getInputStream();
-        BufferedReader redirectContents = new BufferedReader(new InputStreamReader(stream));
-        try {
+        try (InputStream stream = redirect.getInputStream();
+             BufferedReader redirectContents = new BufferedReader(new InputStreamReader(stream))) {
             String redirectName = redirectContents.readLine();
             log.fine("Redirected to " + redirectName);
             return redirectName;
         } catch (Exception e) {
             throw new RuntimeException("Unable to read redirection script: " + scriptName + ".redirect", e);
-        } finally {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to close config file: " + scriptName, e);
-            }
         }
     }
 }
