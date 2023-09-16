@@ -83,7 +83,7 @@ final public class SpiceRack implements Registry {
         return contextMap.get(context);
     }
 
-    public synchronized static void createRootContext() throws Exception {
+    public synchronized static void createRootContext() {
         createRootContext(new FileContextSource(System.getProperty("user.dir")));
     }
 
