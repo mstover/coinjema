@@ -15,24 +15,9 @@ final class Recipe {
 
     static final Object DEFAULT_DEPENDENCY = new Object();
     static final String SELF = ".Self";
-    static final ThreadLocal<CoinjemaContext> contextStack = new ThreadLocal<CoinjemaContext>() {
-        @Override
-        protected CoinjemaContext initialValue() {
-            return null;
-        }
-    };
-    static final ThreadLocal<Set<DependencyGroup>> circle = new ThreadLocal<Set<DependencyGroup>>() {
-        @Override
-        protected Set<DependencyGroup> initialValue() {
-            return new HashSet<DependencyGroup>();
-        }
-    };
-    static final ThreadLocal<LinkedList<ContextOriented>> unfinishedObjects = new ThreadLocal<LinkedList<ContextOriented>>() {
-        @Override
-        protected LinkedList<ContextOriented> initialValue() {
-            return new LinkedList<ContextOriented>();
-        }
-    };
+    static final ThreadLocal<CoinjemaContext> contextStack = ThreadLocal.withInitial( () -> null);
+    static final ThreadLocal<Set<DependencyGroup>> circle = ThreadLocal.withInitial(() -> new HashSet<>());
+    static final ThreadLocal<LinkedList<ContextOriented>> unfinishedObjects = ThreadLocal.withInitial(() -> new LinkedList<>());
     static DynamicDepTracker dynTracker = new DynamicDepTracker();
 
     /*
@@ -43,63 +28,20 @@ final class Recipe {
      */
     private static ConcurrentMap<Class<?>, FunctorSet> functorMap = new ConcurrentHashMap<Class<?>, FunctorSet>();
 
-    final static DiscoveredResource resolveScript(final Map values,
+    final static DiscoveredResource resolveScript(final Map<String,Object> values,
                                                   final ResourceNameResolver resolver, final SpiceRack master) {
         // since redirect preserves original context, have to look all the way
         // down for the redirect before
         // accepting any deps saved to the injector.
         DiscoveredResource dep = new DiscoveredResource(null, null);
-        String redirect = resolver.findDependency(new NameLoop<String>() {
-            public String getDependency(String resourceName) {
-                return RedirectionEvaluator.findRedirectName(resourceName,
-                        master);
-            }
-        });
+        String redirect = resolver.findDependency(resourceName -> RedirectionEvaluator.findRedirectName(resourceName, master));
         if (redirect == null) {
-            dep.dep = resolver.findDependency(new NameLoop<Object>() {
-                public Object getDependency(String resourceName) {
-                    return master.lookupContext(resourceName, (Class<?>) values
-                            .get("objClass"), values.get("obj"));
-                }
-            });
+            dep.dep = resolver.findDependency(resourceName -> master.lookupContext(resourceName, (Class<?>) values.get("objClass"), values.get("obj")));
             if (dep != null && dep.dep != null) {
                 return dep;
             }
             final Set<DependencyGroup> s = circle.get();
-            dep = resolver.findDependency(new NameLoop<DiscoveredResource>() {
-                public DiscoveredResource getDependency(String resourceName) {
-                    if (log.isLoggable(Level.FINEST)) {
-                        log.finest("looking for resource: " + resourceName
-                                + " in context '"
-                                + master.getContext().getName() + "'");
-                    }
-                    DependencyGroup dp = new DependencyGroup(resourceName,
-                            master.getContext());
-                    if (s.contains(dp)) {
-                        if (log.isLoggable(Level.FINEST)) {
-                            log.finest("Retrieving unfinished Resource "
-                                    + resourceName + " in context "
-                                    + master.getContext().getName());
-                        }
-                        DiscoveredResource dr = new DiscoveredResource(null,
-                                resolver.findMatchingUnfinishedObject(
-                                        unfinishedObjects.get(), master
-                                                .getContext()));
-                        if (dr.dep != null) {
-                            return dr;
-                        }
-                    }
-                    DiscoveredResource tempDep = null;
-                    try {
-                        s.add(dp);
-                        tempDep = ScriptEvaluator.evaluate(resourceName, master
-                                .getDirectory(), values);
-                    } finally {
-                        s.remove(dp);
-                    }
-                    return tempDep;
-                }
-            });
+            dep = resolver.findDependency(resourceName -> resolveScriptNameLoop(values, resolver, master, resourceName, s));
             if (dep != null && dep.dep != null) {
                 dep.dep = master.addContext(dep.res, (Class<?>) values
                         .get("objClass"), values.get("obj"), dep.dep);
@@ -109,6 +51,39 @@ final class Recipe {
 
         }
         return dep;
+    }
+
+    private static DiscoveredResource resolveScriptNameLoop(Map<String,Object> values, ResourceNameResolver resolver, SpiceRack master, String resourceName, Set<DependencyGroup> s) {
+        if (log.isLoggable(Level.FINEST)) {
+            log.finest("looking for resource: " + resourceName
+                    + " in context '"
+                    + master.getContext().getName() + "'");
+        }
+        DependencyGroup dp = new DependencyGroup(resourceName,
+                master.getContext());
+        if (s.contains(dp)) {
+            if (log.isLoggable(Level.FINEST)) {
+                log.finest("Retrieving unfinished Resource "
+                        + resourceName + " in context "
+                        + master.getContext().getName());
+            }
+            DiscoveredResource dr = new DiscoveredResource(null,
+                    resolver.findMatchingUnfinishedObject(
+                            unfinishedObjects.get(), master
+                                    .getContext()));
+            if (dr.dep != null) {
+                return dr;
+            }
+        }
+        DiscoveredResource tempDep = null;
+        try {
+            s.add(dp);
+            tempDep = ScriptEvaluator.evaluate(resourceName, master
+                    .getDirectory(), values);
+        } finally {
+            s.remove(dp);
+        }
+        return tempDep;
     }
 
     private static DiscoveredResource redirect(final Map values,
@@ -193,12 +168,7 @@ final class Recipe {
         for (DependencyFunctor<Object> injector : functors) {
             if (!functors.isMarked(injector, baseContext.getContext())) {
                 InjectorNameResolver injResolver = injector.getNameResolver();
-                Object dep = injResolver.findDependency(new NameLoop() {
-                    public Object getDependency(String resourceName) {
-                        return baseContext.lookupContext(resourceName, obj
-                                .getClass(), obj);
-                    }
-                });
+                Object dep = injResolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, obj.getClass(), obj));
                 if (dep == DEFAULT_DEPENDENCY) {
                     functors.markForRemoval(injector, baseContext.getContext());
                 } else if (dep != null) {
@@ -278,11 +248,7 @@ final class Recipe {
                 objClass, ann);
         final SpiceRack baseContext = findBaseContext(context,
                 getOptionalDynContext(ann, obj));
-        Object dep = resolver.findDependency(new NameLoop<Object>() {
-            public Object getDependency(String resourceName) {
-                return baseContext.lookupContext(resourceName, objClass, null);
-            }
-        });
+        Object dep = resolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, objClass, null));
         if (dep != null) {
             if (dep == DEFAULT_DEPENDENCY) {
                 throw new DependencyInjectionException(

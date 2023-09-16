@@ -12,16 +12,16 @@ import org.coinjema.context.source.Resource;
 
 class ComponentMapEvaluator implements Evaluator {
 
-    public Object evaluate(Resource source, Map params)
+    public Object evaluate(Resource source, Map<String,Object> params)
     {
         InputStream scriptBytes = source.getInputStream();
         if(scriptBytes == null) return null;
         Properties props = new Properties();
-        Map<String,Object> components = new HashMap<String,Object>();
+        Map<String,Object> components = new HashMap<>();
         try {
             props.load(scriptBytes);
             SpiceRack master = (SpiceRack)params.get("registry");
-    		final Map tempParams = new HashMap();
+    		final Map<String,Object> tempParams = new HashMap<>();
     		tempParams.putAll(params);
             
             for(Object name : props.keySet())

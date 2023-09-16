@@ -15,6 +15,6 @@ import org.coinjema.context.source.Resource;
  */
 public interface Evaluator {
 	
-	public Object evaluate(Resource source,Map params);
+	public Object evaluate(Resource source,Map<String,Object> params);
 
 }
