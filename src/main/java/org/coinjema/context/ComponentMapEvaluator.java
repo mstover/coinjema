@@ -27,12 +27,7 @@ class ComponentMapEvaluator implements Evaluator {
             for(Object name : props.keySet())
             {
         		final SimpleStringResolver resolver = new SimpleStringResolver(props.getProperty((String)name));
-                Object component = RackLoop.loop(master, new LoopLogic<Object>() {
-        			public Object eval(SpiceRack rack)
-        			{
-        				return Recipe.captureDep(tempParams, resolver, rack);
-        			}
-        		});
+                Object component = RackLoop.loop(master, rack -> Recipe.captureDep(tempParams, resolver, rack));
                 components.put((String)name,component);
             }
         } catch (IOException e) {

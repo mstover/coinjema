@@ -1,13 +1,8 @@
 package org.coinjema.context;
 
-public class LoopLogic<T> {
+public interface LoopLogic<T> {
 
-	public LoopLogic() {
-	}
 	
-	public T eval(SpiceRack rack)
-	{
-		return null;
-	}
+	 T eval(SpiceRack rack);
 
 }
