@@ -16,11 +16,11 @@ import org.coinjema.logging.CoinjemaLogger;
 public aspect ContextBuilder {	
 
 	pointcut objectInit(ContextOriented called): 
-      execution(ContextOriented+.new(..)) && this(called);
+      execution(ContextOriented+.new(..)) && !execution(ConstructorContextOriented+.new(..)) && this(called);
 
 	pointcut objectInitWithContext(CoinjemaContext context,
 			ContextOriented called):
-        execution(ContextOriented+.new(..,CoinjemaContext)) && this(called) && args(..,context);
+        execution(ContextOriented+.new(..,CoinjemaContext)) && !execution(ConstructorContextOriented+.new(..,CoinjemaContext)) && this(called) && args(..,context);
 
 
 	after(ContextOriented called) returning: 

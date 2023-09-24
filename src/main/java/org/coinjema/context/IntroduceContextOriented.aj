@@ -4,6 +4,7 @@ public aspect IntroduceContextOriented {
 
 
 	declare parents : @CoinjemaObject * implements ContextOriented;
+	declare parents : @CoinjemaConstructorObject * implements ConstructorContextOriented;
 
 	private CoinjemaContext ContextOriented.context;
 

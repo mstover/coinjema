@@ -321,7 +321,7 @@ final public class SpiceRack implements Registry {
         values.put("registry", sub);
         final ResourceNameResolver resolver = new SimpleStringResolver(depName);
         DiscoveredResource disc = RackLoop.limitedLoop(sub, this,
-                rack -> Recipe.captureDepInContextStack(values, resolver, rack));
+                rack -> Recipe.CONTEXTUALIZER.get().captureDepInContextStack(values, resolver, rack));
         if (disc != null) {
             return disc.dep;
         } else {
@@ -345,7 +345,7 @@ final public class SpiceRack implements Registry {
         values.put("registry", sub);
         final ResourceNameResolver resolver = new SimpleStringResolver(depName);
         DiscoveredResource disc = RackLoop.limitedLoop(sub, this,
-                rack -> Recipe.captureDepInContextStack(values, resolver, rack));
+                rack -> Recipe.getContextualizer().captureDepInContextStack(values, resolver, rack));
         if (disc != null) {
             return disc.dep;
         } else {

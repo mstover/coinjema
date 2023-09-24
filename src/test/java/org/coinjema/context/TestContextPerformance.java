@@ -10,10 +10,7 @@ import java.lang.reflect.Constructor;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -124,9 +121,9 @@ public class TestContextPerformance extends AbstractContextTester {
         int countChanges = 0;
         for (int i = 0; i < 80000; i += 8) {
             // if(i % 100 == 0) System.out.println("done: " + i);
-            Properties propsa = (Properties) ((Future) results.get(i)).get();
+            Properties propsa = (Properties) ((Future) results.get(i)).get(1, TimeUnit.SECONDS);
             Properties propsb = (Properties) ((Future) results.get(i + 5))
-                    .get();
+                    .get(1, TimeUnit.SECONDS);
             assertEquals( "red", propsa
                     .getProperty("color"),"Failed at i = " + i);
             assertEquals( "purple", propsb

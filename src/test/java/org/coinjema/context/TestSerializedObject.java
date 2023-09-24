@@ -19,7 +19,7 @@ public class TestSerializedObject extends AbstractContextTester {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        File per = new File("test/config1/sessionStore.jser");
+        File per = new File("src/test/resources/config1/sessionStore.jser");
         if(!per.exists())
         {
             PersistentConfig.create();
