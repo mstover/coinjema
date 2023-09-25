@@ -15,8 +15,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <maven.compiler.source>20</maven.compiler.source>
+        <maven.compiler.target>20</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -52,6 +52,13 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>aspectj-maven-plugin</artifactId>
                     <version>1.14.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.aspectj</groupId>
+                            <artifactId>aspectjtools</artifactId>
+                            <version>1.9.20.1</version>
+                        </dependency>
+                    </dependencies>
 
                 </plugin>
                 <plugin>
@@ -71,10 +78,10 @@
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.0.2</version>
                 </plugin>
-<!--                                <plugin>-->
-<!--                                    <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                                    <version>3.8.0</version>-->
-<!--                                </plugin>-->
+                <!--                                <plugin>-->
+                <!--                                    <artifactId>maven-compiler-plugin</artifactId>-->
+                <!--                                    <version>3.8.0</version>-->
+                <!--                                </plugin>-->
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.22.1</version>

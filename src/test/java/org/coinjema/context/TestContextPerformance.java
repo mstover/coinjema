@@ -124,10 +124,10 @@ public class TestContextPerformance extends AbstractContextTester {
             Properties propsa = (Properties) ((Future) results.get(i)).get(1, TimeUnit.SECONDS);
             Properties propsb = (Properties) ((Future) results.get(i + 5))
                     .get(1, TimeUnit.SECONDS);
-            assertEquals( "red", propsa
-                    .getProperty("color"),"Failed at i = " + i);
-            assertEquals( "purple", propsb
-                    .getProperty("color"),"Failed at i = " + i);
+            assertEquals("red", propsa
+                    .getProperty("color"), "Failed at i = " + i);
+            assertEquals("purple", propsb
+                    .getProperty("color"), "Failed at i = " + i);
             if (ms == null) {
                 ms = ((Future<BasicContextOriented>) results.get(i + 1)).get()
                         .getMyService();
@@ -141,21 +141,21 @@ public class TestContextPerformance extends AbstractContextTester {
             assertEquals(ms,
                     ((Future<BasicContextOriented>) results.get(i + 1)).get()
                             .getMyService());
-            assertEquals( "path1",
+            assertEquals("path1",
                     ((Future<BasicContextOriented>) results.get(i + 1)).get()
-                            .getPaths()[0],"Failed at i = " + i);
-            assertEquals( "orc_path1",
+                            .getPaths()[0], "Failed at i = " + i);
+            assertEquals("orc_path1",
                     ((Future<BasicContextOriented>) results.get(i + 2)).get()
-                            .getPaths()[0],"Failed at i = " + i);
-            assertEquals( ms,
+                            .getPaths()[0], "Failed at i = " + i);
+            assertEquals(ms,
                     ((Future<BasicContextOriented>) results.get(i + 2)).get()
-                            .getMyService(),"Failed at i = " + i);
-            assertEquals( "custom/units/",
+                            .getMyService(), "Failed at i = " + i);
+            assertEquals("custom/units/",
                     ((Future<BasicContextOriented>) results.get(i + 3)).get()
-                            .getPaths()[0],"Failed at i = " + i);
-            assertEquals( ms,
+                            .getPaths()[0], "Failed at i = " + i);
+            assertEquals(ms,
                     ((Future<BasicContextOriented>) results.get(i + 3)).get()
-                            .getMyService(),"Failed at i = " + i);
+                            .getMyService(), "Failed at i = " + i);
             // if(i == 40000) i++;
         }
         ContextFactory.refresh(new CoinjemaContext(""));
@@ -181,17 +181,15 @@ public class TestContextPerformance extends AbstractContextTester {
         long time = System.currentTimeMillis();
         System.out.println(root.getName());
         for (int i = 0; i < 50000; i++) {
-            inits.add(new ThreadedObjectInit<BasicContextOriented>(c, root));
+            inits.add(new ThreadedObjectInit<>(c, root));
             inits
-                    .add(new ThreadedObjectInit<BasicContextOriented>(c,
+                    .add(new ThreadedObjectInit<>(c,
                             unitsOrc));
-            inits.add(new ThreadedObjectInit<BasicContextOriented>(c, custom));
-            init2.add(new ThreadedObjectInit<SimpleContextOrientedB>(s, root));
-            init2.add(new ThreadedObjectInit<SimpleContextOrientedB>(s,
-                    unitsOrc));
+            inits.add(new ThreadedObjectInit<>(c, custom));
+            init2.add(new ThreadedObjectInit<>(s, root));
+            init2.add(new ThreadedObjectInit<>(s, unitsOrc));
             init2
-                    .add(new ThreadedObjectInit<SimpleContextOrientedB>(s,
-                            custom));
+                    .add(new ThreadedObjectInit<>(s, custom));
         }
         List<Future<BasicContextOriented>> results = threadPool
                 .invokeAll(inits);
@@ -200,15 +198,15 @@ public class TestContextPerformance extends AbstractContextTester {
         MockSingleton ms = null;
         for (int i = 0; i < 150000; i += 3) {
             if (ms == null) {
-                ms = results.get(i).get().getMyService();
+                ms = results.get(i).get(10, TimeUnit.SECONDS).getMyService();
             }
-            assertEquals(ms, results.get(i).get().getMyService());
-            assertEquals("path1", results.get(i).get().getPaths()[0]);
-            assertEquals("orc_path1", results.get(i + 1).get().getPaths()[0]);
-            assertEquals(ms, results.get(i + 1).get().getMyService());
+            assertEquals(ms, results.get(i).get(10, TimeUnit.SECONDS).getMyService());
+            assertEquals("path1", results.get(i).get(10, TimeUnit.SECONDS).getPaths()[0]);
+            assertEquals("orc_path1", results.get(i + 1).get(10, TimeUnit.SECONDS).getPaths()[0]);
+            assertEquals(ms, results.get(i + 1).get(10, TimeUnit.SECONDS).getMyService());
             assertEquals("custom/units/",
-                    results.get(i + 2).get().getPaths()[0]);
-            assertEquals(ms, results.get(i + 2).get().getMyService());
+                    results.get(i + 2).get(10, TimeUnit.SECONDS).getPaths()[0]);
+            assertEquals(ms, results.get(i + 2).get(10, TimeUnit.SECONDS).getMyService());
         }
         System.out.println("Total Concurrency time = "
                 + (System.currentTimeMillis() - time));
@@ -287,7 +285,7 @@ public class TestContextPerformance extends AbstractContextTester {
 
     }
 
-   private void createEverything() {
+    private void createEverything() {
         AdvancedContextObject aco = new AdvancedContextObject();
         BasicContextOriented bo = new BasicContextOriented();
         PerformanceTestObject pto = new PerformanceTestObject();

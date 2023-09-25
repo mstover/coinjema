@@ -3,6 +3,7 @@ package org.coinjema.context;
 import org.coinjema.context.source.SimpleResource;
 import org.coinjema.util.DependencyFunctor;
 
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
@@ -190,6 +191,87 @@ class ObjectSetterContextualizer {
                         .addContext(dep.res, obj.getClass(), obj, dep.dep);
             }
         }
+    }
+
+    Object findDynamicDependency(final Object obj, final Class<?> objClass,
+                                        final CoinjemaDynamic ann, final Method meth,
+                                        CoinjemaContext context) {
+        if (log.isLoggable(Level.FINE)) {
+            log.fine("Finding dynamic dependency for " + objClass.getName()
+                    + " method: " + meth.getName() + " in context " + context);
+        }
+        final ResourceNameResolver resolver = Recipe.dynTracker.getNameResolver(meth,
+                objClass, ann);
+        final SpiceRack baseContext = findBaseContext(context,
+                getOptionalDynContext(ann, obj));
+        Object dep = resolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, objClass, null));
+        if (dep != null) {
+            if (dep == Recipe.DEFAULT_DEPENDENCY) {
+                throw new DependencyInjectionException(
+                        "Failed to find dependency: " + objClass + " : "
+                                + meth.getName());
+            } else {
+                return dep;
+            }
+        }
+        final Map<String, Object> values = new HashMap<String, Object>();
+        values.put("objClass", objClass);
+        values.put("obj", obj);
+        values.put("injector", null);
+        final LinkedList<SpiceRack> racks = new LinkedList<SpiceRack>();
+        DiscoveredResource newDep = RackLoop.loop(baseContext, rack -> {
+            return findDynamicDep(objClass, rack, resolver, values, racks);
+        });
+        if (newDep == null || newDep.dep == null) {
+            newDep = new DiscoveredResource(new SimpleResource(resolver
+                    .getLocalName()), Recipe.DEFAULT_DEPENDENCY);
+        }
+        if (newDep.res == null && resolver.getName() != null) {
+            newDep.res = new SimpleResource(resolver.getName(), racks
+                    .getFirst().getScope(resolver.getName(), objClass, null));
+        }
+        for (SpiceRack rack : racks) {
+            newDep.dep = rack
+                    .addContext(newDep.res, objClass, null, newDep.dep);
+        }
+        if (newDep.dep == Recipe.DEFAULT_DEPENDENCY) {
+            throw new DependencyInjectionException(
+                    "Failed to find dependency: " + newDep.res);
+        } else {
+            return newDep.dep;
+        }
+    }
+
+    private CoinjemaContext getOptionalDynContext(CoinjemaDynamic ann, Object obj) {
+        String contextMethod = ann.contextMethod();
+        if (!"".equals(contextMethod)) {
+            try {
+                Method m = obj.getClass().getMethod(contextMethod);
+                return new CoinjemaContext((String) m.invoke(obj));
+            } catch (Exception e) {
+                log.warning("Context Method resulted in error: method="
+                        + contextMethod + " class = "
+                        + obj.getClass().getName());
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    private DiscoveredResource findDynamicDep(Class<?> objClass, SpiceRack rack, ResourceNameResolver resolver,
+                                                     Map<String, Object> values, LinkedList<SpiceRack> racks) {
+        Object depObj = resolver
+                .findDependency(resourceName -> rack.lookupContext(resourceName, objClass, null));
+        DiscoveredResource discRes = null;
+        if (depObj == null) {
+            discRes = captureDepInContextStack(values,
+                    resolver, rack);
+        } else {
+            discRes = new DiscoveredResource(null, depObj);
+        }
+        racks.addFirst(rack);
+        return discRes;
     }
 
     private void logAnnotatedMock(SpiceRack rack, DiscoveredResource objDep, DependencyFunctor<Object> depInjector) {
