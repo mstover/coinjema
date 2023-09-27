@@ -16,6 +16,11 @@ public class SimpleConstructorOriented {
         this.service = service;
     }
 
+    public SimpleConstructorOriented() {
+        service = null;
+        username = null;
+    }
+
     public MockSingleton getService() {
         return service;
     }

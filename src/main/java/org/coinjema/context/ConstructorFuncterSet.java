@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 public class ConstructorFuncterSet<T extends ContextOriented> implements Iterable<ConstructorDependencyResolver> {
     private final Class<T> clzz;
     private final List<ConstructorDependencyResolver> resolvers = new ArrayList<>();
+    private Constructor<T> constructor;
 
     public ConstructorFuncterSet(Class<T> clzz) {
         this.clzz = clzz;
@@ -23,6 +24,8 @@ public class ConstructorFuncterSet<T extends ContextOriented> implements Iterabl
             if (parameters.length > 0) {
                 if(isCoinjemaConstructor(parameters)) {
                     resolvers.addAll(Arrays.stream(parameters).map(p -> new ConstructorDependencyResolver(clzz,p)).collect(Collectors.toList()));
+                    this.constructor = (Constructor<T>) constructor;
+                    break;
                 }
             }
         }
@@ -49,8 +52,8 @@ public class ConstructorFuncterSet<T extends ContextOriented> implements Iterabl
         return resolvers.size();
     }
 
-    public Constructor constructor() {
-        return null;
+    public Constructor<T> constructor() {
+        return constructor;
     }
 
     public String getFailedToConstructMessage(ReflectiveOperationException e) {

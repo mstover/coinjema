@@ -12,24 +12,26 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.lang.reflect.Constructor;
+import org.aspectj.lang.reflect.ConstructorSignature;
 
 import org.coinjema.logging.CoinjemaLogger;
 
 public aspect ConstructorContextBuilder {
 
-	pointcut objectInit(ConstructorContextOriented called):
-      execution(ConstructorContextOriented+.new(..)) && this(called);
+	pointcut objectInit():
+      call(ConstructorContextOriented+.new(..));
 
-	pointcut objectInitWithContext(CoinjemaContext context,
-			ConstructorContextOriented called):
-        execution(ConstructorContextOriented+.new(..,CoinjemaContext)) && this(called) && args(..,context);
+	pointcut objectInitWithContext(CoinjemaContext context):
+        call(ConstructorContextOriented+.new(..,CoinjemaContext)) && args(..,context);
 
 
-	Object around(ConstructorContextOriented called):
-      objectInit(called) && !objectInitWithContext(CoinjemaContext,ContextOriented)
+	Object around():
+      objectInit() && !objectInitWithContext(CoinjemaContext)
     {
-        Object[] givenArgs = thisJoinPoint.getArgs();
         LinkedList<CoinjemaContext> stack = ContextFactory.tracker.get();
+        Object[] givenArgs = thisJoinPoint.getArgs();
+        Class called = ((ConstructorSignature)thisJoinPoint.getStaticPart().getSignature()).getConstructor().getDeclaringClass();
         //called.setGiven(false);
         if (stack.isEmpty())
         {
@@ -41,14 +43,13 @@ public aspect ConstructorContextBuilder {
             if(log.isLoggable(Level.FINE)) log.fine("Contextualizing " + called + " in context '" + stack.getFirst() + "'");
             return Recipe.constructContextualized(called, givenArgs, null, stack.getFirst());
         }
-
 	}
 
-	Object around(CoinjemaContext context, ConstructorContextOriented called):
-          objectInitWithContext(context,called) {
+	Object around(CoinjemaContext context):
+          objectInitWithContext(context) {
 			LinkedList<CoinjemaContext> stack = ContextFactory.tracker.get();
-			called.setGiven(true);
         Object[] givenArgs = thisJoinPoint.getArgs();
+        Class called = ((ConstructorSignature)thisJoinPoint.getStaticPart().getSignature()).getConstructor().getDeclaringClass();
 			if (stack.isEmpty())
 			{
 				if(log.isLoggable(Level.FINE)) CoinjemaLogger.log.fine("Contextualizing " + called + " in context ''/" + context);

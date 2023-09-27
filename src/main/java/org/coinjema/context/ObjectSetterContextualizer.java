@@ -5,6 +5,8 @@ import org.coinjema.util.DependencyFunctor;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 
@@ -12,12 +14,12 @@ import static org.coinjema.logging.CoinjemaLogger.log;
 
 class ObjectSetterContextualizer {
 
-    private static ReentrantLock globalSync = new ReentrantLock();
-    private static ReentrantLock objectSync = new ReentrantLock();
+    static final ReentrantLock globalSync = new ReentrantLock();
 
     private final LinkedList<ContextOriented> unfinishedObjects = new LinkedList<>();
     private final Set<DependencyGroup> circleProtection = new HashSet<>();
     private CoinjemaContext currentTopContext;
+    private static final ConcurrentMap<Class<?>, FunctorSet> functorMap = new ConcurrentHashMap<>();
 
     void contextualize(final ContextOriented obj, final CoinjemaContext context, CoinjemaContext base) {
         contextualizeIt(obj, context, base);
@@ -25,7 +27,7 @@ class ObjectSetterContextualizer {
 
     private void contextualizeIt(final ContextOriented obj,
                                  final CoinjemaContext context, final CoinjemaContext base) {
-        FunctorSet functors = Recipe.functorMap.get(obj.getClass());
+        FunctorSet functors = functorMap.get(obj.getClass());
         if (functors == null) {
             contextualizeClassFirstTime(obj, context, base);
         } else {
@@ -35,7 +37,7 @@ class ObjectSetterContextualizer {
                         + (topLevel ? base : currentTopContext)
                         + " sub-context = " + context);
             }
-            final SpiceRack baseContext = findBaseContext(topLevel ? base
+            final SpiceRack baseContext = Recipe.findBaseContext(topLevel ? base
                     : currentTopContext, context);
             if (log.isLoggable(Level.FINER)) {
                 log.finer("Resolved context = " + baseContext.getContext());
@@ -69,32 +71,6 @@ class ObjectSetterContextualizer {
         }
     }
 
-    private SpiceRack findBaseContext(CoinjemaContext base,
-                                      CoinjemaContext sub) {
-        if (base == null && sub == null) {
-            return SpiceRack.getRoot();
-        } else if (base == null) {
-            base = SpiceRack.getRoot().getContext();
-        } else if (sub == null) {
-            sub = SpiceRack.getRoot().getContext();
-        }
-        SpiceRack rack = null;
-        CoinjemaContext subParent = sub;
-        while (subParent != null && rack == null) {
-            CoinjemaContext parent = base;
-            while (parent != null && rack == null) {
-                rack = SpiceRack.getInstance(new CoinjemaContext(parent,
-                        subParent));
-                parent = parent.getParentContext();
-            }
-            subParent = subParent.getParentContext();
-        }
-        if (rack == null) {
-            return SpiceRack.getRoot();
-        }
-        return rack;
-    }
-
 
     private void contextualizeClassFirstTime(
             final ContextOriented obj, final CoinjemaContext context,
@@ -113,7 +89,7 @@ class ObjectSetterContextualizer {
                         + (topLevel ? base : currentTopContext)
                         + " sub-context = " + context);
             }
-            SpiceRack baseContext = findBaseContext(topLevel ? base : currentTopContext, context);
+            SpiceRack baseContext = Recipe.findBaseContext(topLevel ? base : currentTopContext, context);
             if (log.isLoggable(Level.FINER)) {
                 log.finer("Resolved context = " + baseContext.getContext());
             }
@@ -121,7 +97,7 @@ class ObjectSetterContextualizer {
             contextualizing(obj);
             try {
                 iterateFunctors(obj, baseContext, functors);
-            } finally {
+            }finally {
                 doneContextualizing();
             }
         } finally {
@@ -138,7 +114,7 @@ class ObjectSetterContextualizer {
     }
 
     private FunctorSet retrieveFunctors(ContextOriented obj) {
-        return Recipe.functorMap.computeIfAbsent(obj.getClass(), cl -> new FunctorSet(obj));
+        return functorMap.computeIfAbsent(obj.getClass(), cl -> new FunctorSet(obj));
     }
 
     private void iterateFunctors(final ContextOriented obj,
@@ -171,7 +147,7 @@ class ObjectSetterContextualizer {
                 throw new DependencyInjectionException(
                         "Failed to find dependency for "
                                 + injector.getMethodName() + " of class "
-                                + obj.getClass().getName());
+                                + obj.getClass().getName() + " in context " + baseContext.getContext());
             }
         } else if (dep.dep != Recipe.DEFAULT_DEPENDENCY) {
             injector.invoke(obj, dep.dep);
@@ -202,7 +178,7 @@ class ObjectSetterContextualizer {
         }
         final ResourceNameResolver resolver = Recipe.dynTracker.getNameResolver(meth,
                 objClass, ann);
-        final SpiceRack baseContext = findBaseContext(context,
+        final SpiceRack baseContext = Recipe.findBaseContext(context,
                 getOptionalDynContext(ann, obj));
         Object dep = resolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, objClass, null));
         if (dep != null) {
@@ -281,41 +257,41 @@ class ObjectSetterContextualizer {
     }
 
     DiscoveredResource captureDepInContextStack(final Map<String, Object> values,
-                                                ResourceNameResolver resolver, SpiceRack master) {
+                                                ResourceNameResolver resolver, SpiceRack base) {
         CoinjemaContext cc = currentTopContext;
         try {
-            currentTopContext = master.getContext();
-            return captureDep(values, resolver, master);
+            currentTopContext = base.getContext();
+            return captureDep(values, resolver, base);
         } finally {
             currentTopContext = cc;
         }
     }
 
     DiscoveredResource captureDep(final Map<String, Object> values,
-                                  ResourceNameResolver resolver, SpiceRack master) {
-        values.put("registry", master);
-        return resolveScript(values, resolver, master);
+                                  ResourceNameResolver resolver, SpiceRack base) {
+        values.put("registry", base);
+        return resolveScript(values, resolver, base);
     }
 
     private DiscoveredResource resolveScript(final Map<String, Object> values,
-                                             final ResourceNameResolver resolver, final SpiceRack master) {
+                                             final ResourceNameResolver resolver, final SpiceRack base) {
         // since redirect preserves original context, have to look all the way
         // down for the redirect before
         // accepting any deps saved to the injector.
         DiscoveredResource dep = new DiscoveredResource(null, null);
-        String redirect = resolver.findDependency(resourceName -> RedirectionEvaluator.findRedirectName(resourceName, master));
+        String redirect = resolver.findDependency(resourceName -> RedirectionEvaluator.findRedirectName(resourceName, base));
         if (redirect == null) {
-            dep.dep = resolver.findDependency(resourceName -> master.lookupContext(resourceName, (Class<?>) values.get("objClass"), values.get("obj")));
+            dep.dep = resolver.findDependency(resourceName -> base.lookupContext(resourceName, (Class<?>) values.get("objClass"), values.get("obj")));
             if (dep.dep != null) {
                 return dep;
             }
-            dep = resolver.findDependency(resourceName -> resolveScriptNameLoop(values, resolver, master, resourceName));
+            dep = resolver.findDependency(resourceName -> resolveScriptNameLoop(values, resolver, base, resourceName));
             if (dep != null && dep.dep != null) {
-                dep.dep = master.addContext(dep.res, (Class<?>) values
+                dep.dep = base.addContext(dep.res, (Class<?>) values
                         .get("objClass"), values.get("obj"), dep.dep);
             }
         } else {
-            dep = redirect(values, master, redirect, resolver);
+            dep = redirect(values, base, redirect, resolver);
 
         }
         return dep;
@@ -359,7 +335,7 @@ class ObjectSetterContextualizer {
         SpiceRack sub = master;
         int x = -1;
         if ((x = redirect.lastIndexOf("/")) > -1) {
-            sub = findBaseContext(master.getContext(), new CoinjemaContext(
+            sub = Recipe.findBaseContext(master.getContext(), new CoinjemaContext(
                     redirect.substring(0, x)));
             redirect = redirect.substring(x + 1);
         }

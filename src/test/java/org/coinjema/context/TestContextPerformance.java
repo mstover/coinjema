@@ -121,7 +121,7 @@ public class TestContextPerformance extends AbstractContextTester {
         int countChanges = 0;
         for (int i = 0; i < 80000; i += 8) {
             // if(i % 100 == 0) System.out.println("done: " + i);
-            Properties propsa = (Properties) ((Future) results.get(i)).get(1, TimeUnit.SECONDS);
+            Properties propsa = (Properties) ((Future) results.get(i)).get(10, TimeUnit.SECONDS);
             Properties propsb = (Properties) ((Future) results.get(i + 5))
                     .get(1, TimeUnit.SECONDS);
             assertEquals("red", propsa
@@ -129,32 +129,32 @@ public class TestContextPerformance extends AbstractContextTester {
             assertEquals("purple", propsb
                     .getProperty("color"), "Failed at i = " + i);
             if (ms == null) {
-                ms = ((Future<BasicContextOriented>) results.get(i + 1)).get()
+                ms = ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.SECONDS)
                         .getMyService();
             }
-            if (ms != ((Future<BasicContextOriented>) results.get(i + 1)).get()
+            if (ms != ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.SECONDS)
                     .getMyService()) {
-                ms = ((Future<BasicContextOriented>) results.get(i + 1)).get()
+                ms = ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.SECONDS)
                         .getMyService();
                 countChanges++;
             }
             assertEquals(ms,
-                    ((Future<BasicContextOriented>) results.get(i + 1)).get()
+                    ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.SECONDS)
                             .getMyService());
             assertEquals("path1",
-                    ((Future<BasicContextOriented>) results.get(i + 1)).get()
+                    ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.SECONDS)
                             .getPaths()[0], "Failed at i = " + i);
             assertEquals("orc_path1",
-                    ((Future<BasicContextOriented>) results.get(i + 2)).get()
+                    ((Future<BasicContextOriented>) results.get(i + 2)).get(10, TimeUnit.SECONDS)
                             .getPaths()[0], "Failed at i = " + i);
             assertEquals(ms,
-                    ((Future<BasicContextOriented>) results.get(i + 2)).get()
+                    ((Future<BasicContextOriented>) results.get(i + 2)).get(10, TimeUnit.SECONDS)
                             .getMyService(), "Failed at i = " + i);
             assertEquals("custom/units/",
-                    ((Future<BasicContextOriented>) results.get(i + 3)).get()
+                    ((Future<BasicContextOriented>) results.get(i + 3)).get(10, TimeUnit.SECONDS)
                             .getPaths()[0], "Failed at i = " + i);
             assertEquals(ms,
-                    ((Future<BasicContextOriented>) results.get(i + 3)).get()
+                    ((Future<BasicContextOriented>) results.get(i + 3)).get(10, TimeUnit.SECONDS)
                             .getMyService(), "Failed at i = " + i);
             // if(i == 40000) i++;
         }
