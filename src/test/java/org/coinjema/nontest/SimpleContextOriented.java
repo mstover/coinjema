@@ -1,19 +1,18 @@
 package org.coinjema.nontest;
 
-import org.coinjema.context.CoinjemaContext;
-import org.coinjema.context.CoinjemaDependency;
-import org.coinjema.context.CoinjemaObject;
+import org.coinjema.context.*;
 
-@CoinjemaObject
-public class SimpleContextOriented {
+public class SimpleContextOriented extends AbstractContextOriented {
 
 	public SimpleContextOriented() {
 		super();
-		// TODO Auto-generated constructor stub
+		Recipe.contextualize(this);
 	}
 	
 	public SimpleContextOriented(CoinjemaContext cc)
-	{}
+	{
+		Recipe.contextualize(this,cc);
+	}
 	
 	@CoinjemaDependency(method="circular")
 	public void setCircularDependency(SimpleContextOrientedB g)

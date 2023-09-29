@@ -2,24 +2,16 @@ package org.coinjema.nontest;
 
 import java.util.Properties;
 
-import org.coinjema.context.CoinjemaDependency;
-import org.coinjema.context.CoinjemaObject;
+import org.coinjema.context.*;
 
-@CoinjemaObject(type="gpropClass")
 public class HasGroovyProperties {
 
 	public HasGroovyProperties() {
 		super();
-		// TODO Auto-generated constructor stub
+		this.props = Recipe.getDep(new ObjectDependencyDefinition<>(this,Properties.class,"config","gpropClass"));
 	}
 	
-	Properties props;
-	
-	@CoinjemaDependency(method="config")
-	public void setProperties(Properties p)
-	{
-		props = p;
-	}
+	private final Properties props;
 	
 	public String getProperty(String key)
 	{

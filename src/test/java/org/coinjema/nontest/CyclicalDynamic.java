@@ -1,6 +1,7 @@
 package org.coinjema.nontest;
 
 import org.coinjema.context.CoinjemaDynamic;
+import org.coinjema.context.Recipe;
 
 public class CyclicalDynamic {
 
@@ -12,7 +13,7 @@ public class CyclicalDynamic {
 	@CoinjemaDynamic(alias="cyclic.basic")
 	public static CyclicBasic getBasicObject()
 	{
-		return null;
+		return (CyclicBasic) Recipe.dynamicGetter(null,CyclicalDynamic.class,"getBasicObject");
 	}
 
 }

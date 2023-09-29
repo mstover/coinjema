@@ -1,32 +1,25 @@
 package org.coinjema.nontest;
 
+import org.coinjema.context.AbstractContextOriented;
+import org.coinjema.context.CoinjemaContext;
+import org.coinjema.context.DependencyDefinition;
+import org.coinjema.context.Recipe;
+
 import java.util.Properties;
 
-import org.coinjema.context.CoinjemaContext;
-import org.coinjema.context.CoinjemaDependency;
-import org.coinjema.context.CoinjemaObject;
-
-@CoinjemaObject
 public class InheritingObject {
-	
-	public InheritingObject()
-	{
-		
-	}
-	
-	public InheritingObject(CoinjemaContext cc)
-	{
-		
-	}
 
-	Properties props;
+    private final Properties props;
 
-	public Properties getProps() {
-		return props;
-	}
+    public InheritingObject() {
+        this.props = Recipe.getDep(new DependencyDefinition<>(this, Properties.class, "config", null));
+    }
 
-	@CoinjemaDependency(method="config")
-	public void setProps(Properties props) {
-		this.props = props;
-	}
+    public InheritingObject(CoinjemaContext cc) {
+        this.props = Recipe.getDep(new DependencyDefinition<>(this, Properties.class, "config", null),cc);
+    }
+
+    public Properties getProps() {
+        return props;
+    }
 }

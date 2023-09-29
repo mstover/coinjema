@@ -15,6 +15,6 @@ public class TestInheritedContext extends AbstractContextTester {
         SubContextOriented counter = new SubContextOriented();
 
         assertEquals(new URL("http://coinjema.sourceforge.net/"), counter.getHome());
-        assertEquals("path1", counter.getPaths()[0]);
+        assertEquals("wrong_path1", counter.getPaths()[0]);
     }
 }

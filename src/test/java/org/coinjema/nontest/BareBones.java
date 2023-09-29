@@ -2,15 +2,13 @@ package org.coinjema.nontest;
 
 import java.net.URL;
 
-import org.coinjema.context.CoinjemaDependency;
-import org.coinjema.context.CoinjemaObject;
+import org.coinjema.context.*;
 
-@CoinjemaObject
-public class BareBones {
+public class BareBones extends AbstractContextOriented {
 	
 	public BareBones() {
 		super();
-		// TODO Auto-generated constructor stub
+		Recipe.contextualize(this);
 	}
 
 	protected SimpleContextOriented sco = new SimpleContextOriented();

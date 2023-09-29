@@ -1,163 +1,163 @@
 package org.coinjema.nontest;
 
+import org.coinjema.context.*;
+import org.coinjema.context.CoinjemaDependency.Order;
+
 import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.coinjema.context.CoinjemaContext;
-import org.coinjema.context.CoinjemaContextTrack;
-import org.coinjema.context.CoinjemaDependency;
-import org.coinjema.context.CoinjemaObject;
-import org.coinjema.context.CoinjemaDependency.Order;
+public class BasicContextOriented extends AbstractContextOriented {
+    protected String[] paths;
+    Logger log;
+    MockSingleton myService;
+    MockSingleton myOtherService, redirectedService;
+    Properties props;
+    String init;
+    URL home;
+    SimpleContextOriented simple;
 
-@CoinjemaObject
-public class BasicContextOriented {
-	Logger log;
-	MockSingleton myService;
-	MockSingleton myOtherService, redirectedService;
-	Properties props;
-	String init;
+    public BasicContextOriented() {
+        Recipe.contextualize(this);
+    }
 
-	URL home;
+    public BasicContextOriented(CoinjemaContext context) {
+        Recipe.contextualize(this, context);
+    }
 
-	protected String[] paths;
+    public BasicContextOriented(String init, CoinjemaContext context) {
+        this.init = init;
+        Recipe.contextualize(this, context);
+    }
 
-	public BasicContextOriented() {
-	}
+    @CoinjemaDependency(alias = "log4j")
+    public void setLogger(Logger log) {
+        this.log = log;
+    }
 
-	public BasicContextOriented(CoinjemaContext context) {
-	}
+    public Properties getConfig() {
+        return props;
+    }
 
-	public BasicContextOriented(String init, CoinjemaContext context) {
-		this.init = init;
-	}
+    @CoinjemaDependency(method = "config")
+    public void setConfig(Properties p) {
+        props = p;
+    }
 
-	@CoinjemaDependency
-	public void setPaths(String[] paths) {
-		this.paths = paths;
-	}
+    public String getProp(String key) {
+        return props.getProperty(key);
+    }
 
-	@CoinjemaDependency(alias = "log4j")
-	public void setLogger(Logger log) {
-		this.log = log;
-	}
+    public String getDynamicProperty(String key) {
 
-	@CoinjemaDependency(method = "config")
-	public void setConfig(Properties p) {
-		props = p;
-	}
+        try (TempCoinjemaContext tcc = ContextFactory.pushContext(this)) {
+            return getMyService().getProperty(key);
+        }
+    }
 
-	public Properties getConfig() {
-		return props;
-	}
+    @CoinjemaDependency
+    public void setService(MockSingleton myService) {
+        this.myService = myService;
+    }
 
-	public String getProp(String key) {
-		return props.getProperty(key);
-	}
+    @CoinjemaDependency(type = "AnnotatedMock")
+    public void setOtherService(MockSingleton myOtherService) {
+        this.myOtherService = myOtherService;
+    }
 
-	@CoinjemaContextTrack
-	public String getDynamicProperty(String key) {
-		return getMyService().getProperty(key);
-	}
+    public MockSingleton getRedirectedService() {
+        return redirectedService;
+    }
 
-	@CoinjemaDependency
-	public void setService(MockSingleton myService) {
-		this.myService = myService;
-	}
+    @CoinjemaDependency(method = "redirectionMock")
+    public void setRedirectedService(MockSingleton redirected) {
+        this.redirectedService = redirected;
+    }
 
-	@CoinjemaDependency(type = "AnnotatedMock")
-	public void setOtherService(MockSingleton myOtherService) {
-		this.myOtherService = myOtherService;
-	}
+    public String getMyMainValue() {
+        return myService.getMainValue();
+    }
 
-	@CoinjemaDependency(method = "redirectionMock")
-	public void setRedirectedService(MockSingleton redirected) {
-		this.redirectedService = redirected;
-	}
+    public String getMyOtherMainValue() {
+        return myOtherService.getMainValue();
+    }
 
-	public MockSingleton getRedirectedService() {
-		return redirectedService;
-	}
+    public String[] getPaths() {
+        return paths;
+    }
 
-	public String getMyMainValue() {
-		return myService.getMainValue();
-	}
+    @CoinjemaDependency
+    public void setPaths(String[] paths) {
+        this.paths = paths;
+    }
 
-	public String getMyOtherMainValue() {
-		return myOtherService.getMainValue();
-	}
+    public BasicContextOriented getSubObject() {
+        try (TempCoinjemaContext cc = ContextFactory.pushContext(this)) {
+            return new BasicContextOriented();
+        }
+    }
 
-	public String[] getPaths() {
-		return paths;
-	}
+    public BasicContextOriented getSubObject(BasicContextOriented obj) {
+        return obj.getSubObject();
+    }
 
-	@CoinjemaContextTrack
-	public BasicContextOriented getSubObject() {
-		return new BasicContextOriented();
-	}
+    @CoinjemaDependency(order = Order.LAST)
+    public void setZLastDependency(String v) {
+        if (paths == null) {
+            throw new RuntimeException();
+        }
+        if (myOtherService == null) {
+            throw new RuntimeException();
+        }
+        if (myService == null) {
+            throw new RuntimeException();
+        }
+        if (log == null) {
+            throw new RuntimeException();
+        }
+    }
 
-	public BasicContextOriented getSubObject(BasicContextOriented obj) {
-		return obj.getSubObject();
-	}
+    public BasicContextOriented getSubObject(String context) {
+        try (TempCoinjemaContext tcc = ContextFactory.pushContext(this)) {
+            return new BasicContextOriented(new CoinjemaContext(context));
+        }
+    }
 
-	@CoinjemaDependency(order = Order.LAST)
-	public void setZLastDependency(String v) {
-		if (paths == null) {
-			throw new RuntimeException();
-		}
-		if (myOtherService == null) {
-			throw new RuntimeException();
-		}
-		if (myService == null) {
-			throw new RuntimeException();
-		}
-		if (log == null) {
-			throw new RuntimeException();
-		}
-	}
+    public void testLogging() {
+        log.info("My logger works great!");
+    }
 
-	@CoinjemaContextTrack
-	public BasicContextOriented getSubObject(String context) {
-		return new BasicContextOriented(new CoinjemaContext(context));
-	}
+    public String getInit() {
+        return init;
+    }
 
-	public void testLogging() {
-		log.info("My logger works great!");
-	}
+    public SimpleContextOriented getSimple() {
+        return simple;
+    }
 
-	public String getInit() {
-		return init;
-	}
+    /**
+     * @return Returns the myService.
+     */
+    public MockSingleton getMyService() {
+        return myService;
+    }
 
-	public SimpleContextOriented getSimple() {
-		return simple;
-	}
+    public URL getHome() {
+        return home;
+    }
 
-	/**
-	 * @return Returns the myService.
-	 */
-	public MockSingleton getMyService() {
-		return myService;
-	}
+    @CoinjemaDependency(alias = "homeURL")
+    public void setHome(URL home) {
+        this.home = home;
+    }
 
-	public URL getHome() {
-		return home;
-	}
+    @CoinjemaDependency(alias = "simple")
+    public void setSimpleDep(SimpleContextOriented sco) {
+        simple = sco;
+    }
 
-	@CoinjemaDependency(alias = "homeURL")
-	public void setHome(URL home) {
-		this.home = home;
-	}
-
-	@CoinjemaDependency(alias = "simple")
-	public void setSimpleDep(SimpleContextOriented sco) {
-		simple = sco;
-	}
-
-	SimpleContextOriented simple;
-
-	public Logger getLog() {
-		return log;
-	}
+    public Logger getLog() {
+        return log;
+    }
 
 }

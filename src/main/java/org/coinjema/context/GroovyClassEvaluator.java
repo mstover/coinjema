@@ -14,23 +14,20 @@ class GroovyClassEvaluator implements Evaluator {
 
     public Object evaluate(Resource source, Map params) {
         Reader scriptBytes = new InputStreamReader(source.getInputStream());
-        if (scriptBytes != null) {
-            GroovyClassLoader loader = new GroovyClassLoader(Thread.currentThread()
-                    .getContextClassLoader());
+        GroovyClassLoader loader = new GroovyClassLoader(Thread.currentThread()
+                .getContextClassLoader());
+        try {
+            return loader.parseClass(scriptBytes, source.getName()).getDeclaredConstructor().newInstance();
+        } catch (Throwable e) {
+            throw new DependencyInjectionException(
+                    "Couldn't evaluate groovy class: " + source + ".groovyClass", e);
+        } finally {
             try {
-                return loader.parseClass(scriptBytes, source.getName()).newInstance();
-            } catch (Throwable e) {
-                throw new DependencyInjectionException(
-                        "Couldn't evaluate groovy class: " + source + ".groovyClass", e);
-            } finally {
-                try {
-                    scriptBytes.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Failed to close config file: " + source, e);
-                }
+                scriptBytes.close();
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to close config file: " + source, e);
             }
         }
-        return null;
     }
 
 }

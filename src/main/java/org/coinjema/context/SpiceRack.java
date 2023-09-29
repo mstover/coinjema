@@ -200,7 +200,7 @@ final public class SpiceRack implements Registry {
     public Object addContext(final Resource res, Class<?> objClass,
                                    Object obj, final Object dep) {
         if (res == null) {
-            return dep; // safeDepStorage(dep, res.getName());
+            return dep; // safeDepStorage(depOf, res.getName());
         } else if (res.getMetaTypes().contains(MetaType.perClass)
                 && objClass != null) {
             Object key = new ClassKey(objClass, res.getName());

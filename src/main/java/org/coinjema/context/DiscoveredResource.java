@@ -14,7 +14,7 @@ class DiscoveredResource {
 	
 	public String toString()
 	{
-		return "Discovered Resource(dep:" + dep + "; res:" + res + ")";
+		return "Discovered Resource(depOf:" + dep + "; res:" + res + ")";
 	}
 
 }

@@ -1,24 +1,18 @@
 package org.coinjema.nontest;
 
-import org.coinjema.context.CoinjemaConstructorObject;
-import org.coinjema.context.ConstructorDependency;
+import org.coinjema.context.AbstractContextOriented;
+import org.coinjema.context.DependencyDefinition;
+import org.coinjema.context.Recipe;
+import org.coinjema.context.TypeDefinition;
 
-@CoinjemaConstructorObject
-public class SimpleConstructorOriented {
+public class SimpleConstructorOriented extends AbstractContextOriented {
 
     private final MockSingleton service;
     private final String username;
 
-    public SimpleConstructorOriented(
-            @ConstructorDependency MockSingleton service,
-            @ConstructorDependency(method = "username") String username) {
-        this.username = username;
-        this.service = service;
-    }
-
     public SimpleConstructorOriented() {
-        service = null;
-        username = null;
+        this.username = Recipe.getDep(new DependencyDefinition<>(this, String.class, "username", null));
+        this.service = Recipe.getDep(new TypeDefinition<>(this, MockSingleton.class));
     }
 
     public MockSingleton getService() {

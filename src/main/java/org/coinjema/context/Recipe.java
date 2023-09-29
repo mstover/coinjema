@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -16,10 +17,19 @@ public final class Recipe {
     static final ThreadLocal<ObjectSetterContextualizer> CONTEXTUALIZER = ThreadLocal.withInitial(() -> null);
     static final ThreadLocal<ConstructorContextualizer> CONSTRUCTOR_CONTEXTUALIZER = ThreadLocal.withInitial(() -> null);
     static final ThreadLocal<CoinjemaContext> contextStack = ThreadLocal.withInitial(() -> null);
+    static final ReentrantLock globalSync = new ReentrantLock();
     private static final ConcurrentMap<Class<?>, ConstructorFuncterSet<?>> constructorFunctorMap = new ConcurrentHashMap<>();
+    private static final Map<Object, Object> inConstruction = new ConcurrentHashMap<>();
     static DynamicDepTracker dynTracker = new DynamicDepTracker();
 
-    private static final Map<Object,Object> inConstruction = new ConcurrentHashMap<>();
+
+    public static void contextualize(ContextOriented obj) {
+        contextualize(obj, null, ContextFactory.peek());
+    }
+
+    public static void contextualize(ContextOriented obj, CoinjemaContext context) {
+        contextualize(obj, context, ContextFactory.peek());
+    }
 
     public static void contextualize(final ContextOriented obj,
                                      final CoinjemaContext context, final CoinjemaContext base) {
@@ -111,6 +121,20 @@ public final class Recipe {
         return returnWithContextualizer(contextualizer -> contextualizer.captureDep(values, resolver, master));
     }
 
+    public static Object dynamicGetter(Object obj, Class<?> clzz, String methodName) {
+        Method method = null;
+        try {
+            method = clzz.getMethod(methodName);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+        if (obj instanceof ContextOriented && ((ContextOriented) obj).isGiven())
+            return findDynamicDependency(obj, clzz, method.getAnnotation(CoinjemaDynamic.class), method, ((ContextOriented) obj).getCoinjemaContext());
+        else {
+            return findDynamicDependency(obj, clzz, method.getAnnotation(CoinjemaDynamic.class), method, ContextFactory.peek());
+        }
+    }
+
     static Object findDynamicDependency(final Object obj, final Class objClass,
                                         final CoinjemaDynamic ann, final Method meth,
                                         CoinjemaContext context) {
@@ -147,6 +171,44 @@ public final class Recipe {
         ObjectSetterContextualizer objectSetterContextualizer = CONTEXTUALIZER.get();
         if (objectSetterContextualizer != null) return objectSetterContextualizer;
         return new ObjectSetterContextualizer();
+    }
+
+    public static <T> T getDep(DependencyDefinitionI<T> def) {
+        return switch (def) {
+            case AliasDefinition(var obj, var depClass, var alias) ->
+                    (T) new SingleDepContextualizer(obj, new DepForAliasNameResolver(alias), ContextFactory.peek()).getDepOf();
+            case TypeDefinition(var obj, var depClass) ->
+                    (T) new SingleDepContextualizer(obj, new DepOfResolver<>(depClass), ContextFactory.peek()).getDepOf();
+            case DependencyDefinition(
+                    var obj, var depClass, var method, var type
+            ) when method != null && type != null ->
+                    (T) new SingleDepContextualizer(obj, new DepForTypeNameResolver(type, method), ContextFactory.peek()).getDepOf();
+            case DependencyDefinition(
+                    var obj, var depClass, var method, var type
+            ) ->
+                    (T) new SingleDepContextualizer(obj, new DepForMethodNameResolver(obj.getClass(), method), ContextFactory.peek()).getDepOf();
+            case ObjectDependencyDefinition(var obj,var depClass,var method,var type) when method != null && type == null ->
+                    (T) new SingleDepContextualizer(obj, new DepForMethodNameResolver(obj.getClass(), method), ContextFactory.peek()).getDepOf();
+            case ObjectDependencyDefinition(var obj,var depClass,var method,var type) ->
+                    (T) new SingleDepContextualizer(obj, new DepForTypeNameResolver(type, method), ContextFactory.peek()).getDepOf();
+            default -> throw new IllegalStateException("Unexpected value: " + def);
+        };
+    }
+
+    public static <T> T getDep(DependencyDefinitionI<T> def, CoinjemaContext givenContext) {
+        return switch (def) {
+            case AliasDefinition(var obj, var depClass, var alias) ->
+                    (T) new SingleDepContextualizer(obj, new DepForAliasNameResolver(alias), ContextFactory.peek(), givenContext).getDepOf();
+            case TypeDefinition(var obj, var depClass) ->
+                    (T) new SingleDepContextualizer(obj, new DepOfResolver<>(depClass), ContextFactory.peek(), givenContext).getDepOf();
+            case DependencyDefinition(var obj, var depClass, var method, var type)
+                    when method != null && type != null ->
+                    (T) new SingleDepContextualizer(obj, new DepForTypeNameResolver(type, method), ContextFactory.peek(), givenContext).getDepOf();
+            case DependencyDefinition(var obj, var depClass, var method, var type)
+                    when method != null ->
+                    (T) new SingleDepContextualizer(obj, new DepForMethodNameResolver(obj.getClass(), method), ContextFactory.peek(), givenContext).getDepOf();
+            default -> throw new IllegalStateException("Unexpected value: " + def);
+        };
     }
 
     private <T extends ContextOriented> T contextualizeIt(final Class<T> clzz, Object[] givenArgs,

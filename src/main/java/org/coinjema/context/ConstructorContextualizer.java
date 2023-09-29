@@ -54,7 +54,7 @@ public class ConstructorContextualizer {
 
     private <T extends ConstructorContextOriented> Object[] contextualizeFirstTime(ConstructorFuncterSet<T> functors, Object[] givenArgs, CoinjemaContext context, CoinjemaContext base) {
         try {
-            ObjectSetterContextualizer.globalSync.lock();
+            Recipe.globalSync.lock();
             boolean topLevel = currentTopContext == null;
             if (log.isLoggable(Level.FINER)) {
                 log.finer("Base context = "
@@ -67,7 +67,7 @@ public class ConstructorContextualizer {
             }
             return createContextArgValues(functors, givenArgs, baseContext);
         } finally {
-            ObjectSetterContextualizer.globalSync.unlock();
+            Recipe.globalSync.unlock();
         }
     }
 

@@ -1,26 +1,23 @@
 package org.coinjema.nontest;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-
+import org.coinjema.context.AbstractContextOriented;
 import org.coinjema.context.CoinjemaDependency;
 import org.coinjema.context.CoinjemaObject;
+import org.coinjema.context.Recipe;
 
-@CoinjemaObject(type="sessionStore")
-public class PersistentConfig implements Serializable {
+import java.io.*;
+
+@CoinjemaObject(type = "sessionStore")
+public class PersistentConfig extends AbstractContextOriented implements Serializable {
     private static final long serialVersionUID = 1;
     String paramOne = "One";
     String paramTwo = "Two";
     transient MockSingleton mok;
-    
-    
+
 
     public PersistentConfig() {
         super();
+        Recipe.contextualize(this);
     }
 
     /**
@@ -77,15 +74,15 @@ public class PersistentConfig implements Serializable {
     /**
      * @param mok The mok to set.
      */
-    @CoinjemaDependency(type="MockSingleton")
+    @CoinjemaDependency(type = "MockSingleton")
     public void setMok(MockSingleton mok) {
         this.mok = mok;
     }
-    
-    private void readObject(ObjectInputStream in)
-    {
+
+    private void readObject(ObjectInputStream in) {
         try {
             in.defaultReadObject();
+            Recipe.contextualize(this,getCoinjemaContext());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

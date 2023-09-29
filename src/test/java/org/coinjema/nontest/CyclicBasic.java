@@ -1,17 +1,18 @@
 package org.coinjema.nontest;
 
-import org.coinjema.context.CoinjemaContext;
-import org.coinjema.context.CoinjemaDependency;
-import org.coinjema.context.CoinjemaObject;
+import org.coinjema.context.*;
 
 @CoinjemaObject(type="cyclic")
-public class CyclicBasic {
+public class CyclicBasic extends AbstractContextOriented {
 
 	public CyclicBasic() {
+		Recipe.contextualize(this);
 	}
 	
 	public CyclicBasic(CoinjemaContext cc)
-	{}
+	{
+		Recipe.contextualize(this,cc);
+	}
 	
 	private CyclicSingleton single;
 	

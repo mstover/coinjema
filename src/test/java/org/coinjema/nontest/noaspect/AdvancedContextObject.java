@@ -1,15 +1,20 @@
-package org.coinjema.nontest;
+package org.coinjema.nontest.noaspect;
 
-import org.coinjema.context.*;
+import org.coinjema.context.CoinjemaContext;
+import org.coinjema.context.CoinjemaDependency;
+import org.coinjema.context.ContextOriented;
+import org.coinjema.context.Recipe;
+import org.coinjema.nontest.PersistentConfig;
+import org.coinjema.nontest.SimpleDynamic;
 
 import java.util.Properties;
 
+public class AdvancedContextObject implements ContextOriented {
 
-@CoinjemaObject(type = "AService")
-public class AdvancedContextObject extends AbstractContextOriented {
-
-    Properties props;
+    private Properties props = null;
     PersistentConfig session;
+    private CoinjemaContext context;
+    private boolean given;
 
     public AdvancedContextObject() {
         Recipe.contextualize(this);
@@ -21,8 +26,27 @@ public class AdvancedContextObject extends AbstractContextOriented {
     }
 
     public AdvancedContextObject(CoinjemaContext c) {
-        super(c);
         Recipe.contextualize(this, c);
+    }
+
+    @Override
+    public CoinjemaContext getCoinjemaContext() {
+        return context;
+    }
+
+    @Override
+    public void setCoinjemaContext(CoinjemaContext context) {
+        this.context = context;
+    }
+
+    @Override
+    public boolean isGiven() {
+        return given;
+    }
+
+    @Override
+    public void setGiven(boolean given) {
+        this.given = given;
     }
 
     @CoinjemaDependency(method = "config")
@@ -48,9 +72,7 @@ public class AdvancedContextObject extends AbstractContextOriented {
 
 
     public Properties getDynamicProperties() {
-        try (TempCoinjemaContext tcc = ContextFactory.pushContext(this)) {
-            return new SimpleDynamic().getProperties();
-        }
+        return new SimpleDynamic().getProperties();
     }
 
     public String getStaticDynamicName() {
