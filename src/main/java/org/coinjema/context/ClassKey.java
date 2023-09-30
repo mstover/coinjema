@@ -1,9 +1,9 @@
 package org.coinjema.context;
 
 class ClassKey {
-	Class<?> objClass;
-	String resourceName;
-	int hash;
+	private final Class<?> objClass;
+	private final String resourceName;
+	private final int hash;
 
 	public ClassKey(Class<?> oc,String name) {
 		objClass = oc;

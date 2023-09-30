@@ -104,7 +104,7 @@ public class TestContextPerformance extends AbstractContextTester {
         CoinjemaContext unitsOrc = new CoinjemaContext("units/orc");
         CoinjemaContext custom = new CoinjemaContext("custom/units");
 
-        int testSize = 100000;
+        int testSize = 1_000_000;
         System.out.println("Going to invoke them all " + (testSize *8));
         long time = System.currentTimeMillis();
         List<Future<?>> results = new ArrayList<>();

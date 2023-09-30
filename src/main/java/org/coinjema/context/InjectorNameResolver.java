@@ -25,7 +25,7 @@ public class InjectorNameResolver extends AbstractNameResolver {
         count = -1;
     }
 
-    public synchronized String getLocalName() {
+    public String getLocalName() {
         return localName != null ? localName : (localName = (injector.isAliased() ? injector.getAliasLabel() : getSimpleName(objClass) + "." + injector.getMethodLabel()));
     }
 
@@ -50,11 +50,11 @@ public class InjectorNameResolver extends AbstractNameResolver {
         }
     }
 
-    private synchronized String getGlobalName() {
+    private  String getGlobalName() {
         return globalName != null ? globalName : (globalName = injector.isAliased() ? injector.getInjectedLabel() : null);
     }
 
-    private synchronized String getTypeName() {
+    private  String getTypeName() {
         return typeName != null ? typeName : (typeName = injector.isAliased() ? getSimpleName(objClass) + "." + injector.getMethodLabel() : injector.getInjectedLabel());
     }
 

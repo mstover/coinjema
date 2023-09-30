@@ -5,23 +5,8 @@ import org.coinjema.util.DependencyFunctor;
 public abstract class AbstractNameResolver implements ResourceNameResolver {
 
 
-	protected static String getSimpleName(final Class clazz) {
-		CoinjemaObject ann = findObjectAnnotation(clazz);
-		if (ann != null && ann.type().length() > 0)
-			return ann.type();
-		else
-			return clazz.getSimpleName();
-	}
-
-	protected static CoinjemaObject findObjectAnnotation(Class clazz) {
-		Class parent = clazz;
-		CoinjemaObject ann = null;
-		while (ann == null && parent != Object.class) {
-			ann = (CoinjemaObject) parent.getAnnotation(CoinjemaObject.class);
-			if (ann == null)
-				parent = parent.getSuperclass();
-		}
-		return ann;
+	protected static String getSimpleName(final Class<?> clazz) {
+		return ReflectionCache.getInfo(clazz).simpleName;
 	}
 
 	public Object findDependency(NameLoop evaluator) {

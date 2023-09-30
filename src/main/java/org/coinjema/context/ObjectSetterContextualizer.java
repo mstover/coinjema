@@ -37,29 +37,41 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
 
     private void contextualizeIt(final ContextOriented obj,
                                  final CoinjemaContext context, final CoinjemaContext base) {
-        try {
-            Recipe.globalSync.lock();
-            FunctorSet functors = functorMap.get(obj.getClass());
-            if (functors == null) {
-                contextualizeClassFirstTime(obj, context, base);
-            } else {
-                boolean topLevel = currentTopContext == null;
-                if (log.isLoggable(Level.FINER)) {
-                    log.finer("Base context = "
-                            + (topLevel ? base : currentTopContext)
-                            + " sub-context = " + context);
+        FunctorSet functors = functorMap.get(obj.getClass());
+        if (functors != null) {
+            contextualizeItWithFunctors(obj, context, base, functors);
+
+        } else {
+            boolean tryAgain = false;
+            try {
+                Recipe.globalSync.lock();
+                functors = functorMap.get(obj.getClass());
+                if (functors == null) {
+                    contextualizeClassFirstTime(obj, context, base);
+                } else {
+                    tryAgain = true;
                 }
-                final SpiceRack baseContext = Recipe.findBaseContext(topLevel ? base
-                        : currentTopContext, context);
-                if (log.isLoggable(Level.FINER)) {
-                    log.finer("Resolved context = " + baseContext.getContext());
-                }
-                obj.setCoinjemaContext(baseContext.getContext());
-                injectFunctors(obj, context, base, functors, baseContext);
+            } finally {
+                Recipe.globalSync.unlock();
             }
-        } finally {
-            Recipe.globalSync.unlock();
+            if (tryAgain) contextualizeIt(obj, context, base);
         }
+    }
+
+    private void contextualizeItWithFunctors(ContextOriented obj, CoinjemaContext context, CoinjemaContext base, FunctorSet functors) {
+        boolean topLevel = currentTopContext == null;
+        if (log.isLoggable(Level.FINER)) {
+            log.finer("Base context = "
+                    + (topLevel ? base : currentTopContext)
+                    + " sub-context = " + context);
+        }
+        final SpiceRack baseContext = Recipe.findBaseContext(topLevel ? base
+                : currentTopContext, context);
+        if (log.isLoggable(Level.FINER)) {
+            log.finer("Resolved context = " + baseContext.getContext());
+        }
+        obj.setCoinjemaContext(baseContext.getContext());
+        injectFunctors(obj, context, base, functors, baseContext);
     }
 
     private void injectFunctors(final ContextOriented obj,
@@ -180,7 +192,7 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
             log.fine("Finding dynamic dependency for " + objClass.getName()
                     + " method: " + meth.getName() + " in context " + context);
         }
-        final ResourceNameResolver resolver = new DynamicDependencyNameResolver(objClass,ann,meth);
+        final ResourceNameResolver resolver = new DynamicDependencyNameResolver(objClass, ann, meth);
         final SpiceRack baseContext = Recipe.findBaseContext(context,
                 getOptionalDynContext(ann, obj));
         Object dep = findPreviouslyResolvedDep(objClass, meth, resolver, baseContext);
