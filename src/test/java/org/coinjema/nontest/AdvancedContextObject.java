@@ -48,9 +48,7 @@ public class AdvancedContextObject extends AbstractContextOriented {
 
 
     public Properties getDynamicProperties() {
-        try (TempCoinjemaContext tcc = ContextFactory.pushContext(this)) {
-            return new SimpleDynamic().getProperties();
-        }
+        return ContextFactory.withContext(getCoinjemaContext(),() -> new SimpleDynamic().getProperties());
     }
 
     public String getStaticDynamicName() {

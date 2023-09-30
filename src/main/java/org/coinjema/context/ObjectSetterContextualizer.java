@@ -4,16 +4,32 @@ import org.coinjema.context.source.SimpleResource;
 import org.coinjema.util.DependencyFunctor;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 
 import static org.coinjema.logging.CoinjemaLogger.log;
 
-class ObjectSetterContextualizer extends AbstractContextualizer{
+class ObjectSetterContextualizer extends AbstractContextualizer {
 
     private static final ConcurrentMap<Class<?>, FunctorSet> functorMap = new ConcurrentHashMap<>();
+
+    private static Object findPreviouslyResolvedDep(Class<?> objClass, Method meth, ResourceNameResolver resolver, SpiceRack baseContext) {
+        Object dep = resolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, objClass, null));
+        if (dep != null) {
+            if (dep == Recipe.DEFAULT_DEPENDENCY) {
+                throw new DependencyInjectionException(
+                        "Failed to find dependency: " + objClass + " : "
+                                + meth.getName());
+            } else {
+                return dep;
+            }
+        }
+        return null;
+    }
 
     void contextualize(final ContextOriented obj, final CoinjemaContext context, CoinjemaContext base) {
         contextualizeIt(obj, context, base);
@@ -21,23 +37,28 @@ class ObjectSetterContextualizer extends AbstractContextualizer{
 
     private void contextualizeIt(final ContextOriented obj,
                                  final CoinjemaContext context, final CoinjemaContext base) {
-        FunctorSet functors = functorMap.get(obj.getClass());
-        if (functors == null) {
-            contextualizeClassFirstTime(obj, context, base);
-        } else {
-            boolean topLevel = currentTopContext == null;
-            if (log.isLoggable(Level.FINER)) {
-                log.finer("Base context = "
-                        + (topLevel ? base : currentTopContext)
-                        + " sub-context = " + context);
+        try {
+            Recipe.globalSync.lock();
+            FunctorSet functors = functorMap.get(obj.getClass());
+            if (functors == null) {
+                contextualizeClassFirstTime(obj, context, base);
+            } else {
+                boolean topLevel = currentTopContext == null;
+                if (log.isLoggable(Level.FINER)) {
+                    log.finer("Base context = "
+                            + (topLevel ? base : currentTopContext)
+                            + " sub-context = " + context);
+                }
+                final SpiceRack baseContext = Recipe.findBaseContext(topLevel ? base
+                        : currentTopContext, context);
+                if (log.isLoggable(Level.FINER)) {
+                    log.finer("Resolved context = " + baseContext.getContext());
+                }
+                obj.setCoinjemaContext(baseContext.getContext());
+                injectFunctors(obj, context, base, functors, baseContext);
             }
-            final SpiceRack baseContext = Recipe.findBaseContext(topLevel ? base
-                    : currentTopContext, context);
-            if (log.isLoggable(Level.FINER)) {
-                log.finer("Resolved context = " + baseContext.getContext());
-            }
-            obj.setCoinjemaContext(baseContext.getContext());
-            injectFunctors(obj, context, base, functors, baseContext);
+        } finally {
+            Recipe.globalSync.unlock();
         }
     }
 
@@ -51,12 +72,7 @@ class ObjectSetterContextualizer extends AbstractContextualizer{
                 if (dep == Recipe.DEFAULT_DEPENDENCY) {
                     functors.markForRemoval(injector, baseContext.getContext());
                 } else if (dep != null) {
-                    try {
-                        Recipe.globalSync.lock();
-                        injector.invoke(obj, dep);
-                    } finally {
-                        Recipe.globalSync.unlock();
-                    }
+                    injector.invoke(obj, dep);
                 } else {
                     contextualizeContextFirstTime(functors, obj, context, base);
                     break;
@@ -64,7 +80,6 @@ class ObjectSetterContextualizer extends AbstractContextualizer{
             }
         }
     }
-
 
     private void contextualizeClassFirstTime(
             final ContextOriented obj, final CoinjemaContext context,
@@ -75,27 +90,22 @@ class ObjectSetterContextualizer extends AbstractContextualizer{
     private void contextualizeContextFirstTime(
             FunctorSet functors, final ContextOriented obj,
             final CoinjemaContext context, final CoinjemaContext base) {
+        boolean topLevel = currentTopContext == null;
+        if (log.isLoggable(Level.FINER)) {
+            log.finer("Base context = "
+                    + (topLevel ? base : currentTopContext)
+                    + " sub-context = " + context);
+        }
+        SpiceRack baseContext = Recipe.findBaseContext(topLevel ? base : currentTopContext, context);
+        if (log.isLoggable(Level.FINER)) {
+            log.finer("Resolved context = " + baseContext.getContext());
+        }
+        obj.setCoinjemaContext(baseContext.getContext());
+        contextualizing(obj);
         try {
-            Recipe.globalSync.lock();
-            boolean topLevel = currentTopContext == null;
-            if (log.isLoggable(Level.FINER)) {
-                log.finer("Base context = "
-                        + (topLevel ? base : currentTopContext)
-                        + " sub-context = " + context);
-            }
-            SpiceRack baseContext = Recipe.findBaseContext(topLevel ? base : currentTopContext, context);
-            if (log.isLoggable(Level.FINER)) {
-                log.finer("Resolved context = " + baseContext.getContext());
-            }
-            obj.setCoinjemaContext(baseContext.getContext());
-            contextualizing(obj);
-            try {
-                iterateFunctors(obj, baseContext, functors);
-            }finally {
-                doneContextualizing();
-            }
+            iterateFunctors(obj, baseContext, functors);
         } finally {
-            Recipe.globalSync.unlock();
+            doneContextualizing();
         }
     }
 
@@ -164,51 +174,49 @@ class ObjectSetterContextualizer extends AbstractContextualizer{
     }
 
     Object findDynamicDependency(final Object obj, final Class<?> objClass,
-                                        final CoinjemaDynamic ann, final Method meth,
-                                        CoinjemaContext context) {
+                                 final CoinjemaDynamic ann, final Method meth,
+                                 CoinjemaContext context) {
         if (log.isLoggable(Level.FINE)) {
             log.fine("Finding dynamic dependency for " + objClass.getName()
                     + " method: " + meth.getName() + " in context " + context);
         }
-        final ResourceNameResolver resolver = Recipe.dynTracker.getNameResolver(meth,
-                objClass, ann);
+        final ResourceNameResolver resolver = new DynamicDependencyNameResolver(objClass,ann,meth);
         final SpiceRack baseContext = Recipe.findBaseContext(context,
                 getOptionalDynContext(ann, obj));
-        Object dep = resolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, objClass, null));
-        if (dep != null) {
-            if (dep == Recipe.DEFAULT_DEPENDENCY) {
-                throw new DependencyInjectionException(
-                        "Failed to find dependency: " + objClass + " : "
-                                + meth.getName());
-            } else {
-                return dep;
+        Object dep = findPreviouslyResolvedDep(objClass, meth, resolver, baseContext);
+        if (dep != null) return dep;
+        try {
+            Recipe.globalSync.lock();
+            Object depAgain = findPreviouslyResolvedDep(objClass, meth, resolver, baseContext);
+            if (depAgain != null) return depAgain;
+            final Map<String, Object> values = new HashMap<String, Object>();
+            values.put("objClass", objClass);
+            values.put("obj", obj);
+            values.put("injector", null);
+            final LinkedList<SpiceRack> racks = new LinkedList<SpiceRack>();
+            DiscoveredResource newDep = RackLoop.loop(baseContext, rack -> {
+                return findDynamicDep(objClass, rack, resolver, values, racks);
+            });
+            if (newDep == null || newDep.dep == null) {
+                newDep = new DiscoveredResource(new SimpleResource(resolver
+                        .getLocalName()), Recipe.DEFAULT_DEPENDENCY);
             }
-        }
-        final Map<String, Object> values = new HashMap<String, Object>();
-        values.put("objClass", objClass);
-        values.put("obj", obj);
-        values.put("injector", null);
-        final LinkedList<SpiceRack> racks = new LinkedList<SpiceRack>();
-        DiscoveredResource newDep = RackLoop.loop(baseContext, rack -> {
-            return findDynamicDep(objClass, rack, resolver, values, racks);
-        });
-        if (newDep == null || newDep.dep == null) {
-            newDep = new DiscoveredResource(new SimpleResource(resolver
-                    .getLocalName()), Recipe.DEFAULT_DEPENDENCY);
-        }
-        if (newDep.res == null && resolver.getName() != null) {
-            newDep.res = new SimpleResource(resolver.getName(), racks
-                    .getFirst().getScope(resolver.getName(), objClass, null));
-        }
-        for (SpiceRack rack : racks) {
-            newDep.dep = rack
-                    .addContext(newDep.res, objClass, null, newDep.dep);
-        }
-        if (newDep.dep == Recipe.DEFAULT_DEPENDENCY) {
-            throw new DependencyInjectionException(
-                    "Failed to find dependency: " + newDep.res);
-        } else {
-            return newDep.dep;
+            if (newDep.res == null && resolver.getName() != null) {
+                newDep.res = new SimpleResource(resolver.getName(), racks
+                        .getFirst().getScope(resolver.getName(), objClass, null));
+            }
+            for (SpiceRack rack : racks) {
+                newDep.dep = rack
+                        .addContext(newDep.res, objClass, obj, newDep.dep);
+            }
+            if (newDep.dep == Recipe.DEFAULT_DEPENDENCY) {
+                throw new DependencyInjectionException(
+                        "Failed to find dependency: " + newDep.res);
+            } else {
+                return newDep.dep;
+            }
+        } finally {
+            Recipe.globalSync.unlock();
         }
     }
 
@@ -230,7 +238,7 @@ class ObjectSetterContextualizer extends AbstractContextualizer{
     }
 
     private DiscoveredResource findDynamicDep(Class<?> objClass, SpiceRack rack, ResourceNameResolver resolver,
-                                                     Map<String, Object> values, LinkedList<SpiceRack> racks) {
+                                              Map<String, Object> values, LinkedList<SpiceRack> racks) {
         Object depObj = resolver
                 .findDependency(resourceName -> rack.lookupContext(resourceName, objClass, null));
         DiscoveredResource discRes = null;
@@ -244,7 +252,8 @@ class ObjectSetterContextualizer extends AbstractContextualizer{
         return discRes;
     }
 
-    private void logAnnotatedMock(SpiceRack rack, DiscoveredResource objDep, DependencyFunctor<Object> depInjector) {
+    private void logAnnotatedMock(SpiceRack rack, DiscoveredResource
+            objDep, DependencyFunctor<Object> depInjector) {
         if (objDep == null && "AnnotatedMock".equals(depInjector.getInjectedLabel())) {
             System.out.println("Looking in " + rack.getDirectory().getName());
         }

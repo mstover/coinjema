@@ -14,13 +14,15 @@ public class SingleDepContextualizer extends AbstractContextualizer {
     private final CoinjemaContext subContext;
     private final Object obj;
 
-    public SingleDepContextualizer(Object obj, ResourceNameResolver resolver,CoinjemaContext peek) {
+    public SingleDepContextualizer(Object obj, ResourceNameResolver resolver, CoinjemaContext peek) {
         this.clzz = obj.getClass();
         this.obj = obj;
         this.base = peek;
         this.resolver = resolver;
         this.subContext = null;
-    }public SingleDepContextualizer(Object obj, ResourceNameResolver resolver,CoinjemaContext peek,CoinjemaContext sub) {
+    }
+
+    public SingleDepContextualizer(Object obj, ResourceNameResolver resolver, CoinjemaContext peek, CoinjemaContext sub) {
         this.clzz = obj.getClass();
         this.obj = obj;
         this.base = peek;
@@ -28,15 +30,17 @@ public class SingleDepContextualizer extends AbstractContextualizer {
         this.subContext = sub;
     }
 
-    public  Object getDepOf() {
-        SpiceRack baseContext = Recipe.findBaseContext(base, subContext);;
-        Object dep = resolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, clzz, null));
+    public Object getDepOf() {
+        SpiceRack baseContext = Recipe.findBaseContext(base, subContext);
+        Object dep = findPreviouslyResolvedDep(baseContext);
         if (dep != null) return dep;
         try {
-            final LinkedList<SpiceRack> racks = new LinkedList<SpiceRack>();
             Recipe.globalSync.lock();
+            Object depAgain = findPreviouslyResolvedDep(baseContext);
+            if (depAgain != null) return depAgain;
+            final LinkedList<SpiceRack> racks = new LinkedList<SpiceRack>();
             final Map<String, Object> values = new HashMap<>();
-            values.put("obj",obj);
+            values.put("obj", obj);
             values.put("resolver", resolver);
             values.put("objClass", clzz);
             DiscoveredResource discoveredDep = RackLoop.loop(baseContext, rack -> {
@@ -44,7 +48,7 @@ public class SingleDepContextualizer extends AbstractContextualizer {
                 racks.addFirst(rack);
                 return objDep;
             });
-            if(discoveredDep == null || discoveredDep.dep == null) {
+            if (discoveredDep == null || discoveredDep.dep == null) {
                 throw new DependencyInjectionException(
                         "Failed to find dependency for "
                                 + resolver.getName() + " for class "
@@ -66,5 +70,11 @@ public class SingleDepContextualizer extends AbstractContextualizer {
         } finally {
             Recipe.globalSync.unlock();
         }
+    }
+
+    private Object findPreviouslyResolvedDep(SpiceRack baseContext) {
+        Object dep = resolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, clzz, null));
+        if (dep != null) return dep;
+        return null;
     }
 }

@@ -7,28 +7,21 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.logging.Level;
-
-import static org.coinjema.logging.CoinjemaLogger.log;
 
 public final class Recipe {
 
     static final Object DEFAULT_DEPENDENCY = new Object();
-    static final ThreadLocal<ObjectSetterContextualizer> CONTEXTUALIZER = ThreadLocal.withInitial(() -> null);
-    static final ThreadLocal<ConstructorContextualizer> CONSTRUCTOR_CONTEXTUALIZER = ThreadLocal.withInitial(() -> null);
-    static final ThreadLocal<CoinjemaContext> contextStack = ThreadLocal.withInitial(() -> null);
     static final ReentrantLock globalSync = new ReentrantLock();
-    private static final ConcurrentMap<Class<?>, ConstructorFuncterSet<?>> constructorFunctorMap = new ConcurrentHashMap<>();
-    private static final Map<Object, Object> inConstruction = new ConcurrentHashMap<>();
-    static DynamicDepTracker dynTracker = new DynamicDepTracker();
+    static ScopedValue<ObjectSetterContextualizer> CONTEXTUALIZER = ScopedValue.newInstance();
+    static ScopedValue<ConstructorContextualizer> CONSTRUCTOR_CONTEXTUALIZER = ScopedValue.newInstance();
 
 
     public static void contextualize(ContextOriented obj) {
-        contextualize(obj, null, ContextFactory.peek());
+        contextualize(obj, null, ContextFactory.getContext());
     }
 
     public static void contextualize(ContextOriented obj, CoinjemaContext context) {
-        contextualize(obj, context, ContextFactory.peek());
+        contextualize(obj, context, ContextFactory.getContext());
     }
 
     public static void contextualize(final ContextOriented obj,
@@ -41,63 +34,34 @@ public final class Recipe {
         });
     }
 
-    static boolean enterConstruct(ConstructorContextOriented obj) {
-        Object o = inConstruction.putIfAbsent(obj.getClass(), obj);
-        return o == null;
-    }
-
-    static void exitConstruct(ConstructorContextOriented obj) {
-        inConstruction.remove(obj.getClass());
-    }
-
 
     static void runWithContextualizer(Consumer<ObjectSetterContextualizer> func) {
-        ObjectSetterContextualizer objectSetterContextualizer = CONTEXTUALIZER.get();
-        if (objectSetterContextualizer != null) {
-            func.accept(objectSetterContextualizer);
-        } else {
-            ObjectSetterContextualizer contextualizer = new ObjectSetterContextualizer();
-            CONTEXTUALIZER.set(contextualizer);
-            try {
-                func.accept(contextualizer);
-            } finally {
-                CONTEXTUALIZER.remove();
-            }
-        }
+        if (CONTEXTUALIZER.isBound()) func.accept(CONTEXTUALIZER.get());
+        else
+            ScopedValue.runWhere(CONTEXTUALIZER, new ObjectSetterContextualizer(), () -> func.accept(CONTEXTUALIZER.get()));
+
     }
 
     static <T> T returnWithContextualizer(Function<ObjectSetterContextualizer, T> func) {
-        T out = null;
-        ObjectSetterContextualizer objectSetterContextualizer = CONTEXTUALIZER.get();
-        if (objectSetterContextualizer != null) {
-            out = func.apply(objectSetterContextualizer);
-        } else {
-            ObjectSetterContextualizer contextualizer = new ObjectSetterContextualizer();
-            CONTEXTUALIZER.set(contextualizer);
+        if (CONTEXTUALIZER.isBound()) return func.apply(CONTEXTUALIZER.get());
+        else {
             try {
-                out = func.apply(contextualizer);
-            } finally {
-                CONTEXTUALIZER.remove();
+                return ScopedValue.callWhere(CONTEXTUALIZER, new ObjectSetterContextualizer(), () -> func.apply(CONTEXTUALIZER.get()));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
-        return out;
     }
 
     static <T> T returnWithConstructorContextualizer(Function<ConstructorContextualizer, T> func) {
-        T out = null;
-        ConstructorContextualizer cc = CONSTRUCTOR_CONTEXTUALIZER.get();
-        if (cc != null) {
-            out = func.apply(cc);
-        } else {
-            ConstructorContextualizer contextualizer = new ConstructorContextualizer();
-            CONSTRUCTOR_CONTEXTUALIZER.set(contextualizer);
+        if(CONSTRUCTOR_CONTEXTUALIZER.isBound()) return func.apply(CONSTRUCTOR_CONTEXTUALIZER.get());
+        else {
             try {
-                out = func.apply(contextualizer);
-            } finally {
-                CONSTRUCTOR_CONTEXTUALIZER.remove();
+                return ScopedValue.callWhere(CONSTRUCTOR_CONTEXTUALIZER, new ConstructorContextualizer(), () -> func.apply(CONSTRUCTOR_CONTEXTUALIZER.get()));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
-        return out;
     }
 
     static void contextualizeWithoutSave(final ContextOriented obj,
@@ -131,7 +95,7 @@ public final class Recipe {
         if (obj instanceof ContextOriented && ((ContextOriented) obj).isGiven())
             return findDynamicDependency(obj, clzz, method.getAnnotation(CoinjemaDynamic.class), method, ((ContextOriented) obj).getCoinjemaContext());
         else {
-            return findDynamicDependency(obj, clzz, method.getAnnotation(CoinjemaDynamic.class), method, ContextFactory.peek());
+            return findDynamicDependency(obj, clzz, method.getAnnotation(CoinjemaDynamic.class), method, ContextFactory.getContext());
         }
     }
 
@@ -168,29 +132,30 @@ public final class Recipe {
     }
 
     static ObjectSetterContextualizer getContextualizer() {
-        ObjectSetterContextualizer objectSetterContextualizer = CONTEXTUALIZER.get();
-        if (objectSetterContextualizer != null) return objectSetterContextualizer;
-        return new ObjectSetterContextualizer();
+        if (CONTEXTUALIZER.isBound()) return CONTEXTUALIZER.get();
+        else return new ObjectSetterContextualizer();
     }
 
     public static <T> T getDep(DependencyDefinitionI<T> def) {
         return switch (def) {
             case AliasDefinition(var obj, var depClass, var alias) ->
-                    (T) new SingleDepContextualizer(obj, new DepForAliasNameResolver(alias), ContextFactory.peek()).getDepOf();
+                    (T) new SingleDepContextualizer(obj, new DepForAliasNameResolver(alias), ContextFactory.getContext()).getDepOf();
             case TypeDefinition(var obj, var depClass) ->
-                    (T) new SingleDepContextualizer(obj, new DepOfResolver<>(depClass), ContextFactory.peek()).getDepOf();
+                    (T) new SingleDepContextualizer(obj, new DepOfResolver<>(depClass), ContextFactory.getContext()).getDepOf();
             case DependencyDefinition(
                     var obj, var depClass, var method, var type
             ) when method != null && type != null ->
-                    (T) new SingleDepContextualizer(obj, new DepForTypeNameResolver(type, method), ContextFactory.peek()).getDepOf();
+                    (T) new SingleDepContextualizer(obj, new DepForTypeNameResolver(type, method), ContextFactory.getContext()).getDepOf();
             case DependencyDefinition(
                     var obj, var depClass, var method, var type
             ) ->
-                    (T) new SingleDepContextualizer(obj, new DepForMethodNameResolver(obj.getClass(), method), ContextFactory.peek()).getDepOf();
-            case ObjectDependencyDefinition(var obj,var depClass,var method,var type) when method != null && type == null ->
-                    (T) new SingleDepContextualizer(obj, new DepForMethodNameResolver(obj.getClass(), method), ContextFactory.peek()).getDepOf();
-            case ObjectDependencyDefinition(var obj,var depClass,var method,var type) ->
-                    (T) new SingleDepContextualizer(obj, new DepForTypeNameResolver(type, method), ContextFactory.peek()).getDepOf();
+                    (T) new SingleDepContextualizer(obj, new DepForMethodNameResolver(obj.getClass(), method), ContextFactory.getContext()).getDepOf();
+            case ObjectDependencyDefinition(
+                    var obj, var depClass, var method, var type
+            ) when method != null && type == null ->
+                    (T) new SingleDepContextualizer(obj, new DepForMethodNameResolver(obj.getClass(), method), ContextFactory.getContext()).getDepOf();
+            case ObjectDependencyDefinition(var obj, var depClass, var method, var type) ->
+                    (T) new SingleDepContextualizer(obj, new DepForTypeNameResolver(type, method), ContextFactory.getContext()).getDepOf();
             default -> throw new IllegalStateException("Unexpected value: " + def);
         };
     }
@@ -198,48 +163,21 @@ public final class Recipe {
     public static <T> T getDep(DependencyDefinitionI<T> def, CoinjemaContext givenContext) {
         return switch (def) {
             case AliasDefinition(var obj, var depClass, var alias) ->
-                    (T) new SingleDepContextualizer(obj, new DepForAliasNameResolver(alias), ContextFactory.peek(), givenContext).getDepOf();
+                    (T) new SingleDepContextualizer(obj, new DepForAliasNameResolver(alias), ContextFactory.getContext(), givenContext).getDepOf();
             case TypeDefinition(var obj, var depClass) ->
-                    (T) new SingleDepContextualizer(obj, new DepOfResolver<>(depClass), ContextFactory.peek(), givenContext).getDepOf();
+                    (T) new SingleDepContextualizer(obj, new DepOfResolver<>(depClass), ContextFactory.getContext(), givenContext).getDepOf();
             case DependencyDefinition(var obj, var depClass, var method, var type)
                     when method != null && type != null ->
-                    (T) new SingleDepContextualizer(obj, new DepForTypeNameResolver(type, method), ContextFactory.peek(), givenContext).getDepOf();
-            case DependencyDefinition(var obj, var depClass, var method, var type)
-                    when method != null ->
-                    (T) new SingleDepContextualizer(obj, new DepForMethodNameResolver(obj.getClass(), method), ContextFactory.peek(), givenContext).getDepOf();
+                    (T) new SingleDepContextualizer(obj, new DepForTypeNameResolver(type, method), ContextFactory.getContext(), givenContext).getDepOf();
+            case DependencyDefinition(var obj, var depClass, var method, var type) ->
+                    (T) new SingleDepContextualizer(obj, new DepForMethodNameResolver(obj.getClass(), method), ContextFactory.getContext(), givenContext).getDepOf();
+            case ObjectDependencyDefinition(
+                    var obj, var depClass, var method, var type
+            ) when method != null && type == null ->
+                    (T) new SingleDepContextualizer(obj, new DepForMethodNameResolver(obj.getClass(), method), ContextFactory.getContext(), givenContext).getDepOf();
+            case ObjectDependencyDefinition(var obj, var depClass, var method, var type) ->
+                    (T) new SingleDepContextualizer(obj, new DepForTypeNameResolver(type, method), ContextFactory.getContext(), givenContext).getDepOf();
             default -> throw new IllegalStateException("Unexpected value: " + def);
         };
-    }
-
-    private <T extends ContextOriented> T contextualizeIt(final Class<T> clzz, Object[] givenArgs,
-                                                          final CoinjemaContext context, final CoinjemaContext base) {
-        ConstructorFuncterSet<T> functors = (ConstructorFuncterSet<T>) constructorFunctorMap.computeIfAbsent(clzz, c -> new ConstructorFuncterSet<>(clzz));
-
-        boolean topLevel = contextStack.get() == null;
-        if (log.isLoggable(Level.FINER)) {
-            log.finer("Base context = "
-                    + (topLevel ? base : contextStack.get())
-                    + " sub-context = " + context);
-        }
-        final SpiceRack baseContext = findBaseContext(topLevel ? base : contextStack.get(), context);
-        if (log.isLoggable(Level.FINER)) {
-            log.finer("Resolved context = " + baseContext.getContext());
-        }
-        Object[] argsToUse = new Object[functors.argCount()];
-        int index = 0;
-        for (ConstructorDependencyResolver resolver : functors) {
-            Object dep = resolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, clzz, givenArgs));
-            if (dep != null) {
-                argsToUse[index++] = dep;
-            } else {
-                throw new RuntimeException("I would prefer we always find the dependency, but we failed to find it for " + resolver.getFailedToFindMessage());
-            }
-        }
-        try {
-            return (T) functors.constructor().newInstance(argsToUse);
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException("Failed to construct object for " + functors.getFailedToConstructMessage(e), e);
-        }
-
     }
 }

@@ -49,10 +49,7 @@ public class BasicContextOriented extends AbstractContextOriented {
     }
 
     public String getDynamicProperty(String key) {
-
-        try (TempCoinjemaContext tcc = ContextFactory.pushContext(this)) {
-            return getMyService().getProperty(key);
-        }
+        return ContextFactory.withContext(getCoinjemaContext(), () -> getMyService().getProperty(key));
     }
 
     @CoinjemaDependency
@@ -92,9 +89,7 @@ public class BasicContextOriented extends AbstractContextOriented {
     }
 
     public BasicContextOriented getSubObject() {
-        try (TempCoinjemaContext cc = ContextFactory.pushContext(this)) {
-            return new BasicContextOriented();
-        }
+        return ContextFactory.withContext(getCoinjemaContext(), () -> new BasicContextOriented());
     }
 
     public BasicContextOriented getSubObject(BasicContextOriented obj) {
@@ -118,9 +113,7 @@ public class BasicContextOriented extends AbstractContextOriented {
     }
 
     public BasicContextOriented getSubObject(String context) {
-        try (TempCoinjemaContext tcc = ContextFactory.pushContext(this)) {
-            return new BasicContextOriented(new CoinjemaContext(context));
-        }
+        return ContextFactory.withContext(getCoinjemaContext(), () -> new BasicContextOriented(new CoinjemaContext(context)));
     }
 
     public void testLogging() {

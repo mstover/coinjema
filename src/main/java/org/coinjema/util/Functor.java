@@ -130,7 +130,7 @@ public class Functor<R> implements InvokableOn<R>, Callable<R>, Runnable {
 		} catch (Exception e) {
 			throw new RuntimeException("Trying to invoke method: "
 					+ getMethodName() + " on object: " + invokee
-					+ " with arguments " + Arrays.asList(tempArgs), e);
+					+ " with arguments " + (tempArgs == null ? "none" : Arrays.asList(tempArgs)), e);
 		}
 	}
 

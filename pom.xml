@@ -52,6 +52,9 @@
                     <version>3.11.0</version>
                     <configuration>
                         <enablePreview>true</enablePreview>
+                        <release>21</release>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -78,6 +81,9 @@
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.22.1</version>
+                    <configuration>
+                        <argLine>--enable-preview</argLine>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>

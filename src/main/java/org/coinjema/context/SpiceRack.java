@@ -34,11 +34,11 @@ final public class SpiceRack implements Registry {
     static Map<CoinjemaContext, SpiceRack> contextMap;
 
     private final Map<Object, Object> depObjects;
-    private ContextSource directory;
     private final HashSet<SpiceRack> children;
     Properties coinjemaProperties;
     boolean reconfigurability = false;
     boolean created = false;
+    private ContextSource directory;
     private CoinjemaContext context;
 
     // Set<WeakReference> contextualized;
@@ -198,7 +198,7 @@ final public class SpiceRack implements Registry {
     }
 
     public Object addContext(final Resource res, Class<?> objClass,
-                                   Object obj, final Object dep) {
+                             Object obj, final Object dep) {
         if (res == null) {
             return dep; // safeDepStorage(depOf, res.getName());
         } else if (res.getMetaTypes().contains(MetaType.perClass)
@@ -282,25 +282,25 @@ final public class SpiceRack implements Registry {
      *
      * @see org.coinjema.context.NamedContext#getContext()
      */
-     public CoinjemaContext getContext() {
+    public CoinjemaContext getContext() {
         return context;
     }
 
-     public void setContext(final CoinjemaContext context) {
+    public void setContext(final CoinjemaContext context) {
         this.context = context;
     }
 
     /**
      * @return Returns the directory.
      */
-     public ContextSource getDirectory() {
+    public ContextSource getDirectory() {
         return directory;
     }
 
     /**
      * @param directory The directory to set.
      */
-     public void setDirectory(final ContextSource directory) {
+    public void setDirectory(final ContextSource directory) {
         this.directory = directory;
     }
 
@@ -315,13 +315,13 @@ final public class SpiceRack implements Registry {
     }
 
     public Object getSharedDep(String contextPath, String depName) {
-        final Map<String,Object> values = new HashMap<>();
+        final Map<String, Object> values = new HashMap<>();
         SpiceRack sub = Recipe.findBaseContext(this.getContext(),
                 new CoinjemaContext(contextPath));
         values.put("registry", sub);
         final ResourceNameResolver resolver = new SimpleStringResolver(depName);
         DiscoveredResource disc = RackLoop.limitedLoop(sub, this,
-                rack -> Recipe.CONTEXTUALIZER.get().captureDepInContextStack(values, resolver, rack));
+                rack -> Recipe.CONTEXTUALIZER.orElse(new ObjectSetterContextualizer()).captureDepInContextStack(values, resolver, rack));
         if (disc != null) {
             return disc.dep;
         } else {
@@ -330,10 +330,10 @@ final public class SpiceRack implements Registry {
     }
 
     public Object getSharedDep(String contextPath) {
-        final Map<String,Object> values = new HashMap<>();
+        final Map<String, Object> values = new HashMap<>();
         int x = contextPath.lastIndexOf("/");
         String path = null;
-        String depName ;
+        String depName;
         if (x > -1) {
             path = contextPath.substring(0, x);
             depName = contextPath.substring(x + 1);

@@ -2,7 +2,7 @@ package org.coinjema.context;
 
 import org.coinjema.context.source.ContextSource;
 
-import java.util.LinkedList;
+import java.util.function.Supplier;
 
 /**
  * Contains static methods for initializing Coinjema with context locations.  Also contains methods for destroying
@@ -12,39 +12,16 @@ import java.util.LinkedList;
  * @author mikes
  */
 public class ContextFactory {
-    static ThreadLocal<LinkedList<CoinjemaContext>> tracker = new ThreadLocal<LinkedList<CoinjemaContext>>() {
-        public LinkedList<CoinjemaContext> initialValue() {
-            return new LinkedList<CoinjemaContext>();
-        }
-    };
+
+    public static ScopedValue<CoinjemaContext> CONTEXT = ScopedValue.newInstance();
+    public static CoinjemaContext ROOT_CONTEXT = new CoinjemaContext("");
 
 
     private ContextFactory() {
         super();
     }
 
-    /**
-     * For direct and quick control over a thread's current context, call this method to push a
-     * context onto its stack.  Any objects created in this thread after pushing a context will be
-     * created in that context.  You must remove the context when you are done via popContext();
-     *
-     * @param cc
-     */
-    public static void pushContext(CoinjemaContext cc) {
-        tracker.get().addFirst(cc);
-    }
 
-    /**
-     * Remove the top context from the context stack.  DO NOT call this unless you added a context
-     * manually via pushContext(CoinjemaContext).
-     */
-    public static void popContext() {
-        tracker.get().removeFirst();
-    }
-
-    public static CoinjemaContext peek() {
-        return tracker.get().peek();
-    }
 
     /**
      * Creates the root context using the default working directory as the base context location. (ie System.getProperty("user.dir")).
@@ -54,6 +31,14 @@ public class ContextFactory {
      */
     public static void createRootContext() throws Exception {
         SpiceRack.createRootContext();
+    }
+
+    public static <T> T withContext(CoinjemaContext newContext, Supplier<T> func) {
+        try {
+            return ScopedValue.callWhere(CONTEXT,newContext, () -> func.get());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -115,10 +100,7 @@ public class ContextFactory {
         return SpiceRack.getInstance(new CoinjemaContext(contextName));
     }
 
-    public static TempCoinjemaContext pushContext(ContextOriented coObj) {
-        CoinjemaContext coinjemaContext = coObj.getCoinjemaContext();
-        var tmpContext = new TempCoinjemaContext(coinjemaContext);
-        pushContext(coinjemaContext);
-        return tmpContext;
+    public static CoinjemaContext getContext() {
+        return CONTEXT.orElse(ROOT_CONTEXT);
     }
 }

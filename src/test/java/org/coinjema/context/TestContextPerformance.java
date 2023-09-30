@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -85,7 +86,8 @@ public class TestContextPerformance extends AbstractContextTester {
     @Test
     public void testTheConcurrencyChallenge() throws Exception {
         // for(int j = 0;j < 50;j++) {
-        ExecutorService threadPool = Executors.newFixedThreadPool(50);
+//        ExecutorService threadPool = Executors.newFixedThreadPool(50);
+        ExecutorService threadPool = Executors.newVirtualThreadPerTaskExecutor();
         List dynProps = new LinkedList();
         Functor getPropsa = new Functor(new AdvancedContextObject(),
                 "getDynamicProperties");
@@ -102,59 +104,60 @@ public class TestContextPerformance extends AbstractContextTester {
         CoinjemaContext unitsOrc = new CoinjemaContext("units/orc");
         CoinjemaContext custom = new CoinjemaContext("custom/units");
 
+        int testSize = 100000;
+        System.out.println("Going to invoke them all " + (testSize *8));
         long time = System.currentTimeMillis();
-        for (int i = 0; i < 10000; i++) {
-            dynProps.add(getPropsa);
-            dynProps.add(new ThreadedObjectInit(c, root));
-            dynProps.add(new ThreadedObjectInit(c, unitsOrc));
-            dynProps.add(new ThreadedObjectInit(c, custom));
-            dynProps.add(new ThreadedObjectInit(s, root));
-            dynProps.add(getPropsb);
-            dynProps.add(new ThreadedObjectInit(s, unitsOrc));
-            dynProps.add(new ThreadedObjectInit(s, custom));
+        List<Future<?>> results = new ArrayList<>();
+        for (int i = 0; i < testSize; i++) {
+            results.add(threadPool.submit((Callable<Object>) getPropsa));
+            results.add(threadPool.submit(new ThreadedObjectInit(c, root)));
+            results.add(threadPool.submit(new ThreadedObjectInit(c, unitsOrc)));
+            results.add(threadPool.submit(new ThreadedObjectInit(c, custom)));
+            results.add(threadPool.submit(new ThreadedObjectInit(s, root)));
+            results.add(threadPool.submit((Callable<Object>) getPropsb));
+            results.add(threadPool.submit(new ThreadedObjectInit(s, unitsOrc)));
+            results.add(threadPool.submit(new ThreadedObjectInit(s, custom)));
             // if(i == 5000) dynProps.add(new CallableFunctor(refresher));
         }
-        System.out.println("Going to invoke them all " + dynProps.size());
-        List results = threadPool.invokeAll(dynProps);
         System.out.println("Done invoking");
         MockSingleton ms = null;
         int countChanges = 0;
-        for (int i = 0; i < 80000; i += 8) {
+        for (int i = 0; i < testSize*8; i += 8) {
             // if(i % 100 == 0) System.out.println("done: " + i);
-            Properties propsa = (Properties) ((Future) results.get(i)).get(10, TimeUnit.SECONDS);
+            Properties propsa = (Properties) ((Future) results.get(i)).get(10, TimeUnit.MINUTES);
             Properties propsb = (Properties) ((Future) results.get(i + 5))
-                    .get(1, TimeUnit.SECONDS);
+                    .get(10, TimeUnit.MINUTES);
             assertEquals("red", propsa
                     .getProperty("color"), "Failed at i = " + i);
             assertEquals("purple", propsb
                     .getProperty("color"), "Failed at i = " + i);
             if (ms == null) {
-                ms = ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.SECONDS)
+                ms = ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.MINUTES)
                         .getMyService();
             }
-            if (ms != ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.SECONDS)
+            if (ms != ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.MINUTES)
                     .getMyService()) {
-                ms = ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.SECONDS)
+                ms = ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.MINUTES)
                         .getMyService();
                 countChanges++;
             }
             assertEquals(ms,
-                    ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.SECONDS)
+                    ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.MINUTES)
                             .getMyService());
             assertEquals("path1",
-                    ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.SECONDS)
+                    ((Future<BasicContextOriented>) results.get(i + 1)).get(10, TimeUnit.MINUTES)
                             .getPaths()[0], "Failed at i = " + i);
             assertEquals("orc_path1",
-                    ((Future<BasicContextOriented>) results.get(i + 2)).get(10, TimeUnit.SECONDS)
+                    ((Future<BasicContextOriented>) results.get(i + 2)).get(10, TimeUnit.MINUTES)
                             .getPaths()[0], "Failed at i = " + i);
             assertEquals(ms,
-                    ((Future<BasicContextOriented>) results.get(i + 2)).get(10, TimeUnit.SECONDS)
+                    ((Future<BasicContextOriented>) results.get(i + 2)).get(10, TimeUnit.MINUTES)
                             .getMyService(), "Failed at i = " + i);
             assertEquals("custom/units/",
-                    ((Future<BasicContextOriented>) results.get(i + 3)).get(10, TimeUnit.SECONDS)
+                    ((Future<BasicContextOriented>) results.get(i + 3)).get(10, TimeUnit.MINUTES)
                             .getPaths()[0], "Failed at i = " + i);
             assertEquals(ms,
-                    ((Future<BasicContextOriented>) results.get(i + 3)).get(10, TimeUnit.SECONDS)
+                    ((Future<BasicContextOriented>) results.get(i + 3)).get(10, TimeUnit.MINUTES)
                             .getMyService(), "Failed at i = " + i);
             // if(i == 40000) i++;
         }

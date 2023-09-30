@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * An implementation of ContextSource based on a simple file structure.
@@ -21,8 +22,8 @@ import java.util.List;
 public class FileContextSource implements ContextSource {
 
 	File root;
-	ThreadLocal<Resource> latest = new ThreadLocal<Resource>();
-	ThreadLocal<String> latestResourceName = new ThreadLocal<String>();
+
+	private AtomicReference<String[]> filenames = new AtomicReference<>();
 
 	public FileContextSource(File file) {
 		root = file.getAbsoluteFile();
@@ -84,8 +85,6 @@ public class FileContextSource implements ContextSource {
 
 	public Resource getResource(final String resourceName, final String ext) {
 		File res = new File(root, resourceName + "." + ext);
-		latestResourceName.set(null);
-		latest.set(null);
 		if (res.exists() && !res.isDirectory()) {
 			return new FileResource(res, resourceName, ext);
 		}
@@ -93,45 +92,26 @@ public class FileContextSource implements ContextSource {
 	}
 
 	public Resource getResource(final String resourceName) {
-		if (resourceName.equals(latestResourceName.get())) {
-			return latest.get();
-		} else {
-			latestResourceName.set(resourceName);
-			latest.set(null);
-		}
-		File[] candidates = root.listFiles(new FilenameFilter() {
-			public boolean accept(File parent, String filename) {
-				if (filename.startsWith(resourceName)) {
-					String end = filename.substring(resourceName.length());
-					if (end.length() > 0 && end.charAt(0) == '.') {
-						if (end.substring(1).indexOf(".") == -1) {
-							return true;
-						} else {
-							end = MetaType.stripMetaTypes(end);
-							if (end.substring(1).indexOf(".") == -1) {
-								return true;
-							} else {
-								return false;
-							}
-						}
+		String[] fileNamesInRoot = filenames.accumulateAndGet(null,(prev,cur) -> {
+			if(prev != null) return prev;
+			return root.list();
+		});
+		for (String filename : fileNamesInRoot) {
+			if (filename.startsWith(resourceName)) {
+				String end = filename.substring(resourceName.length());
+				if (end.length() > 0 && end.charAt(0) == '.') {
+					if (end.substring(1).indexOf(".") == -1) {
+						return new FileResource(new File(root,filename),resourceName);
 					} else {
-						return false;
+						end = MetaType.stripMetaTypes(end);
+						if (end.substring(1).indexOf(".") == -1) {
+							return new FileResource(new File(root,filename),resourceName);
+						}
 					}
-				} else {
-					return false;
 				}
 			}
-		});
-		if (candidates == null || candidates.length == 0) {
-			latest.set(null);
-		} else if (candidates.length == 1) {
-			latest.set(new FileResource(candidates[0], resourceName));
-		} else if (candidates.length > 1) {
-			throw new RuntimeException(
-					"More than one resource found with name: '" + resourceName
-							+ "' in directory " + root.getAbsolutePath());
 		}
-		return latest.get();
+		return null;
 	}
 
 }
