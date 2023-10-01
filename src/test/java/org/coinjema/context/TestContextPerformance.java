@@ -86,7 +86,7 @@ public class TestContextPerformance extends AbstractContextTester {
     @Test
     public void testTheConcurrencyChallenge() throws Exception {
         // for(int j = 0;j < 50;j++) {
-//        ExecutorService threadPool = Executors.newFixedThreadPool(50);
+//        ExecutorService threadPool = Executors.newFixedThreadPool(10);
         ExecutorService threadPool = Executors.newVirtualThreadPerTaskExecutor();
         List dynProps = new LinkedList();
         Functor getPropsa = new Functor(new AdvancedContextObject(),

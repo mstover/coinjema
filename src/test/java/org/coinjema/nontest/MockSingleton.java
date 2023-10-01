@@ -2,7 +2,6 @@ package org.coinjema.nontest;
 
 import org.coinjema.context.*;
 
-@CoinjemaObject
 public class MockSingleton extends AbstractContextOriented {
     String mainValue;
     SimpleDynamic dyn = new SimpleDynamic();
@@ -11,7 +10,6 @@ public class MockSingleton extends AbstractContextOriented {
 
     public MockSingleton() {
         super();
-        Recipe.contextualize(this);
     }
     
     public String getMainValue()
