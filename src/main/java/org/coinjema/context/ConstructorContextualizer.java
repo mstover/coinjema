@@ -1,5 +1,6 @@
 package org.coinjema.context;
 
+import org.coinjema.context.source.Resource;
 import org.coinjema.context.source.SimpleResource;
 
 import java.util.HashMap;
@@ -106,18 +107,16 @@ public class ConstructorContextualizer {
             out = dep.dep;
         }
         if (dep.res == null && resolver.getName() != null) {
-            dep.res = new SimpleResource(resolver.getName(), racks.getFirst()
-                    .getScope(resolver.getName(), resolver.getTargetClass(), null));
+            dep.addRes(new SimpleResource(resolver.getName(), racks.getFirst()
+                    .getScope(resolver.getName(), resolver.getTargetClass(), null)));
         }
         for (SpiceRack rack : racks) {
             if (dep.dep == Recipe.DEFAULT_DEPENDENCY) {
-                dep.dep = rack
-                        .addContext(dep.res, resolver.getTargetClass(), null, dep.dep);
+                dep.dep = dep.rackAllResources(rack, resolver.getTargetClass(), null, dep.dep);
             } else if (resolver.getName() == null) {
                 break;
             } else {
-                dep.dep = rack
-                        .addContext(dep.res, resolver.getTargetClass(), null, dep.dep);
+                dep.dep = dep.rackAllResources(rack, resolver.getTargetClass(), null, dep.dep);
             }
         }
         return out;
@@ -143,7 +142,7 @@ public class ConstructorContextualizer {
         // down for the redirect before
         // accepting any deps saved to the injector.
         DiscoveredResource dep = new DiscoveredResource(null, null);
-        String redirect = resolver.findDependency(resourceName -> RedirectionEvaluator.findRedirectName(resourceName, base));
+        SimpleResource redirect = resolver.findDependency(resourceName -> RedirectionEvaluator.findRedirectName(resourceName, base));
         if (redirect == null) {
             dep.dep = resolver.findDependency(resourceName -> base.lookupContext(resourceName, (Class<?>) values.get("objClass"), values.get("obj")));
             if (dep.dep != null) {
@@ -151,7 +150,7 @@ public class ConstructorContextualizer {
             }
             dep = resolver.findDependency(resourceName -> resolveScriptNameLoop(values, resolver, base, resourceName));
             if (dep != null && dep.dep != null) {
-                dep.dep = base.addContext(dep.res, (Class<?>) values
+                dep.dep = dep.rackAllResources(base, (Class<?>) values
                         .get("objClass"), values.get("obj"), dep.dep);
             }
         } else {
@@ -170,19 +169,21 @@ public class ConstructorContextualizer {
         return ScriptEvaluator.evaluate(resourceName, base.getDirectory(), values);
     }
 
-    private DiscoveredResource redirect(Map<String, Object> values, SpiceRack base, String redirect, ResourceNameResolver parentResolver) {
+    private DiscoveredResource redirect(Map<String, Object> values, SpiceRack base, SimpleResource redirect, ResourceNameResolver parentResolver) {
         DiscoveredResource dep;
         final Map<String, Object> newValues = new HashMap<String, Object>(values);
         SpiceRack sub = base;
+        String redirectName = redirect.getName();
         int x = -1;
-        if ((x = redirect.lastIndexOf("/")) > -1) {
+        if ((x = redirectName.lastIndexOf("/")) > -1) {
             sub = Recipe.findBaseContext(base.getContext(), new CoinjemaContext(
-                    redirect.substring(0, x)));
-            redirect = redirect.substring(x + 1);
+                    redirectName.substring(0, x)));
+            redirectName = redirectName.substring(x + 1);
         }
         final RedirectNameResolver redirectResolve = new RedirectNameResolver(
-                redirect, parentResolver);
+                redirectName, parentResolver);
         dep = RackLoop.limitedLoop(sub, base, rack -> captureDepInContextStack(newValues, redirectResolve, rack));
+        if (dep.dep != null) dep.addRes(new SimpleResource(parentResolver.getName(), redirect.getScope()));
         return dep;
     }
 }

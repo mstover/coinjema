@@ -22,7 +22,7 @@ class WeakPool implements Iterable<ContextOriented> {
 		map.put(o,null);
 	}
 	
-	public synchronized Iterator<ContextOriented> iterator()
+	public  Iterator<ContextOriented> iterator()
 	{
 		return map.keySet().iterator();
 	}

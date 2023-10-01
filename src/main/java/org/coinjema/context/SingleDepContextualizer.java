@@ -55,15 +55,14 @@ public class SingleDepContextualizer extends AbstractContextualizer {
                                 + clzz.getName() + " in context " + baseContext.getContext());
             }
             if (discoveredDep.res == null && resolver.getName() != null) {
-                discoveredDep.res = new SimpleResource(resolver.getName(), racks.getFirst()
-                        .getScope(resolver.getName(), clzz, null));
+                discoveredDep.addRes(new SimpleResource(resolver.getName(), racks.getFirst()
+                        .getScope(resolver.getName(), clzz, null)));
             }
             for (SpiceRack rack : racks) {
                 if (resolver.getName() == null) {
                     break;
                 } else {
-                    discoveredDep.dep = rack
-                            .addContext(discoveredDep.res, clzz, null, discoveredDep.dep);
+                    discoveredDep.dep = discoveredDep.rackAllResources(rack, clzz, null, discoveredDep.dep);
                 }
             }
             return discoveredDep.dep;

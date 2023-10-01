@@ -31,7 +31,7 @@ public class ScriptEvaluator {
 		addEvaluator("groovySql", new GroovySqlEvaluator());
 	}
 
-	static synchronized DiscoveredResource evaluate(String scriptName,
+	static  DiscoveredResource evaluate(String scriptName,
 			ContextSource source, Map scriptParameters) {
 		Resource res = source.getResource(scriptName);
 		try {

@@ -20,6 +20,19 @@ public class InjectorNameResolver extends AbstractNameResolver {
         this.injector = injector;
     }
 
+    @Override
+    public String toString() {
+        return "InjectorNameResolver{" +
+                "injector=" + injector +
+                ", objClass=" + objClass +
+                ", fixedName='" + fixedName + '\'' +
+                ", localName='" + localName + '\'' +
+                ", typeName='" + typeName + '\'' +
+                ", globalName='" + globalName + '\'' +
+                ", count=" + count +
+                '}';
+    }
+
     protected void reset() {
         fixedName = null;
         count = -1;

@@ -7,8 +7,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import static org.coinjema.logging.CoinjemaLogger.log;
@@ -16,6 +18,8 @@ import static org.coinjema.logging.CoinjemaLogger.log;
 class ObjectSetterContextualizer extends AbstractContextualizer {
 
     private static final ConcurrentMap<Class<?>, FunctorSet> functorMap = new ConcurrentHashMap<>();
+
+    private static final ConcurrentMap<ClassContextKey, Boolean> contextInitialized = new ConcurrentHashMap<>();
 
     private static Object findPreviouslyResolvedDep(Class<?> objClass, Method meth, ResourceNameResolver resolver, SpiceRack baseContext) {
         Object dep = resolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, objClass, null));
@@ -31,6 +35,11 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
         return null;
     }
 
+    public static void clear() {
+        functorMap.clear();
+        contextInitialized.clear();
+    }
+
     void contextualize(final ContextOriented obj, final CoinjemaContext context, CoinjemaContext base) {
         contextualizeIt(obj, context, base);
     }
@@ -38,23 +47,30 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
     private void contextualizeIt(final ContextOriented obj,
                                  final CoinjemaContext context, final CoinjemaContext base) {
         FunctorSet functors = functorMap.get(obj.getClass());
-        if (functors != null) {
+        if (functors != null && contextInitialized.getOrDefault(new ClassContextKey(obj.getClass(), Recipe.findBaseContext(base, context).getContext()), false)) {
             contextualizeItWithFunctors(obj, context, base, functors);
 
         } else {
             boolean tryAgain = false;
             try {
-                Recipe.globalSync.lock();
-                functors = functorMap.get(obj.getClass());
-                if (functors == null) {
-                    contextualizeClassFirstTime(obj, context, base);
-                } else {
-                    tryAgain = true;
-                }
-            } finally {
-                Recipe.globalSync.unlock();
+                boolean haveLock = Recipe.globalSync.tryLock(1, TimeUnit.MILLISECONDS);
+                if (haveLock) {
+                    try {
+                        functors = functorMap.get(obj.getClass());
+                        if (functors == null || !contextInitialized.getOrDefault(new ClassContextKey(obj.getClass(), Recipe.findBaseContext(base, context).getContext()), false)) {
+                            contextualizeClassFirstTime(obj, context, base);
+                        } else {
+                            tryAgain = true;
+                        }
+                    } finally {
+                        Recipe.globalSync.unlock();
+                    }
+                } else tryAgain = true;
+                if (tryAgain) contextualizeIt(obj, context, base);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
             }
-            if (tryAgain) contextualizeIt(obj, context, base);
         }
     }
 
@@ -86,7 +102,13 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
                 } else if (dep != null) {
                     injector.invoke(obj, dep);
                 } else {
-                    contextualizeContextFirstTime(functors, obj, context, base);
+                    try {
+                        Recipe.globalSync.lock();
+                        System.out.println("uncontextualized functor shouldn't happen - in context " + baseContext.getContext() + " " + injResolver);
+                        contextualizeContextFirstTime(functors, obj, context, base);
+                    } finally {
+                        Recipe.globalSync.unlock();
+                    }
                     break;
                 }
             }
@@ -96,7 +118,10 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
     private void contextualizeClassFirstTime(
             final ContextOriented obj, final CoinjemaContext context,
             final CoinjemaContext base) {
-        contextualizeContextFirstTime(retrieveFunctors(obj), obj, context, base);
+        FunctorSet functors = retrieveFunctors(obj);
+        contextualizeContextFirstTime(functors, obj, context, base);
+        functorMap.put(obj.getClass(), functors);
+        contextInitialized.put(new ClassContextKey(obj.getClass(), Recipe.findBaseContext(base, context).getContext()), true);
     }
 
     private void contextualizeContextFirstTime(
@@ -130,7 +155,7 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
     }
 
     private FunctorSet retrieveFunctors(Object obj) {
-        return functorMap.computeIfAbsent(obj.getClass(), cl -> new FunctorSet(obj));
+        return new FunctorSet(obj);
     }
 
     private void iterateFunctors(final ContextOriented obj,
@@ -168,19 +193,17 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
         } else if (dep.dep != Recipe.DEFAULT_DEPENDENCY) {
             injector.invoke(obj, dep.dep);
         }
-        if (dep.res == null && resolver.getName() != null) {
-            dep.res = new SimpleResource(resolver.getName(), racks.getFirst()
-                    .getScope(resolver.getName(), obj.getClass(), obj));
+        if (dep.hasNoResource() && resolver.getName() != null) {
+            dep.res.add(new SimpleResource(resolver.getName(), racks.getFirst()
+                    .getScope(resolver.getName(), obj.getClass(), obj)));
         }
         for (SpiceRack rack : racks) {
             if (dep.dep == Recipe.DEFAULT_DEPENDENCY) {
-                dep.dep = rack
-                        .addContext(dep.res, obj.getClass(), obj, dep.dep);
+                dep.dep = dep.rackAllResources(rack, obj.getClass(), obj, dep.dep);
             } else if (resolver.getName() == null) {
                 break;
             } else {
-                dep.dep = rack
-                        .addContext(dep.res, obj.getClass(), obj, dep.dep);
+                dep.dep = dep.rackAllResources(rack, obj.getClass(), obj, dep.dep);
             }
         }
     }
@@ -214,12 +237,11 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
                         .getLocalName()), Recipe.DEFAULT_DEPENDENCY);
             }
             if (newDep.res == null && resolver.getName() != null) {
-                newDep.res = new SimpleResource(resolver.getName(), racks
-                        .getFirst().getScope(resolver.getName(), objClass, null));
+                newDep.addRes(new SimpleResource(resolver.getName(), racks
+                        .getFirst().getScope(resolver.getName(), objClass, null)));
             }
             for (SpiceRack rack : racks) {
-                newDep.dep = rack
-                        .addContext(newDep.res, objClass, obj, newDep.dep);
+                newDep.dep = newDep.rackAllResources(rack, objClass, obj, newDep.dep);
             }
             if (newDep.dep == Recipe.DEFAULT_DEPENDENCY) {
                 throw new DependencyInjectionException(
@@ -271,4 +293,31 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
         }
     }
 
+    private static class ClassContextKey {
+        final Class<?> clzz;
+        final CoinjemaContext cc;
+
+        public ClassContextKey(Class<?> clzz, CoinjemaContext cc) {
+            this.clzz = clzz;
+            this.cc = cc;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ClassContextKey that = (ClassContextKey) o;
+
+            if (!Objects.equals(clzz, that.clzz)) return false;
+            return Objects.equals(cc, that.cc);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = clzz != null ? clzz.hashCode() : 0;
+            result = 31 * result + (cc != null ? cc.hashCode() : 0);
+            return result;
+        }
+    }
 }

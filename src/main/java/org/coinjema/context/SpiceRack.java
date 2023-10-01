@@ -14,6 +14,7 @@ import org.coinjema.context.source.Resource;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * The SpiceRack keeps a single registry-like tree for the entire JVM, though
@@ -25,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Generation - Code and Comments
  */
-final public class SpiceRack implements Registry {
+final class SpiceRack implements Registry {
 
     final static WeakPool contextObjects = new WeakPool();
 
@@ -38,9 +39,9 @@ final public class SpiceRack implements Registry {
     Properties coinjemaProperties;
     boolean reconfigurability = false;
     boolean created = false;
+    ReentrantLock contextLock = new ReentrantLock();
     private ContextSource directory;
     private CoinjemaContext context;
-
     // Set<WeakReference> contextualized;
     private SpiceRack parent;
 
@@ -49,7 +50,7 @@ final public class SpiceRack implements Registry {
         this.directory = directory;
         depObjects = new ConcurrentHashMap<>(101);
         parent = null;
-        contextMap = new HashMap<>();
+        contextMap = new ConcurrentHashMap<>();
         created = true;
         root = this;
         contextMap.put(context, this);
@@ -83,37 +84,60 @@ final public class SpiceRack implements Registry {
         return contextMap.get(context);
     }
 
-    public synchronized static void createRootContext() {
+    public static void createRootContext() {
         createRootContext(new FileContextSource(System.getProperty("user.dir")));
     }
 
-    public static synchronized void createRootContext(ContextSource directory) {
-        new SpiceRack(directory);
+    public static void createRootContext(ContextSource directory) {
+        try {
+            Recipe.globalSync.lock();
+            new SpiceRack(directory);
+        } finally {
+            Recipe.globalSync.unlock();
+        }
     }
 
-    public synchronized static void createContext(
+    public static void createContext(
             final String contextName, final ContextSource directory) {
-        new SpiceRack(new CoinjemaContext(contextName), directory, root);
+        try {
+            Recipe.globalSync.lock();
+            new SpiceRack(new CoinjemaContext(contextName), directory, root);
+        } finally {
+            Recipe.globalSync.unlock();
+        }
     }
 
-    public synchronized static void createContext(
+    public static void createContext(
             final String contextName, final ContextSource directory,
             CoinjemaContext parentContext) {
-        new SpiceRack(new CoinjemaContext(parentContext, contextName),
-                directory, getInstance(parentContext));
+        try {
+            Recipe.globalSync.lock();
+            new SpiceRack(new CoinjemaContext(parentContext, contextName),
+                    directory, getInstance(parentContext));
+        } finally {
+            Recipe.globalSync.unlock();
+        }
     }
 
-    public synchronized static void destroyContext(
+    public static void destroyContext(
             final String contextName) {
         CoinjemaContext context = new CoinjemaContext(contextName);
         SpiceRack rack = getInstance(context);
-        rack.clear();
-        contextMap.remove(context);
-        if (rack == getRoot()) {
-            root.clear();
-            root = null;
+        try {
+            rack.contextLock.lock();
+            rack.clear();
+            contextMap.remove(context);
+            if (rack == getRoot()) {
+                root.clear();
+                root = null;
+                ObjectSetterContextualizer.clear();
+            } else {
+                ObjectSetterContextualizer.clear();
+            }
+        } finally {
+            rack.contextLock.unlock();
         }
-        System.gc();
+
     }
 
     private void createChildren() {
@@ -216,15 +240,7 @@ final public class SpiceRack implements Registry {
     }
 
     private Object safeDepStorage(final Object dep, Object key) {
-        synchronized (depObjects) {
-            Object ret;
-            if ((ret = depObjects.get(key)) != null) {
-                return ret;
-            } else {
-                depObjects.put(key, dep);
-                return dep;
-            }
-        }
+        return depObjects.computeIfAbsent(key, k -> dep);
     }
 
     SpiceRack getParent() {
@@ -261,11 +277,15 @@ final public class SpiceRack implements Registry {
     public void refresh(boolean redo) {
         List<ContextOriented> l = null;
         if (redo) {
-            synchronized (contextObjects) {
+            try {
+                contextLock.lock();
                 l = new LinkedList<>(contextObjects.map.keySet());
+            } finally {
+                contextLock.unlock();
             }
         }
         depObjects.clear();
+        ObjectSetterContextualizer.clear();
         for (SpiceRack child : children) {
             child.refresh(false);
         }
