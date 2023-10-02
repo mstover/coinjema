@@ -6,27 +6,22 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class SingleDepContextualizer extends AbstractContextualizer {
-    private final Class<?> clzz;
+public class ResourceNameContextualizer extends AbstractContextualizer {
     private final CoinjemaContext base;
     private final ResourceNameResolver resolver;
 
     private final CoinjemaContext subContext;
-    private final Object obj;
 
-    public SingleDepContextualizer(Object obj, ResourceNameResolver resolver, CoinjemaContext peek) {
-        this.clzz = obj.getClass();
-        this.obj = obj;
-        this.base = peek;
+
+    public ResourceNameContextualizer(ResourceNameResolver resolver, CoinjemaContext base) {
         this.resolver = resolver;
+        this.base = base;
         this.subContext = null;
     }
 
-    public SingleDepContextualizer(Object obj, ResourceNameResolver resolver, CoinjemaContext peek, CoinjemaContext sub) {
-        this.clzz = obj.getClass();
-        this.obj = obj;
-        this.base = peek;
+    public ResourceNameContextualizer(ResourceNameResolver resolver, CoinjemaContext base, CoinjemaContext sub) {
         this.resolver = resolver;
+        this.base = base;
         this.subContext = sub;
     }
 
@@ -40,9 +35,9 @@ public class SingleDepContextualizer extends AbstractContextualizer {
             if (depAgain != null) return depAgain;
             final LinkedList<SpiceRack> racks = new LinkedList<SpiceRack>();
             final Map<String, Object> values = new HashMap<>();
-            values.put("obj", obj);
+            values.put("obj", "");
             values.put("resolver", resolver);
-            values.put("objClass", clzz);
+            values.put("objClass", Object.class);
             DiscoveredResource discoveredDep = RackLoop.loop(baseContext, rack -> {
                 DiscoveredResource objDep = captureDepInContextStack(values, resolver, rack);
                 racks.addFirst(rack);
@@ -51,18 +46,17 @@ public class SingleDepContextualizer extends AbstractContextualizer {
             if (discoveredDep == null || discoveredDep.dep == null) {
                 throw new DependencyInjectionException(
                         "Failed to find dependency for "
-                                + resolver.getName() + " for class "
-                                + clzz.getName() + " in context " + baseContext.getContext());
+                                + resolver.getName() + " in context " + baseContext.getContext());
             }
             if (discoveredDep.res == null && resolver.getName() != null) {
                 discoveredDep.addRes(new SimpleResource(resolver.getName(), racks.getFirst()
-                        .getScope(resolver.getName(), clzz, obj)));
+                        .getScope(resolver.getName(), Object.class, null)));
             }
             for (SpiceRack rack : racks) {
                 if (resolver.getName() == null) {
                     break;
                 } else {
-                    discoveredDep.dep = discoveredDep.rackAllResources(rack, clzz, obj, discoveredDep.dep);
+                    discoveredDep.dep = discoveredDep.rackAllResources(rack, Object.class, null, discoveredDep.dep);
                 }
             }
             return discoveredDep.dep;
@@ -72,7 +66,7 @@ public class SingleDepContextualizer extends AbstractContextualizer {
     }
 
     private Object findPreviouslyResolvedDep(SpiceRack baseContext) {
-        Object dep = resolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, clzz, obj));
+        Object dep = resolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, Object.class, null));
         if (dep != null) return dep;
         return null;
     }

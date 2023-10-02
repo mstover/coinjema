@@ -2,8 +2,6 @@ package org.coinjema.context;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -54,7 +52,7 @@ public final class Recipe {
     }
 
     static <T> T returnWithConstructorContextualizer(Function<ConstructorContextualizer, T> func) {
-        if(CONSTRUCTOR_CONTEXTUALIZER.isBound()) return func.apply(CONSTRUCTOR_CONTEXTUALIZER.get());
+        if (CONSTRUCTOR_CONTEXTUALIZER.isBound()) return func.apply(CONSTRUCTOR_CONTEXTUALIZER.get());
         else {
             try {
                 return ScopedValue.callWhere(CONSTRUCTOR_CONTEXTUALIZER, new ConstructorContextualizer(), () -> func.apply(CONSTRUCTOR_CONTEXTUALIZER.get()));
@@ -156,6 +154,8 @@ public final class Recipe {
                     (T) new SingleDepContextualizer(obj, new DepForMethodNameResolver(obj.getClass(), method), ContextFactory.getContext()).getDepOf();
             case ObjectDependencyDefinition(var obj, var depClass, var method, var type) ->
                     (T) new SingleDepContextualizer(obj, new DepForTypeNameResolver(type, method), ContextFactory.getContext()).getDepOf();
+            case ResourceNameDefinition(var resName) ->
+                    (T) new ResourceNameContextualizer(new DepForAliasNameResolver(resName), ContextFactory.getContext()).getDepOf();
             default -> throw new IllegalStateException("Unexpected value: " + def);
         };
     }
@@ -177,7 +177,13 @@ public final class Recipe {
                     (T) new SingleDepContextualizer(obj, new DepForMethodNameResolver(obj.getClass(), method), ContextFactory.getContext(), givenContext).getDepOf();
             case ObjectDependencyDefinition(var obj, var depClass, var method, var type) ->
                     (T) new SingleDepContextualizer(obj, new DepForTypeNameResolver(type, method), ContextFactory.getContext(), givenContext).getDepOf();
+            case ResourceNameDefinition(var resName) ->
+                    (T) new ResourceNameContextualizer(new DepForAliasNameResolver(resName), ContextFactory.getContext(),givenContext).getDepOf();
             default -> throw new IllegalStateException("Unexpected value: " + def);
         };
+    }
+
+    public static Object getDep(String resourceName) {
+        return getDep(new ResourceNameDefinition(resourceName));
     }
 }

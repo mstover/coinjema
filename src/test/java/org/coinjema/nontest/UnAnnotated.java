@@ -3,14 +3,14 @@ package org.coinjema.nontest;
 import org.coinjema.context.AbstractContextOriented;
 import org.coinjema.context.Recipe;
 
-public class UnAnnotated extends AbstractContextOriented {
+public class UnAnnotated {
 
-    private String name;
+    private final String name;
 
     private String value = "Has Default";
 
-    public UnAnnotated() {
-        Recipe.contextualize(this);
+    public UnAnnotated(String name) {
+        this.name = name;
     }
 
     public String getValue() {
@@ -23,10 +23,6 @@ public class UnAnnotated extends AbstractContextOriented {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
 }
