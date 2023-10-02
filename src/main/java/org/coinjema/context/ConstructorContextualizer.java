@@ -1,6 +1,5 @@
 package org.coinjema.context;
 
-import org.coinjema.context.source.Resource;
 import org.coinjema.context.source.SimpleResource;
 
 import java.util.HashMap;
@@ -14,13 +13,13 @@ import static org.coinjema.logging.CoinjemaLogger.log;
 
 public class ConstructorContextualizer {
     private static final ConcurrentMap<Class<?>, ConstructorFuncterSet<?>> constructorFunctorMap = new ConcurrentHashMap<>();
-    private CoinjemaContext currentTopContext;
+    private CjmContext currentTopContext;
 
-    public <T extends ConstructorContextOriented> T constructContextualized(Class<T> objClass, Object[] givenArgs, CoinjemaContext context, CoinjemaContext base) {
+    public <T extends ConstructorContextOriented> T constructContextualized(Class<T> objClass, Object[] givenArgs, CjmContext context, CjmContext base) {
         return contextualizeIt(objClass, givenArgs, context, base);
     }
 
-    private <T extends ConstructorContextOriented> T contextualizeIt(Class<T> clzz, Object[] givenArgs, CoinjemaContext context, CoinjemaContext base) {
+    private <T extends ConstructorContextOriented> T contextualizeIt(Class<T> clzz, Object[] givenArgs, CjmContext context, CjmContext base) {
         ConstructorFuncterSet<T> functors = (ConstructorFuncterSet<T>) constructorFunctorMap.computeIfAbsent(clzz, c -> new ConstructorFuncterSet<>(clzz));
 
         boolean topLevel = currentTopContext == null;
@@ -29,7 +28,7 @@ public class ConstructorContextualizer {
                     + (topLevel ? base : currentTopContext)
                     + " sub-context = " + context);
         }
-        final SpiceRack baseContext = Recipe.findBaseContext(topLevel ? base : currentTopContext, context);
+        final SpiceRack baseContext = Cjm.findBaseContext(topLevel ? base : currentTopContext, context);
         if (log.isLoggable(Level.FINER)) {
             log.finer("Resolved context = " + baseContext.getContext());
         }
@@ -53,22 +52,22 @@ public class ConstructorContextualizer {
 
     }
 
-    private <T extends ConstructorContextOriented> Object[] contextualizeFirstTime(ConstructorFuncterSet<T> functors, Object[] givenArgs, CoinjemaContext context, CoinjemaContext base) {
+    private <T extends ConstructorContextOriented> Object[] contextualizeFirstTime(ConstructorFuncterSet<T> functors, Object[] givenArgs, CjmContext context, CjmContext base) {
         try {
-            Recipe.globalSync.lock();
+            Cjm.globalSync.lock();
             boolean topLevel = currentTopContext == null;
             if (log.isLoggable(Level.FINER)) {
                 log.finer("Base context = "
                         + (topLevel ? base : currentTopContext)
                         + " sub-context = " + context);
             }
-            SpiceRack baseContext = Recipe.findBaseContext(topLevel ? base : currentTopContext, context);
+            SpiceRack baseContext = Cjm.findBaseContext(topLevel ? base : currentTopContext, context);
             if (log.isLoggable(Level.FINER)) {
                 log.finer("Resolved context = " + baseContext.getContext());
             }
             return createContextArgValues(functors, givenArgs, baseContext);
         } finally {
-            Recipe.globalSync.unlock();
+            Cjm.globalSync.unlock();
         }
     }
 
@@ -96,14 +95,14 @@ public class ConstructorContextualizer {
         if (dep == null || dep.dep == null) {
             if (resolver.hasDefault()) {
                 dep = new DiscoveredResource(new SimpleResource(resolver
-                        .getLocalName()), Recipe.DEFAULT_DEPENDENCY);
+                        .getLocalName()), Cjm.DEFAULT_DEPENDENCY);
             } else {
                 throw new DependencyInjectionException(
                         "Failed to find dependency for "
                                 + resolver.getLocalName() + " of class "
                                 + resolver.getTargetClass().getName());
             }
-        } else if (dep.dep != Recipe.DEFAULT_DEPENDENCY) {
+        } else if (dep.dep != Cjm.DEFAULT_DEPENDENCY) {
             out = dep.dep;
         }
         if (dep.res == null && resolver.getName() != null) {
@@ -111,7 +110,7 @@ public class ConstructorContextualizer {
                     .getScope(resolver.getName(), resolver.getTargetClass(), null)));
         }
         for (SpiceRack rack : racks) {
-            if (dep.dep == Recipe.DEFAULT_DEPENDENCY) {
+            if (dep.dep == Cjm.DEFAULT_DEPENDENCY) {
                 dep.dep = dep.rackAllResources(rack, resolver.getTargetClass(), null, dep.dep);
             } else if (resolver.getName() == null) {
                 break;
@@ -123,7 +122,7 @@ public class ConstructorContextualizer {
     }
 
     private DiscoveredResource captureDepInContextStack(Map<String, Object> values, ResourceNameResolver resolver, SpiceRack base) {
-        CoinjemaContext cc = currentTopContext;
+        CjmContext cc = currentTopContext;
         try {
             currentTopContext = base.getContext();
             return captureDep(values, resolver, base);
@@ -176,7 +175,7 @@ public class ConstructorContextualizer {
         String redirectName = redirect.getName();
         int x = -1;
         if ((x = redirectName.lastIndexOf("/")) > -1) {
-            sub = Recipe.findBaseContext(base.getContext(), new CoinjemaContext(
+            sub = Cjm.findBaseContext(base.getContext(), new CjmContext(
                     redirectName.substring(0, x)));
             redirectName = redirectName.substring(x + 1);
         }

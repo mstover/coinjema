@@ -1,10 +1,10 @@
 package org.coinjema.nontest;
 
-import org.coinjema.context.CoinjemaDynamic;
+import org.coinjema.context.CjmDynamic;
 
 public class DefaultDynamic {
 	
-	@CoinjemaDynamic
+	@CjmDynamic
 	public String getDefaultDynamic()
 	{
 		return "Howdy";

@@ -1,29 +1,29 @@
 package org.coinjema.context;
 
- class CoinjemaClassInfo {
+ class CjmClassInfo {
 
      final Class<?> clzz;
       final String simpleName;
 
-     public CoinjemaClassInfo(Class<?> clzz) {
+     public CjmClassInfo(Class<?> clzz) {
          this.clzz = clzz;
          this.simpleName = getSimpleName(clzz);
 
      }
 
      private  String getSimpleName(final Class<?> clazz) {
-         CoinjemaObject ann = findObjectAnnotation(clazz);
+         CjmObject ann = findObjectAnnotation(clazz);
          if (ann != null && ann.type().length() > 0)
              return ann.type();
          else
              return clazz.getSimpleName();
      }
 
-     private  CoinjemaObject findObjectAnnotation(Class<?> clazz) {
+     private CjmObject findObjectAnnotation(Class<?> clazz) {
          Class parent = clazz;
-         CoinjemaObject ann = null;
+         CjmObject ann = null;
          while (ann == null && parent != Object.class) {
-             ann = (CoinjemaObject) parent.getAnnotation(CoinjemaObject.class);
+             ann = (CjmObject) parent.getAnnotation(CjmObject.class);
              if (ann == null)
                  parent = parent.getSuperclass();
          }

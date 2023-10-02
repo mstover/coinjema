@@ -1,6 +1,5 @@
 package org.coinjema.context;
 
-import org.coinjema.context.source.Resource;
 import org.coinjema.context.source.SimpleResource;
 
 import java.util.*;
@@ -11,11 +10,11 @@ import static org.coinjema.logging.CoinjemaLogger.log;
 public class AbstractContextualizer {
     protected final LinkedList<ContextOriented> unfinishedObjects = new LinkedList<>();
     private final Set<DependencyGroup> circleProtection = new HashSet<>();
-    protected CoinjemaContext currentTopContext;
+    protected CjmContext currentTopContext;
 
     DiscoveredResource captureDepInContextStack(final Map<String, Object> values,
                                                 ResourceNameResolver resolver, SpiceRack base) {
-        CoinjemaContext cc = currentTopContext;
+        CjmContext cc = currentTopContext;
         try {
             currentTopContext = base.getContext();
             return captureDep(values, resolver, base);
@@ -94,7 +93,7 @@ public class AbstractContextualizer {
         int x = -1;
         String redirectName = redirect.getName();
         if ((x = redirectName.lastIndexOf("/")) > -1) {
-            sub = Recipe.findBaseContext(master.getContext(), new CoinjemaContext(
+            sub = Cjm.findBaseContext(master.getContext(), new CjmContext(
                     redirectName.substring(0, x)));
             redirectName = redirectName.substring(x + 1);
         }

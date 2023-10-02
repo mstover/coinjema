@@ -1,7 +1,7 @@
 package org.coinjema.nontest;
 
-import org.coinjema.context.CoinjemaDynamic;
-import org.coinjema.context.Recipe;
+import org.coinjema.context.CjmDynamic;
+import org.coinjema.context.Cjm;
 
 public class StaticDynamic {
 
@@ -12,9 +12,9 @@ public class StaticDynamic {
         // TODO Auto-generated constructor stub
     }
 
-    @CoinjemaDynamic(alias = "static_dynamic.name")
+    @CjmDynamic(alias = "static_dynamic.name")
     public static String getDynName() {
-        return (String) Recipe.dynamicGetter(null, StaticDynamic.class, "getDynName");
+        return (String) Cjm.dynamicGetter(null, StaticDynamic.class, "getDynName");
     }
 
     public String getName() {

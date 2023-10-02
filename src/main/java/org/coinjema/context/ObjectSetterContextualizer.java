@@ -24,7 +24,7 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
     private static Object findPreviouslyResolvedDep(Class<?> objClass, Method meth, ResourceNameResolver resolver, SpiceRack baseContext) {
         Object dep = resolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, objClass, null));
         if (dep != null) {
-            if (dep == Recipe.DEFAULT_DEPENDENCY) {
+            if (dep == Cjm.DEFAULT_DEPENDENCY) {
                 throw new DependencyInjectionException(
                         "Failed to find dependency: " + objClass + " : "
                                 + meth.getName());
@@ -36,34 +36,33 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
     }
 
     public static void clear() {
-        functorMap.clear();
         contextInitialized.clear();
     }
 
-    void contextualize(final ContextOriented obj, final CoinjemaContext context, CoinjemaContext base) {
+    void contextualize(final ContextOriented obj, final CjmContext context, CjmContext base) {
         contextualizeIt(obj, context, base);
     }
 
     private void contextualizeIt(final ContextOriented obj,
-                                 final CoinjemaContext context, final CoinjemaContext base) {
+                                 final CjmContext context, final CjmContext base) {
         FunctorSet functors = functorMap.get(obj.getClass());
-        if (functors != null && contextInitialized.getOrDefault(new ClassContextKey(obj.getClass(), Recipe.findBaseContext(base, context).getContext()), false)) {
+        if (functors != null && contextInitialized.getOrDefault(new ClassContextKey(obj.getClass(), Cjm.findBaseContext(base, context).getContext()), false)) {
             contextualizeItWithFunctors(obj, context, base, functors);
 
         } else {
             boolean tryAgain = false;
             try {
-                boolean haveLock = Recipe.globalSync.tryLock(1, TimeUnit.MILLISECONDS);
+                boolean haveLock = Cjm.globalSync.tryLock(1, TimeUnit.MILLISECONDS);
                 if (haveLock) {
                     try {
                         functors = functorMap.get(obj.getClass());
-                        if (functors == null || !contextInitialized.getOrDefault(new ClassContextKey(obj.getClass(), Recipe.findBaseContext(base, context).getContext()), false)) {
+                        if (functors == null || !contextInitialized.getOrDefault(new ClassContextKey(obj.getClass(), Cjm.findBaseContext(base, context).getContext()), false)) {
                             contextualizeClassFirstTime(obj, context, base);
                         } else {
                             tryAgain = true;
                         }
                     } finally {
-                        Recipe.globalSync.unlock();
+                        Cjm.globalSync.unlock();
                     }
                 } else tryAgain = true;
                 if (tryAgain) contextualizeIt(obj, context, base);
@@ -74,14 +73,14 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
         }
     }
 
-    private void contextualizeItWithFunctors(ContextOriented obj, CoinjemaContext context, CoinjemaContext base, FunctorSet functors) {
+    private void contextualizeItWithFunctors(ContextOriented obj, CjmContext context, CjmContext base, FunctorSet functors) {
         boolean topLevel = currentTopContext == null;
         if (log.isLoggable(Level.FINER)) {
             log.finer("Base context = "
                     + (topLevel ? base : currentTopContext)
                     + " sub-context = " + context);
         }
-        final SpiceRack baseContext = Recipe.findBaseContext(topLevel ? base
+        final SpiceRack baseContext = Cjm.findBaseContext(topLevel ? base
                 : currentTopContext, context);
         if (log.isLoggable(Level.FINER)) {
             log.finer("Resolved context = " + baseContext.getContext());
@@ -91,23 +90,22 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
     }
 
     private void injectFunctors(final ContextOriented obj,
-                                final CoinjemaContext context, final CoinjemaContext base,
+                                final CjmContext context, final CjmContext base,
                                 FunctorSet functors, final SpiceRack baseContext) {
         for (DependencyFunctor<Object> injector : functors) {
             if (!functors.isMarked(injector, baseContext.getContext())) {
                 InjectorNameResolver injResolver = injector.getNameResolver();
                 Object dep = injResolver.findDependency(resourceName -> baseContext.lookupContext(resourceName, obj.getClass(), obj));
-                if (dep == Recipe.DEFAULT_DEPENDENCY) {
+                if (dep == Cjm.DEFAULT_DEPENDENCY) {
                     functors.markForRemoval(injector, baseContext.getContext());
                 } else if (dep != null) {
                     injector.invoke(obj, dep);
                 } else {
                     try {
-                        Recipe.globalSync.lock();
-                        System.out.println("uncontextualized functor shouldn't happen - in context " + baseContext.getContext() + " " + injResolver);
+                        Cjm.globalSync.lock();
                         contextualizeContextFirstTime(functors, obj, context, base);
                     } finally {
-                        Recipe.globalSync.unlock();
+                        Cjm.globalSync.unlock();
                     }
                     break;
                 }
@@ -116,24 +114,24 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
     }
 
     private void contextualizeClassFirstTime(
-            final ContextOriented obj, final CoinjemaContext context,
-            final CoinjemaContext base) {
+            final ContextOriented obj, final CjmContext context,
+            final CjmContext base) {
         FunctorSet functors = retrieveFunctors(obj);
         contextualizeContextFirstTime(functors, obj, context, base);
         functorMap.put(obj.getClass(), functors);
-        contextInitialized.put(new ClassContextKey(obj.getClass(), Recipe.findBaseContext(base, context).getContext()), true);
+        contextInitialized.put(new ClassContextKey(obj.getClass(), Cjm.findBaseContext(base, context).getContext()), true);
     }
 
     private void contextualizeContextFirstTime(
             FunctorSet functors, final ContextOriented obj,
-            final CoinjemaContext context, final CoinjemaContext base) {
+            final CjmContext context, final CjmContext base) {
         boolean topLevel = currentTopContext == null;
         if (log.isLoggable(Level.FINER)) {
             log.finer("Base context = "
                     + (topLevel ? base : currentTopContext)
                     + " sub-context = " + context);
         }
-        SpiceRack baseContext = Recipe.findBaseContext(topLevel ? base : currentTopContext, context);
+        SpiceRack baseContext = Cjm.findBaseContext(topLevel ? base : currentTopContext, context);
         if (log.isLoggable(Level.FINER)) {
             log.finer("Resolved context = " + baseContext.getContext());
         }
@@ -183,14 +181,14 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
         if (dep == null || dep.dep == null) {
             if (injector.hasDefault()) {
                 dep = new DiscoveredResource(new SimpleResource(resolver
-                        .getLocalName()), Recipe.DEFAULT_DEPENDENCY);
+                        .getLocalName()), Cjm.DEFAULT_DEPENDENCY);
             } else {
                 throw new DependencyInjectionException(
                         "Failed to find dependency for "
                                 + resolver.getName() + " of class "
                                 + obj.getClass().getName() + " in context " + baseContext.getContext());
             }
-        } else if (dep.dep != Recipe.DEFAULT_DEPENDENCY) {
+        } else if (dep.dep != Cjm.DEFAULT_DEPENDENCY) {
             injector.invoke(obj, dep.dep);
         }
         if (dep.hasNoResource() && resolver.getName() != null) {
@@ -198,7 +196,7 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
                     .getScope(resolver.getName(), obj.getClass(), obj)));
         }
         for (SpiceRack rack : racks) {
-            if (dep.dep == Recipe.DEFAULT_DEPENDENCY) {
+            if (dep.dep == Cjm.DEFAULT_DEPENDENCY) {
                 dep.dep = dep.rackAllResources(rack, obj.getClass(), obj, dep.dep);
             } else if (resolver.getName() == null) {
                 break;
@@ -209,19 +207,19 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
     }
 
     Object findDynamicDependency(final Object obj, final Class<?> objClass,
-                                 final CoinjemaDynamic ann, final Method meth,
-                                 CoinjemaContext context) {
+                                 final CjmDynamic ann, final Method meth,
+                                 CjmContext context) {
         if (log.isLoggable(Level.FINE)) {
             log.fine("Finding dynamic dependency for " + objClass.getName()
                     + " method: " + meth.getName() + " in context " + context);
         }
         final ResourceNameResolver resolver = new DynamicDependencyNameResolver(objClass, ann, meth);
-        final SpiceRack baseContext = Recipe.findBaseContext(context,
+        final SpiceRack baseContext = Cjm.findBaseContext(context,
                 getOptionalDynContext(ann, obj));
         Object dep = findPreviouslyResolvedDep(objClass, meth, resolver, baseContext);
         if (dep != null) return dep;
         try {
-            Recipe.globalSync.lock();
+            Cjm.globalSync.lock();
             Object depAgain = findPreviouslyResolvedDep(objClass, meth, resolver, baseContext);
             if (depAgain != null) return depAgain;
             final Map<String, Object> values = new HashMap<String, Object>();
@@ -234,7 +232,7 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
             });
             if (newDep == null || newDep.dep == null) {
                 newDep = new DiscoveredResource(new SimpleResource(resolver
-                        .getLocalName()), Recipe.DEFAULT_DEPENDENCY);
+                        .getLocalName()), Cjm.DEFAULT_DEPENDENCY);
             }
             if (newDep.res == null && resolver.getName() != null) {
                 newDep.addRes(new SimpleResource(resolver.getName(), racks
@@ -243,23 +241,23 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
             for (SpiceRack rack : racks) {
                 newDep.dep = newDep.rackAllResources(rack, objClass, obj, newDep.dep);
             }
-            if (newDep.dep == Recipe.DEFAULT_DEPENDENCY) {
+            if (newDep.dep == Cjm.DEFAULT_DEPENDENCY) {
                 throw new DependencyInjectionException(
                         "Failed to find dependency: " + newDep.res);
             } else {
                 return newDep.dep;
             }
         } finally {
-            Recipe.globalSync.unlock();
+            Cjm.globalSync.unlock();
         }
     }
 
-    private CoinjemaContext getOptionalDynContext(CoinjemaDynamic ann, Object obj) {
+    private CjmContext getOptionalDynContext(CjmDynamic ann, Object obj) {
         String contextMethod = ann.contextMethod();
         if (!"".equals(contextMethod)) {
             try {
                 Method m = obj.getClass().getMethod(contextMethod);
-                return new CoinjemaContext((String) m.invoke(obj));
+                return new CjmContext((String) m.invoke(obj));
             } catch (Exception e) {
                 log.warning("Context Method resulted in error: method="
                         + contextMethod + " class = "
@@ -295,9 +293,9 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
 
     private static class ClassContextKey {
         final Class<?> clzz;
-        final CoinjemaContext cc;
+        final CjmContext cc;
 
-        public ClassContextKey(Class<?> clzz, CoinjemaContext cc) {
+        public ClassContextKey(Class<?> clzz, CjmContext cc) {
             this.clzz = clzz;
             this.cc = cc;
         }

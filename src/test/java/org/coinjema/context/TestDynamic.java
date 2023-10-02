@@ -15,15 +15,15 @@ public class TestDynamic extends AbstractContextTester {
 	public void testDynamicProperties() throws Exception
 	{
 		assertEquals("red",new AdvancedContextObject().getDynamicProperties().getProperty("color"));
-		assertEquals("purple",new AdvancedContextObject(new CoinjemaContext("custom")).getDynamicProperties().getProperty("color"));
-		assertEquals("red",new AdvancedContextObject(new CoinjemaContext("config")).getDynamicProperties().getProperty("color"));
-		assertEquals("orange",new AdvancedContextObject(new CoinjemaContext("override")).getDynamicProperties().getProperty("color"));
+		assertEquals("purple",new AdvancedContextObject(new CjmContext("custom")).getDynamicProperties().getProperty("color"));
+		assertEquals("red",new AdvancedContextObject(new CjmContext("config")).getDynamicProperties().getProperty("color"));
+		assertEquals("orange",new AdvancedContextObject(new CjmContext("override")).getDynamicProperties().getProperty("color"));
 	}
 
 	@Test
 	public void testThroughSingleton() throws Exception
 	{
-		BasicContextOriented co = new BasicContextOriented(new CoinjemaContext("custom"));
+		BasicContextOriented co = new BasicContextOriented(new CjmContext("custom"));
 		assertEquals("purple",co.getDynamicProperty("color"));
 	}
 

@@ -1,8 +1,5 @@
 package org.coinjema.nontest;
 
-import org.coinjema.context.AbstractContextOriented;
-import org.coinjema.context.Recipe;
-
 public class UnAnnotated {
 
     private final String name;

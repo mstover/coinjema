@@ -2,7 +2,7 @@ package org.coinjema.nontest;
 
 import java.util.List;
 
-import org.coinjema.context.CoinjemaDynamic;
+import org.coinjema.context.CjmDynamic;
 
 public class DataBaseObject {
 	
@@ -23,13 +23,13 @@ public class DataBaseObject {
 		return context;
 	}
 	
-	@CoinjemaDynamic(method="data",contextMethod="getContextString")
+	@CjmDynamic(method="data",contextMethod="getContextString")
 	public String getData()
 	{
 		return null;
 	}
 	
-	@CoinjemaDynamic(method="allData")
+	@CjmDynamic(method="allData")
 	public List<String> getAllData()
 	{
 		return null;

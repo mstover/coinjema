@@ -2,22 +2,22 @@ package org.coinjema.nontest;
 
 import org.coinjema.context.*;
 
-@CoinjemaObject(type="B")
+@CjmObject(type="B")
 public class SimpleContextOrientedB extends AbstractContextOriented {
 
 	public SimpleContextOrientedB() {
 		super();
-		Recipe.contextualize(this);
+		Cjm.contextualize(this);
 	}
 
-	public SimpleContextOrientedB(CoinjemaContext c)
+	public SimpleContextOrientedB(CjmContext c)
 	{
-		Recipe.contextualize(this,c);
+		Cjm.contextualize(this,c);
 	}
 
 
 
-	@CoinjemaDependency(method="circular")
+	@CjmDependency(method="circular")
 	public void setCircularDependency(SimpleContextOriented g)
 	{
 		circular = g;
@@ -30,13 +30,13 @@ public class SimpleContextOrientedB extends AbstractContextOriented {
 		return circular;
 	}
 
-	@CoinjemaDependency(method="test")
+	@CjmDependency(method="test")
 	public void setTestString(String t)
 	{
 		test = t;
 	}
 
-	@CoinjemaDependency(type="MockSingleton")
+	@CjmDependency(type="MockSingleton")
 	public void setService(MockSingleton m)
 	{
 		service = m;

@@ -1,7 +1,7 @@
 package org.coinjema.nontest;
 
-import org.coinjema.context.CoinjemaContext;
-import org.coinjema.context.CoinjemaDependency;
+import org.coinjema.context.CjmContext;
+import org.coinjema.context.CjmDependency;
 
 public class SubContextOriented extends BasicContextOriented {
     int countInjections;
@@ -11,15 +11,15 @@ public class SubContextOriented extends BasicContextOriented {
         paths=new String[]{"wrong_path1","wrong_path2"};
     }
 
-    public SubContextOriented(CoinjemaContext context) {
+    public SubContextOriented(CjmContext context) {
         super(context);
     }
 
-    public SubContextOriented(String init, CoinjemaContext context) {
+    public SubContextOriented(String init, CjmContext context) {
         super(init, context);
     }
     
-    @CoinjemaDependency(method="string")
+    @CjmDependency(method="string")
     public void setDummyDep(String d)
     {
         countInjections++;

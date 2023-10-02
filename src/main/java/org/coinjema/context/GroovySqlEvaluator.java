@@ -104,7 +104,7 @@ public class GroovySqlEvaluator extends GroovyScriptEvaluator {
 		}
 	}
 	
-	@CoinjemaDynamic(alias="coinjema.dataSource",type="dataSource")
+	@CjmDynamic(alias="coinjema.dataSource",type="dataSource")
 	private DataSource getDataSource()
 	{
 		return null;

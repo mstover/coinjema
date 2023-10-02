@@ -22,13 +22,13 @@ public class MockSingleton extends AbstractContextOriented {
         mainValue = mv;
     }
     
-    @CoinjemaDependency(alias="mockName")
+    @CjmDependency(alias="mockName")
     public void setMockName(String mockName)
     {
     	this.mockName = mockName;
     }
     
-    @CoinjemaDependency(alias="simple")
+    @CjmDependency(alias="simple")
     public void setCircularDependency(SimpleContextOriented bco)
     {
     	
@@ -43,7 +43,7 @@ public class MockSingleton extends AbstractContextOriented {
 		return mockName;
 	}
 	
-	@CoinjemaDependency(type="MockSingleton")
+	@CjmDependency(type="MockSingleton")
 	public void setSelf(MockSingleton ms)
 	{
 		selfService = ms;

@@ -7,9 +7,13 @@ import java.lang.annotation.Target;
 
 @Target(value=ElementType.METHOD)
 @Retention(value=RetentionPolicy.RUNTIME)
-public @interface CoinjemaDynamic {
-	String type() default "";
+public @interface CjmDependency {
+
+    public static enum Order {NA,LAST};
+    
     String method() default "";
+    String type() default "";
     String alias() default "";
-    String contextMethod() default "";
+    Order order() default Order.NA;
+    boolean hasDefault() default false;
 }

@@ -14,7 +14,7 @@ public class DepOfResolver<T> extends AbstractSingleDepResolver {
     }
 
     @Override
-    public Object findMatchingUnfinishedObject(Collection<ContextOriented> unfinishedObjects, CoinjemaContext cc) {
+    public Object findMatchingUnfinishedObject(Collection<ContextOriented> unfinishedObjects, CjmContext cc) {
         if (log.isLoggable(Level.FINEST)) {
             log.finest("DepOfResolver: looking for match with resource: " + getName() + " in context: " + cc);
         }

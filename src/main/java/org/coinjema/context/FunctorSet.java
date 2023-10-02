@@ -1,6 +1,6 @@
 package org.coinjema.context;
 
-import org.coinjema.context.CoinjemaDependency.Order;
+import org.coinjema.context.CjmDependency.Order;
 import org.coinjema.util.DependencyFunctor;
 import org.coinjema.util.Functor;
 
@@ -10,8 +10,8 @@ import java.util.*;
 public class FunctorSet implements Iterable<DependencyFunctor<Object>> {
 
     LinkedList<DependencyFunctor<Object>> functors;
-    Map<CoinjemaContext, Set<DependencyFunctor<Object>>> marked;
-    Set<CoinjemaContext> perContext = new HashSet<CoinjemaContext>();
+    Map<CjmContext, Set<DependencyFunctor<Object>>> marked;
+    Set<CjmContext> perContext = new HashSet<CjmContext>();
 
     public FunctorSet(Object obj) {
         retrieveFunctors(obj);
@@ -24,9 +24,9 @@ public class FunctorSet implements Iterable<DependencyFunctor<Object>> {
     final void retrieveFunctors(final Object obj) {
         functors = new LinkedList<DependencyFunctor<Object>>();
         for (Method method : obj.getClass().getMethods()) {
-            if (method.getAnnotation(CoinjemaDependency.class) != null) {
-                CoinjemaDependency ann = method
-                        .getAnnotation(CoinjemaDependency.class);
+            if (method.getAnnotation(CjmDependency.class) != null) {
+                CjmDependency ann = method
+                        .getAnnotation(CjmDependency.class);
                 if (ann.order() == Order.LAST) {
                     functors.addLast(new DependencyFunctor<Object>(obj.getClass(), method, ann));
                 } else {
@@ -39,21 +39,21 @@ public class FunctorSet implements Iterable<DependencyFunctor<Object>> {
         }
     }
 
-    synchronized void markForRemoval(DependencyFunctor<Object> inj, CoinjemaContext cc) {
+    synchronized void markForRemoval(DependencyFunctor<Object> inj, CjmContext cc) {
         if (marked == null) marked = new HashMap<>();
         Set<DependencyFunctor<Object>> marks = marked.computeIfAbsent(cc, k -> new HashSet<>());
         marks.add(inj);
     }
 
-    public boolean isMarked(Functor<Object> inj, CoinjemaContext cc) {
+    public boolean isMarked(Functor<Object> inj, CjmContext cc) {
         return marked != null && marked.containsKey(cc) && marked.get(cc).contains(inj);
     }
 
-    synchronized void setContextDone(CoinjemaContext cc) {
+    synchronized void setContextDone(CjmContext cc) {
         perContext.add(cc);
     }
 
-    synchronized boolean isContextDone(CoinjemaContext cc) {
+    synchronized boolean isContextDone(CjmContext cc) {
         return perContext.contains(cc);
     }
 }

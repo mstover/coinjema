@@ -2,9 +2,9 @@ package org.coinjema.context;
 
 public interface ContextOriented {
     
-    CoinjemaContext getCoinjemaContext();
+    CjmContext getCoinjemaContext();
     
-    void setCoinjemaContext(CoinjemaContext context);
+    void setCoinjemaContext(CjmContext context);
     
     boolean isGiven();
     

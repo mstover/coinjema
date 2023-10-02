@@ -22,7 +22,7 @@ public class GroovyScriptEvaluator implements Evaluator {
 			try {
 				Object evaluate = shell.evaluate(scriptBytes);
 				if(evaluate instanceof ContextOriented && ((ContextOriented) evaluate).getCoinjemaContext() == null) {
-					Recipe.contextualize((ContextOriented) evaluate);
+					Cjm.contextualize((ContextOriented) evaluate);
 				}
 				return evaluate;
 			} catch (Exception e) {

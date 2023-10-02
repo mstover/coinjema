@@ -13,8 +13,8 @@ import java.util.function.Supplier;
  */
 public class ContextFactory {
 
-    public static ScopedValue<CoinjemaContext> CONTEXT = ScopedValue.newInstance();
-    public static CoinjemaContext ROOT_CONTEXT = new CoinjemaContext("");
+    public static ScopedValue<CjmContext> CONTEXT = ScopedValue.newInstance();
+    public static CjmContext ROOT_CONTEXT = new CjmContext("");
 
 
     private ContextFactory() {
@@ -33,7 +33,7 @@ public class ContextFactory {
         SpiceRack.createRootContext();
     }
 
-    public static <T> T withContext(CoinjemaContext newContext, Supplier<T> func) {
+    public static <T> T withContext(CjmContext newContext, Supplier<T> func) {
         try {
             return ScopedValue.callWhere(CONTEXT,newContext, () -> func.get());
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class ContextFactory {
      * @param directory
      * @throws Exception
      */
-    public static void createContext(String contextName, ContextSource directory, CoinjemaContext parentContext) throws Exception {
+    public static void createContext(String contextName, ContextSource directory, CjmContext parentContext) throws Exception {
         SpiceRack.createContext(contextName, directory, parentContext);
     }
 
@@ -92,15 +92,15 @@ public class ContextFactory {
      *
      * @param context
      */
-    public static void refresh(CoinjemaContext context) {
+    public static void refresh(CjmContext context) {
         SpiceRack.getInstance(context).refresh();
     }
 
     public static Registry getRegistry(String contextName) {
-        return SpiceRack.getInstance(new CoinjemaContext(contextName));
+        return SpiceRack.getInstance(new CjmContext(contextName));
     }
 
-    public static CoinjemaContext getContext() {
+    public static CjmContext getContext() {
         return CONTEXT.orElse(ROOT_CONTEXT);
     }
 }

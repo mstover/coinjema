@@ -22,23 +22,23 @@ public class TestAdvancedContext extends AbstractContextTester {
     public void testDependencyReuse() throws Exception
     {
     	BasicContextOriented co = new BasicContextOriented();
-    	BasicContextOriented co2 = new BasicContextOriented(new CoinjemaContext("custom"));
+    	BasicContextOriented co2 = new BasicContextOriented(new CjmContext("custom"));
     	assertEquals(co.getPaths(),co2.getPaths());
     }
 
     @Test
     public void testDuplicateShared() throws Exception
     {
-    	BasicContextOriented bo = new BasicContextOriented(new CoinjemaContext("dup_shared"));
+    	BasicContextOriented bo = new BasicContextOriented(new CjmContext("dup_shared"));
     	assertEquals("Hello",bo.getMyService().getMockName());
     }
 
     @Test
     public void testExcludedContexts() throws Exception
     {
-    	BasicContextOriented bo = new BasicContextOriented(new CoinjemaContext("_excluded"));
+    	BasicContextOriented bo = new BasicContextOriented(new CjmContext("_excluded"));
     	assertEquals("path1",bo.getPaths()[0]);
-    	bo = new BasicContextOriented(new CoinjemaContext("custom/not_included"));
+    	bo = new BasicContextOriented(new CjmContext("custom/not_included"));
     	assertEquals("path1",bo.getPaths()[0]);
     }
 

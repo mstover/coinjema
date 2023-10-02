@@ -22,14 +22,14 @@ public class TestDatabaseSource extends AbstractContextTester {
 	@Test
 	public void testDatabaseContext() throws Exception
 	{
-		BasicContextOriented obj = new BasicContextOriented(new CoinjemaContext("database"));
+		BasicContextOriented obj = new BasicContextOriented(new CjmContext("database"));
 		assertEquals("db3",obj.getPaths()[0]);
 	}
 
 	@Test
 	public void testChildDatabaseContext() throws Exception
 	{
-		BasicContextOriented obj = new BasicContextOriented(new CoinjemaContext("database/customer"));
+		BasicContextOriented obj = new BasicContextOriented(new CjmContext("database/customer"));
 		assertEquals("cust3",obj.getPaths()[0]);
 	}
 

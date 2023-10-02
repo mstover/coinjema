@@ -18,13 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestContextPerformance extends AbstractContextTester {
     String[] paths = new String[]{"path1", "path2"};
-    CoinjemaContext[] contexts = new CoinjemaContext[]{new CoinjemaContext(),
-            new CoinjemaContext("config2"), new CoinjemaContext("custom"),
-            new CoinjemaContext("custom/units"),
-            new CoinjemaContext("custom/units/elf"),
-            new CoinjemaContext("custom/units/orc"),
-            new CoinjemaContext("override"), new CoinjemaContext("units"),
-            new CoinjemaContext("units/elf"), new CoinjemaContext("units/orc")};
+    CjmContext[] contexts = new CjmContext[]{new CjmContext(),
+            new CjmContext("config2"), new CjmContext("custom"),
+            new CjmContext("custom/units"),
+            new CjmContext("custom/units/elf"),
+            new CjmContext("custom/units/orc"),
+            new CjmContext("override"), new CjmContext("units"),
+            new CjmContext("units/elf"), new CjmContext("units/orc")};
     String[] testPaths = new String[]{"path1", "path1", "path1",
             "custom/units/", "custom/units/elf", "custom/units/orc", "path3",
             "units/", "elf_path1", "orc_path1"};
@@ -92,17 +92,17 @@ public class TestContextPerformance extends AbstractContextTester {
         Functor getPropsa = new Functor(new AdvancedContextObject(),
                 "getDynamicProperties");
         Functor getPropsb = new Functor(new AdvancedContextObject(
-                new CoinjemaContext("custom")), "getDynamicProperties");
+                new CjmContext("custom")), "getDynamicProperties");
         Functor refresher = new Functor(SpiceRack.root, "refresh");
         List inits = new LinkedList();
         Constructor c = BasicContextOriented.class
-                .getConstructor(CoinjemaContext.class);
+                .getConstructor(CjmContext.class);
         List init2 = new LinkedList();
         Constructor s = SimpleContextOrientedB.class
-                .getConstructor(CoinjemaContext.class);
-        CoinjemaContext root = new CoinjemaContext();
-        CoinjemaContext unitsOrc = new CoinjemaContext("units/orc");
-        CoinjemaContext custom = new CoinjemaContext("custom/units");
+                .getConstructor(CjmContext.class);
+        CjmContext root = new CjmContext();
+        CjmContext unitsOrc = new CjmContext("units/orc");
+        CjmContext custom = new CjmContext("custom/units");
 
         int testSize = 1_000_000;
         System.out.println("Going to invoke them all " + (testSize *8));
@@ -161,7 +161,7 @@ public class TestContextPerformance extends AbstractContextTester {
                             .getMyService(), "Failed at i = " + i);
             // if(i == 40000) i++;
         }
-        ContextFactory.refresh(new CoinjemaContext(""));
+        ContextFactory.refresh(new CjmContext(""));
         // assertEquals(1,countChanges);
         System.out.println("Total Challenge time = "
                 + (System.currentTimeMillis() - time));
@@ -173,14 +173,14 @@ public class TestContextPerformance extends AbstractContextTester {
         ExecutorService threadPool = Executors.newFixedThreadPool(20);
         List<Callable<BasicContextOriented>> inits = new LinkedList<Callable<BasicContextOriented>>();
         Constructor<BasicContextOriented> c = BasicContextOriented.class
-                .getConstructor(CoinjemaContext.class);
+                .getConstructor(CjmContext.class);
         ExecutorService threadPool2 = Executors.newFixedThreadPool(20);
         List<Callable<SimpleContextOrientedB>> init2 = new LinkedList<Callable<SimpleContextOrientedB>>();
         Constructor<SimpleContextOrientedB> s = SimpleContextOrientedB.class
-                .getConstructor(CoinjemaContext.class);
-        CoinjemaContext root = new CoinjemaContext();
-        CoinjemaContext unitsOrc = new CoinjemaContext("units/orc");
-        CoinjemaContext custom = new CoinjemaContext("custom/units");
+                .getConstructor(CjmContext.class);
+        CjmContext root = new CjmContext();
+        CjmContext unitsOrc = new CjmContext("units/orc");
+        CjmContext custom = new CjmContext("custom/units");
         long time = System.currentTimeMillis();
         System.out.println(root.getName());
         for (int i = 0; i < 50000; i++) {
@@ -222,7 +222,7 @@ public class TestContextPerformance extends AbstractContextTester {
         Functor<Properties> getPropsa = new Functor(
                 new AdvancedContextObject(), "getDynamicProperties");
         Functor<Properties> getPropsb = new Functor(new AdvancedContextObject(
-                new CoinjemaContext("custom")), "getDynamicProperties");
+                new CjmContext("custom")), "getDynamicProperties");
 
         long time = System.currentTimeMillis();
         for (int i = 0; i < 50000; i++) {
@@ -266,7 +266,7 @@ public class TestContextPerformance extends AbstractContextTester {
 
     @Test
     public void testDynamicPerformance() throws Exception {
-        BasicContextOriented co = new BasicContextOriented(new CoinjemaContext(
+        BasicContextOriented co = new BasicContextOriented(new CjmContext(
                 "custom"));
         assertEquals("purple", co.getDynamicProperty("color"));
         BasicObject bo = new BasicObject();
@@ -296,75 +296,75 @@ public class TestContextPerformance extends AbstractContextTester {
         CyclicBasic cb = new CyclicBasic();
         SubContextOriented subco = new SubContextOriented();
 
-        aco = new AdvancedContextObject(new CoinjemaContext("config2"));
-        bo = new BasicContextOriented(new CoinjemaContext("config2"));
-        pto = new PerformanceTestObject(new CoinjemaContext("config2"));
-        sco = new SimpleContextOriented(new CoinjemaContext("config2"));
-        cb = new CyclicBasic(new CoinjemaContext("config2"));
-        subco = new SubContextOriented(new CoinjemaContext("config2"));
+        aco = new AdvancedContextObject(new CjmContext("config2"));
+        bo = new BasicContextOriented(new CjmContext("config2"));
+        pto = new PerformanceTestObject(new CjmContext("config2"));
+        sco = new SimpleContextOriented(new CjmContext("config2"));
+        cb = new CyclicBasic(new CjmContext("config2"));
+        subco = new SubContextOriented(new CjmContext("config2"));
 
-        aco = new AdvancedContextObject(new CoinjemaContext("config3"));
-        bo = new BasicContextOriented(new CoinjemaContext("config3"));
-        pto = new PerformanceTestObject(new CoinjemaContext("config3"));
-        sco = new SimpleContextOriented(new CoinjemaContext("config3"));
-        cb = new CyclicBasic(new CoinjemaContext("config3"));
-        subco = new SubContextOriented(new CoinjemaContext("config3"));
+        aco = new AdvancedContextObject(new CjmContext("config3"));
+        bo = new BasicContextOriented(new CjmContext("config3"));
+        pto = new PerformanceTestObject(new CjmContext("config3"));
+        sco = new SimpleContextOriented(new CjmContext("config3"));
+        cb = new CyclicBasic(new CjmContext("config3"));
+        subco = new SubContextOriented(new CjmContext("config3"));
 
-        aco = new AdvancedContextObject(new CoinjemaContext("custom"));
-        bo = new BasicContextOriented(new CoinjemaContext("custom"));
-        pto = new PerformanceTestObject(new CoinjemaContext("custom"));
-        sco = new SimpleContextOriented(new CoinjemaContext("custom"));
-        cb = new CyclicBasic(new CoinjemaContext("custom"));
-        subco = new SubContextOriented(new CoinjemaContext("custom"));
+        aco = new AdvancedContextObject(new CjmContext("custom"));
+        bo = new BasicContextOriented(new CjmContext("custom"));
+        pto = new PerformanceTestObject(new CjmContext("custom"));
+        sco = new SimpleContextOriented(new CjmContext("custom"));
+        cb = new CyclicBasic(new CjmContext("custom"));
+        subco = new SubContextOriented(new CjmContext("custom"));
 
-        aco = new AdvancedContextObject(new CoinjemaContext("custom/units/orc"));
-        bo = new BasicContextOriented(new CoinjemaContext("custom/units/orc"));
-        pto = new PerformanceTestObject(new CoinjemaContext("custom/units/orc"));
-        sco = new SimpleContextOriented(new CoinjemaContext("custom/units/orc"));
-        cb = new CyclicBasic(new CoinjemaContext("custom/units/orc"));
-        subco = new SubContextOriented(new CoinjemaContext("custom/units/orc"));
+        aco = new AdvancedContextObject(new CjmContext("custom/units/orc"));
+        bo = new BasicContextOriented(new CjmContext("custom/units/orc"));
+        pto = new PerformanceTestObject(new CjmContext("custom/units/orc"));
+        sco = new SimpleContextOriented(new CjmContext("custom/units/orc"));
+        cb = new CyclicBasic(new CjmContext("custom/units/orc"));
+        subco = new SubContextOriented(new CjmContext("custom/units/orc"));
 
-        aco = new AdvancedContextObject(new CoinjemaContext("custom/units/elf"));
-        bo = new BasicContextOriented(new CoinjemaContext("custom/units/elf"));
-        pto = new PerformanceTestObject(new CoinjemaContext("custom/units/elf"));
-        sco = new SimpleContextOriented(new CoinjemaContext("custom/units/elf"));
-        cb = new CyclicBasic(new CoinjemaContext("custom/units/elf"));
-        subco = new SubContextOriented(new CoinjemaContext("custom/units/elf"));
+        aco = new AdvancedContextObject(new CjmContext("custom/units/elf"));
+        bo = new BasicContextOriented(new CjmContext("custom/units/elf"));
+        pto = new PerformanceTestObject(new CjmContext("custom/units/elf"));
+        sco = new SimpleContextOriented(new CjmContext("custom/units/elf"));
+        cb = new CyclicBasic(new CjmContext("custom/units/elf"));
+        subco = new SubContextOriented(new CjmContext("custom/units/elf"));
 
-        aco = new AdvancedContextObject(new CoinjemaContext("units/elf"));
-        bo = new BasicContextOriented(new CoinjemaContext("units/elf"));
-        pto = new PerformanceTestObject(new CoinjemaContext("units/elf"));
-        sco = new SimpleContextOriented(new CoinjemaContext("units/elf"));
-        cb = new CyclicBasic(new CoinjemaContext("units/elf"));
-        subco = new SubContextOriented(new CoinjemaContext("units/elf"));
+        aco = new AdvancedContextObject(new CjmContext("units/elf"));
+        bo = new BasicContextOriented(new CjmContext("units/elf"));
+        pto = new PerformanceTestObject(new CjmContext("units/elf"));
+        sco = new SimpleContextOriented(new CjmContext("units/elf"));
+        cb = new CyclicBasic(new CjmContext("units/elf"));
+        subco = new SubContextOriented(new CjmContext("units/elf"));
 
-        aco = new AdvancedContextObject(new CoinjemaContext("override"));
-        bo = new BasicContextOriented(new CoinjemaContext("override"));
-        pto = new PerformanceTestObject(new CoinjemaContext("override"));
-        sco = new SimpleContextOriented(new CoinjemaContext("override"));
-        cb = new CyclicBasic(new CoinjemaContext("override"));
-        subco = new SubContextOriented(new CoinjemaContext("override"));
+        aco = new AdvancedContextObject(new CjmContext("override"));
+        bo = new BasicContextOriented(new CjmContext("override"));
+        pto = new PerformanceTestObject(new CjmContext("override"));
+        sco = new SimpleContextOriented(new CjmContext("override"));
+        cb = new CyclicBasic(new CjmContext("override"));
+        subco = new SubContextOriented(new CjmContext("override"));
 
-        aco = new AdvancedContextObject(new CoinjemaContext("units"));
-        bo = new BasicContextOriented(new CoinjemaContext("units"));
-        pto = new PerformanceTestObject(new CoinjemaContext("units"));
-        sco = new SimpleContextOriented(new CoinjemaContext("units"));
-        cb = new CyclicBasic(new CoinjemaContext("units"));
-        subco = new SubContextOriented(new CoinjemaContext("units"));
+        aco = new AdvancedContextObject(new CjmContext("units"));
+        bo = new BasicContextOriented(new CjmContext("units"));
+        pto = new PerformanceTestObject(new CjmContext("units"));
+        sco = new SimpleContextOriented(new CjmContext("units"));
+        cb = new CyclicBasic(new CjmContext("units"));
+        subco = new SubContextOriented(new CjmContext("units"));
 
-        aco = new AdvancedContextObject(new CoinjemaContext("custom/units"));
-        bo = new BasicContextOriented(new CoinjemaContext("custom/units"));
-        pto = new PerformanceTestObject(new CoinjemaContext("custom/units"));
-        sco = new SimpleContextOriented(new CoinjemaContext("custom/units"));
-        cb = new CyclicBasic(new CoinjemaContext("custom/units"));
-        subco = new SubContextOriented(new CoinjemaContext("custom/units"));
+        aco = new AdvancedContextObject(new CjmContext("custom/units"));
+        bo = new BasicContextOriented(new CjmContext("custom/units"));
+        pto = new PerformanceTestObject(new CjmContext("custom/units"));
+        sco = new SimpleContextOriented(new CjmContext("custom/units"));
+        cb = new CyclicBasic(new CjmContext("custom/units"));
+        subco = new SubContextOriented(new CjmContext("custom/units"));
 
-        aco = new AdvancedContextObject(new CoinjemaContext("redirect"));
-        bo = new BasicContextOriented(new CoinjemaContext("redirect"));
-        pto = new PerformanceTestObject(new CoinjemaContext("redirect"));
-        sco = new SimpleContextOriented(new CoinjemaContext("redirect"));
-        cb = new CyclicBasic(new CoinjemaContext("redirect"));
-        subco = new SubContextOriented(new CoinjemaContext("redirect"));
+        aco = new AdvancedContextObject(new CjmContext("redirect"));
+        bo = new BasicContextOriented(new CjmContext("redirect"));
+        pto = new PerformanceTestObject(new CjmContext("redirect"));
+        sco = new SimpleContextOriented(new CjmContext("redirect"));
+        cb = new CyclicBasic(new CjmContext("redirect"));
+        subco = new SubContextOriented(new CjmContext("redirect"));
     }
 
 }

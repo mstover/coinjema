@@ -7,30 +7,30 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class ResourceNameContextualizer extends AbstractContextualizer {
-    private final CoinjemaContext base;
+    private final CjmContext base;
     private final ResourceNameResolver resolver;
 
-    private final CoinjemaContext subContext;
+    private final CjmContext subContext;
 
 
-    public ResourceNameContextualizer(ResourceNameResolver resolver, CoinjemaContext base) {
+    public ResourceNameContextualizer(ResourceNameResolver resolver, CjmContext base) {
         this.resolver = resolver;
         this.base = base;
         this.subContext = null;
     }
 
-    public ResourceNameContextualizer(ResourceNameResolver resolver, CoinjemaContext base, CoinjemaContext sub) {
+    public ResourceNameContextualizer(ResourceNameResolver resolver, CjmContext base, CjmContext sub) {
         this.resolver = resolver;
         this.base = base;
         this.subContext = sub;
     }
 
     public Object getDepOf() {
-        SpiceRack baseContext = Recipe.findBaseContext(base, subContext);
+        SpiceRack baseContext = Cjm.findBaseContext(base, subContext);
         Object dep = findPreviouslyResolvedDep(baseContext);
         if (dep != null) return dep;
         try {
-            Recipe.globalSync.lock();
+            Cjm.globalSync.lock();
             Object depAgain = findPreviouslyResolvedDep(baseContext);
             if (depAgain != null) return depAgain;
             final LinkedList<SpiceRack> racks = new LinkedList<SpiceRack>();
@@ -61,7 +61,7 @@ public class ResourceNameContextualizer extends AbstractContextualizer {
             }
             return discoveredDep.dep;
         } finally {
-            Recipe.globalSync.unlock();
+            Cjm.globalSync.unlock();
         }
     }
 

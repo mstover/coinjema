@@ -3,10 +3,11 @@ package org.coinjema.context;
 import static org.coinjema.logging.CoinjemaLogger.log;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.logging.Level;
 
-public class SimpleStringResolver extends AbstractNameResolver {
-	String name;
+public class SimpleStringResolver implements ResourceNameResolver {
+	private final String name;
 	
 	public SimpleStringResolver(String name)
 	{
@@ -26,42 +27,22 @@ public class SimpleStringResolver extends AbstractNameResolver {
 	}
 
 	@Override
-	protected String nextName() {
-		return null;
-	}
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-	@Override
-	protected void reset() {		
-	}
+		SimpleStringResolver that = (SimpleStringResolver) o;
+
+        return Objects.equals(name, that.name);
+    }
 
 	@Override
 	public int hashCode() {
-		final int PRIME = 31;
-		int result = 1;
-		result = PRIME * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+		return name != null ? name.hashCode() : 0;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final SimpleStringResolver other = (SimpleStringResolver) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
-	}
-
-	
 	public Object findMatchingUnfinishedObject(Collection<ContextOriented> unfinishedObjects,
-			CoinjemaContext cc)
+											   CjmContext cc)
 	{
 		if(log.isLoggable(Level.FINEST))
 		{

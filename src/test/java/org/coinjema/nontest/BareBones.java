@@ -8,7 +8,7 @@ public class BareBones extends AbstractContextOriented {
 	
 	public BareBones() {
 		super();
-		Recipe.contextualize(this);
+		Cjm.contextualize(this);
 	}
 
 	protected SimpleContextOriented sco = new SimpleContextOriented();
@@ -19,7 +19,7 @@ public class BareBones extends AbstractContextOriented {
 		return home;
 	}
 
-	@CoinjemaDependency(alias="homeURL")
+	@CjmDependency(alias="homeURL")
 	public void setHome(URL home) {
 		this.home = home;
 	}

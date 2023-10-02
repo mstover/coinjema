@@ -1,7 +1,7 @@
 package org.coinjema.nontest;
 
-import org.coinjema.context.CoinjemaDynamic;
-import org.coinjema.context.Recipe;
+import org.coinjema.context.CjmDynamic;
+import org.coinjema.context.Cjm;
 
 public class CyclicalDynamic {
 
@@ -10,10 +10,10 @@ public class CyclicalDynamic {
 		// TODO Auto-generated constructor stub
 	}
 	
-	@CoinjemaDynamic(alias="cyclic.basic")
+	@CjmDynamic(alias="cyclic.basic")
 	public static CyclicBasic getBasicObject()
 	{
-		return (CyclicBasic) Recipe.dynamicGetter(null,CyclicalDynamic.class,"getBasicObject");
+		return (CyclicBasic) Cjm.dynamicGetter(null,CyclicalDynamic.class,"getBasicObject");
 	}
 
 }

@@ -8,13 +8,13 @@ import java.util.Map;
 
 public class SingleDepContextualizer extends AbstractContextualizer {
     private final Class<?> clzz;
-    private final CoinjemaContext base;
+    private final CjmContext base;
     private final ResourceNameResolver resolver;
 
-    private final CoinjemaContext subContext;
+    private final CjmContext subContext;
     private final Object obj;
 
-    public SingleDepContextualizer(Object obj, ResourceNameResolver resolver, CoinjemaContext peek) {
+    public SingleDepContextualizer(Object obj, ResourceNameResolver resolver, CjmContext peek) {
         this.clzz = obj.getClass();
         this.obj = obj;
         this.base = peek;
@@ -22,7 +22,7 @@ public class SingleDepContextualizer extends AbstractContextualizer {
         this.subContext = null;
     }
 
-    public SingleDepContextualizer(Object obj, ResourceNameResolver resolver, CoinjemaContext peek, CoinjemaContext sub) {
+    public SingleDepContextualizer(Object obj, ResourceNameResolver resolver, CjmContext peek, CjmContext sub) {
         this.clzz = obj.getClass();
         this.obj = obj;
         this.base = peek;
@@ -31,11 +31,11 @@ public class SingleDepContextualizer extends AbstractContextualizer {
     }
 
     public Object getDepOf() {
-        SpiceRack baseContext = Recipe.findBaseContext(base, subContext);
+        SpiceRack baseContext = Cjm.findBaseContext(base, subContext);
         Object dep = findPreviouslyResolvedDep(baseContext);
         if (dep != null) return dep;
         try {
-            Recipe.globalSync.lock();
+            Cjm.globalSync.lock();
             Object depAgain = findPreviouslyResolvedDep(baseContext);
             if (depAgain != null) return depAgain;
             final LinkedList<SpiceRack> racks = new LinkedList<SpiceRack>();
@@ -67,7 +67,7 @@ public class SingleDepContextualizer extends AbstractContextualizer {
             }
             return discoveredDep.dep;
         } finally {
-            Recipe.globalSync.unlock();
+            Cjm.globalSync.unlock();
         }
     }
 

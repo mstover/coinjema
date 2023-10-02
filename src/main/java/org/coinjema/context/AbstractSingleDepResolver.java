@@ -11,18 +11,18 @@ public abstract class AbstractSingleDepResolver implements ResourceNameResolver 
     }
 
     protected static String getSimpleName(final Class<?> clazz) {
-        CoinjemaConstructorObject ann = AbstractSingleDepResolver.findObjectConstructorAnnotation(clazz);
+        CjmConstructorObject ann = AbstractSingleDepResolver.findObjectConstructorAnnotation(clazz);
         if (ann != null && !ann.type().isEmpty())
             return ann.type();
         else
             return clazz.getSimpleName();
     }
 
-    protected static CoinjemaConstructorObject findObjectConstructorAnnotation(Class<?> clazz) {
+    protected static CjmConstructorObject findObjectConstructorAnnotation(Class<?> clazz) {
         Class<?> parent = clazz;
-        CoinjemaConstructorObject ann = null;
+        CjmConstructorObject ann = null;
         while (ann == null && parent != Object.class) {
-            ann = (CoinjemaConstructorObject) parent.getAnnotation(CoinjemaConstructorObject.class);
+            ann = (CjmConstructorObject) parent.getAnnotation(CjmConstructorObject.class);
             if (ann == null)
                 parent = parent.getSuperclass();
         }
@@ -45,7 +45,7 @@ public abstract class AbstractSingleDepResolver implements ResourceNameResolver 
     }
 
     @Override
-    public Object findMatchingUnfinishedObject(Collection<ContextOriented> unfinishedObjects, CoinjemaContext cc) {
+    public Object findMatchingUnfinishedObject(Collection<ContextOriented> unfinishedObjects, CjmContext cc) {
         return null;
     }
 }

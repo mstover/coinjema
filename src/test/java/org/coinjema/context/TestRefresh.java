@@ -38,7 +38,7 @@ public class TestRefresh extends AbstractContextTester {
         file
                 .write("new java.net.URL(\"http://coinjema.sourceforge.net/overview.html\")");
         file.close();
-        ContextFactory.refresh(new CoinjemaContext());
+        ContextFactory.refresh(new CjmContext());
         co = new BasicContextOriented();
         assertEquals(new URL("http://coinjema.sourceforge.net/overview.html"),
                 co.getHome());
@@ -56,13 +56,13 @@ public class TestRefresh extends AbstractContextTester {
                 "src/test/resources/config1/mockName.txt"));
         file.write("Goodbye");
         file.close();
-        ContextFactory.refresh(new CoinjemaContext());
+        ContextFactory.refresh(new CjmContext());
         assertEquals("Goodbye", co.getMyService().getMockName());
         assertEquals("Goodbye", ms.getMockName());
         file = new PrintWriter(new FileWriter("src/test/resources/config1/mockName.txt"));
         file.write("Au Revoir");
         file.close();
-        ContextFactory.refresh(new CoinjemaContext());
+        ContextFactory.refresh(new CjmContext());
         assertEquals("Au Revoir", co.getMyService().getMockName());
         assertEquals("Au Revoir", ms.getMockName());
     }

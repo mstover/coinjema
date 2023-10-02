@@ -6,15 +6,15 @@ public class SimpleContextOriented extends AbstractContextOriented {
 
 	public SimpleContextOriented() {
 		super();
-		Recipe.contextualize(this);
+		Cjm.contextualize(this);
 	}
 	
-	public SimpleContextOriented(CoinjemaContext cc)
+	public SimpleContextOriented(CjmContext cc)
 	{
-		Recipe.contextualize(this,cc);
+		Cjm.contextualize(this,cc);
 	}
 	
-	@CoinjemaDependency(method="circular")
+	@CjmDependency(method="circular")
 	public void setCircularDependency(SimpleContextOrientedB g)
 	{
 		circular = g;
@@ -27,7 +27,7 @@ public class SimpleContextOriented extends AbstractContextOriented {
 		return circular;
 	}
 	
-	@CoinjemaDependency(method="test")
+	@CjmDependency(method="test")
 	public void setTest(String t)
 	{
 		test = t;

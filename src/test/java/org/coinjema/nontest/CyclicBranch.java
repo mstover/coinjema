@@ -1,9 +1,9 @@
 package org.coinjema.nontest;
 
-import org.coinjema.context.CoinjemaDependency;
-import org.coinjema.context.CoinjemaObject;
+import org.coinjema.context.CjmDependency;
+import org.coinjema.context.CjmObject;
 
-@CoinjemaObject
+@CjmObject
 public class CyclicBranch {
 	
 	CyclicSingleton single;
@@ -12,7 +12,7 @@ public class CyclicBranch {
 		super();
 	}
 	
-	@CoinjemaDependency(type="cyclic.static")
+	@CjmDependency(type="cyclic.static")
 	public void setSingle(CyclicSingleton cs)
 	{
 		single = cs;

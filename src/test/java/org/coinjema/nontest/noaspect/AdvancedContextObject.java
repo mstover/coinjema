@@ -1,9 +1,9 @@
 package org.coinjema.nontest.noaspect;
 
-import org.coinjema.context.CoinjemaContext;
-import org.coinjema.context.CoinjemaDependency;
+import org.coinjema.context.CjmContext;
+import org.coinjema.context.CjmDependency;
 import org.coinjema.context.ContextOriented;
-import org.coinjema.context.Recipe;
+import org.coinjema.context.Cjm;
 import org.coinjema.nontest.PersistentConfig;
 import org.coinjema.nontest.SimpleDynamic;
 
@@ -13,29 +13,29 @@ public class AdvancedContextObject implements ContextOriented {
 
     private Properties props = null;
     PersistentConfig session;
-    private CoinjemaContext context;
+    private CjmContext context;
     private boolean given;
 
     public AdvancedContextObject() {
-        Recipe.contextualize(this);
+        Cjm.contextualize(this);
     }
 
     public AdvancedContextObject(String context) {
-        this(new CoinjemaContext(context));
+        this(new CjmContext(context));
         System.out.println(((ContextOriented) this).getCoinjemaContext());
     }
 
-    public AdvancedContextObject(CoinjemaContext c) {
-        Recipe.contextualize(this, c);
+    public AdvancedContextObject(CjmContext c) {
+        Cjm.contextualize(this, c);
     }
 
     @Override
-    public CoinjemaContext getCoinjemaContext() {
+    public CjmContext getCoinjemaContext() {
         return context;
     }
 
     @Override
-    public void setCoinjemaContext(CoinjemaContext context) {
+    public void setCoinjemaContext(CjmContext context) {
         this.context = context;
     }
 
@@ -49,7 +49,7 @@ public class AdvancedContextObject implements ContextOriented {
         this.given = given;
     }
 
-    @CoinjemaDependency(method = "config")
+    @CjmDependency(method = "config")
     public void setServiceProperties(Properties p) {
         props = p;
     }
@@ -58,7 +58,7 @@ public class AdvancedContextObject implements ContextOriented {
         return props.getProperty(name);
     }
 
-    @CoinjemaDependency(type = "sessionStore")
+    @CjmDependency(type = "sessionStore")
     public void setPersistentSession(PersistentConfig config) {
         this.session = config;
     }

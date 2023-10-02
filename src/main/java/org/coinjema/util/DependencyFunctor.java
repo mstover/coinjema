@@ -4,7 +4,7 @@
  */
 package org.coinjema.util;
 
-import org.coinjema.context.CoinjemaDependency;
+import org.coinjema.context.CjmDependency;
 import org.coinjema.context.InjectorNameResolver;
 
 import java.lang.reflect.Method;
@@ -24,7 +24,7 @@ public class DependencyFunctor<R> extends Functor<R> {
     boolean hasDefault = false, isAliased;
 
     public DependencyFunctor(Class<?> objClass, Method method,
-                             CoinjemaDependency depAnn) {
+                             CjmDependency depAnn) {
         super(method.getName(), method.getParameterTypes());
         this.objClass = objClass;
         if (types == null || types.length != 1) {
@@ -83,7 +83,7 @@ public class DependencyFunctor<R> extends Functor<R> {
      * @param depAnn
      */
     private void determineMethodLabel(String methodName,
-                                      CoinjemaDependency depAnn) {
+                                      CjmDependency depAnn) {
         if (depAnn != null && !depAnn.method().equals("")) {
             methodLabel = depAnn.method();
         } else {
@@ -91,7 +91,7 @@ public class DependencyFunctor<R> extends Functor<R> {
         }
     }
 
-    private void determineAliasLabel(CoinjemaDependency depAnn) {
+    private void determineAliasLabel(CjmDependency depAnn) {
         if (depAnn != null && !(depAnn.alias().length() == 0)) {
             alias = depAnn.alias();
             isAliased = true;
@@ -104,7 +104,7 @@ public class DependencyFunctor<R> extends Functor<R> {
      * @param depAnn
      * @param types
      */
-    private void determineInjectedLabel(CoinjemaDependency depAnn,
+    private void determineInjectedLabel(CjmDependency depAnn,
                                         Class... types) {
         if (depAnn != null && !depAnn.type().equals("")) {
             injectedLabel = depAnn.type();

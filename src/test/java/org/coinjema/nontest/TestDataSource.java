@@ -6,10 +6,10 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
-import org.coinjema.context.CoinjemaDependency;
-import org.coinjema.context.CoinjemaObject;
+import org.coinjema.context.CjmDependency;
+import org.coinjema.context.CjmObject;
 
-@CoinjemaObject
+@CjmObject
 public class TestDataSource implements DataSource {
 	DataSource source;
 
@@ -63,7 +63,7 @@ public class TestDataSource implements DataSource {
 		return 0;
 	}
 	
-	@CoinjemaDependency(alias="datasource")
+	@CjmDependency(alias="datasource")
 	public void setDataSource(DataSource ds)
 	{
 		source = ds;

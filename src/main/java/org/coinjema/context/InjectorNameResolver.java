@@ -10,7 +10,7 @@ import static org.coinjema.logging.CoinjemaLogger.log;
 public class InjectorNameResolver extends AbstractNameResolver {
 
     DependencyFunctor<?> injector;
-    Class objClass;
+    Class<?> objClass;
     String fixedName = null;
     String localName, typeName, globalName;
     int count = -1;
@@ -97,7 +97,7 @@ public class InjectorNameResolver extends AbstractNameResolver {
     }
 
     public Object findMatchingUnfinishedObject(Collection<ContextOriented> unfinishedObjects,
-                                               CoinjemaContext cc) {
+                                               CjmContext cc) {
         if (log.isLoggable(Level.FINEST)) {
             log.finest("DynamicDependencyResolver: looking for match with resource: " + getName() + " in context: " + cc);
         }

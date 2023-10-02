@@ -21,18 +21,18 @@ public class ConstructorDependencyResolver<T extends ConstructorContextOriented>
     }
 
     protected static String getSimpleName(final Class<?> clazz) {
-        CoinjemaConstructorObject ann = findObjectConstructorAnnotation(clazz);
+        CjmConstructorObject ann = findObjectConstructorAnnotation(clazz);
         if (ann != null && !ann.type().isEmpty())
             return ann.type();
         else
             return clazz.getSimpleName();
     }
 
-    protected static CoinjemaConstructorObject findObjectConstructorAnnotation(Class<?> clazz) {
+    protected static CjmConstructorObject findObjectConstructorAnnotation(Class<?> clazz) {
         Class<?> parent = clazz;
-        CoinjemaConstructorObject ann = null;
+        CjmConstructorObject ann = null;
         while (ann == null && parent != Object.class) {
-            ann = (CoinjemaConstructorObject) parent.getAnnotation(CoinjemaConstructorObject.class);
+            ann = (CjmConstructorObject) parent.getAnnotation(CjmConstructorObject.class);
             if (ann == null)
                 parent = parent.getSuperclass();
         }
@@ -55,7 +55,7 @@ public class ConstructorDependencyResolver<T extends ConstructorContextOriented>
     }
 
     @Override
-    public Object findMatchingUnfinishedObject(Collection<ContextOriented> unfinishedObjects, CoinjemaContext cc) {
+    public Object findMatchingUnfinishedObject(Collection<ContextOriented> unfinishedObjects, CjmContext cc) {
         if (log.isLoggable(Level.FINEST)) {
             log.finest("DynamicDependencyResolver: looking for match with resource: " + getName() + " in context: " + cc);
         }

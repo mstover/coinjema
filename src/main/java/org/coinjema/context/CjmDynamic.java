@@ -5,9 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(value=ElementType.TYPE)
+@Target(value=ElementType.METHOD)
 @Retention(value=RetentionPolicy.RUNTIME)
-public @interface CoinjemaObject {
-    String type() default "";
-
+public @interface CjmDynamic {
+	String type() default "";
+    String method() default "";
+    String alias() default "";
+    String contextMethod() default "";
 }

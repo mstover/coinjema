@@ -32,7 +32,7 @@ final class SpiceRack implements Registry {
 
     static SpiceRack root;
 
-    static Map<CoinjemaContext, SpiceRack> contextMap;
+    static Map<CjmContext, SpiceRack> contextMap;
 
     private final Map<Object, Object> depObjects;
     private final HashSet<SpiceRack> children;
@@ -41,12 +41,12 @@ final class SpiceRack implements Registry {
     boolean created = false;
     ReentrantLock contextLock = new ReentrantLock();
     private ContextSource directory;
-    private CoinjemaContext context;
+    private CjmContext context;
     // Set<WeakReference> contextualized;
     private SpiceRack parent;
 
     private SpiceRack(final ContextSource directory) {
-        context = new CoinjemaContext();
+        context = new CjmContext();
         this.directory = directory;
         depObjects = new ConcurrentHashMap<>(101);
         parent = null;
@@ -59,7 +59,7 @@ final class SpiceRack implements Registry {
         createChildren();
     }
 
-    private SpiceRack(final CoinjemaContext context,
+    private SpiceRack(final CjmContext context,
                       final ContextSource directory, final SpiceRack parent) {
         this.context = context;
         this.directory = directory;
@@ -77,7 +77,7 @@ final class SpiceRack implements Registry {
         return root;
     }
 
-    public static SpiceRack getInstance(final CoinjemaContext context) {
+    public static SpiceRack getInstance(final CjmContext context) {
         if (context == null) {
             return root;
         }
@@ -90,38 +90,38 @@ final class SpiceRack implements Registry {
 
     public static void createRootContext(ContextSource directory) {
         try {
-            Recipe.globalSync.lock();
+            Cjm.globalSync.lock();
             new SpiceRack(directory);
         } finally {
-            Recipe.globalSync.unlock();
+            Cjm.globalSync.unlock();
         }
     }
 
     public static void createContext(
             final String contextName, final ContextSource directory) {
         try {
-            Recipe.globalSync.lock();
-            new SpiceRack(new CoinjemaContext(contextName), directory, root);
+            Cjm.globalSync.lock();
+            new SpiceRack(new CjmContext(contextName), directory, root);
         } finally {
-            Recipe.globalSync.unlock();
+            Cjm.globalSync.unlock();
         }
     }
 
     public static void createContext(
             final String contextName, final ContextSource directory,
-            CoinjemaContext parentContext) {
+            CjmContext parentContext) {
         try {
-            Recipe.globalSync.lock();
-            new SpiceRack(new CoinjemaContext(parentContext, contextName),
+            Cjm.globalSync.lock();
+            new SpiceRack(new CjmContext(parentContext, contextName),
                     directory, getInstance(parentContext));
         } finally {
-            Recipe.globalSync.unlock();
+            Cjm.globalSync.unlock();
         }
     }
 
     public static void destroyContext(
             final String contextName) {
-        CoinjemaContext context = new CoinjemaContext(contextName);
+        CjmContext context = new CjmContext(contextName);
         SpiceRack rack = getInstance(context);
         try {
             rack.contextLock.lock();
@@ -150,7 +150,7 @@ final class SpiceRack implements Registry {
                             coinjemaProperties
                                     .getProperty("excludeDirs")))) {
                 new SpiceRack(
-                        new CoinjemaContext(context, subContext.getName()),
+                        new CjmContext(context, subContext.getName()),
                         subContext, this);
             }
         }
@@ -291,7 +291,7 @@ final class SpiceRack implements Registry {
         }
         if (redo) {
             for (ContextOriented co : l) {
-                Recipe.contextualizeWithoutSave(co, co.getCoinjemaContext(),
+                Cjm.contextualizeWithoutSave(co, co.getCoinjemaContext(),
                         null);
             }
         }
@@ -302,11 +302,11 @@ final class SpiceRack implements Registry {
      *
      * @see org.coinjema.context.NamedContext#getContext()
      */
-    public CoinjemaContext getContext() {
+    public CjmContext getContext() {
         return context;
     }
 
-    public void setContext(final CoinjemaContext context) {
+    public void setContext(final CjmContext context) {
         this.context = context;
     }
 
@@ -336,12 +336,12 @@ final class SpiceRack implements Registry {
 
     public Object getSharedDep(String contextPath, String depName) {
         final Map<String, Object> values = new HashMap<>();
-        SpiceRack sub = Recipe.findBaseContext(this.getContext(),
-                new CoinjemaContext(contextPath));
+        SpiceRack sub = Cjm.findBaseContext(this.getContext(),
+                new CjmContext(contextPath));
         values.put("registry", sub);
         final ResourceNameResolver resolver = new SimpleStringResolver(depName);
         DiscoveredResource disc = RackLoop.limitedLoop(sub, this,
-                rack -> Recipe.CONTEXTUALIZER.orElse(new ObjectSetterContextualizer()).captureDepInContextStack(values, resolver, rack));
+                rack -> Cjm.CONTEXTUALIZER.orElse(new ObjectSetterContextualizer()).captureDepInContextStack(values, resolver, rack));
         if (disc != null) {
             return disc.dep;
         } else {
@@ -360,12 +360,12 @@ final class SpiceRack implements Registry {
         } else {
             depName = contextPath;
         }
-        SpiceRack sub = Recipe.findBaseContext(this.getContext(),
-                new CoinjemaContext(path));
+        SpiceRack sub = Cjm.findBaseContext(this.getContext(),
+                new CjmContext(path));
         values.put("registry", sub);
         final ResourceNameResolver resolver = new SimpleStringResolver(depName);
         DiscoveredResource disc = RackLoop.limitedLoop(sub, this,
-                rack -> Recipe.getContextualizer().captureDepInContextStack(values, resolver, rack));
+                rack -> Cjm.getContextualizer().captureDepInContextStack(values, resolver, rack));
         if (disc != null) {
             return disc.dep;
         } else {

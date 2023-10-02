@@ -29,7 +29,7 @@ public class RedirectNameResolver extends AbstractNameResolver {
 
 	public Object findMatchingUnfinishedObject(
 			Collection<ContextOriented> unfinishedObjects,
-			CoinjemaContext cc) {
+			CjmContext cc) {
 		return parent.findMatchingUnfinishedObject(unfinishedObjects,cc);
 	}
 

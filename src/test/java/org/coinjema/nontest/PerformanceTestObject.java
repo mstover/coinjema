@@ -4,17 +4,17 @@ import org.coinjema.context.*;
 
 import java.util.logging.Logger;
 
-@CoinjemaObject(type = "performer")
+@CjmObject(type = "performer")
 public class PerformanceTestObject extends AbstractContextOriented {
     static Logger log;
     String[] paths;
 
     public PerformanceTestObject() {
-        Recipe.contextualize(this);
+        Cjm.contextualize(this);
     }
 
-    public PerformanceTestObject(CoinjemaContext c) {
-        Recipe.contextualize(this, c);
+    public PerformanceTestObject(CjmContext c) {
+        Cjm.contextualize(this, c);
     }
 
     public static Logger getLog() {
@@ -31,12 +31,12 @@ public class PerformanceTestObject extends AbstractContextOriented {
     /**
      * @param paths The paths to set.
      */
-    @CoinjemaDependency(method = "paths")
+    @CjmDependency(method = "paths")
     public void setPaths(String[] paths) {
         this.paths = paths;
     }
 
-    @CoinjemaDependency(alias = "log4j")
+    @CjmDependency(alias = "log4j")
     public void setLogger(Logger l) {
         log = l;
     }

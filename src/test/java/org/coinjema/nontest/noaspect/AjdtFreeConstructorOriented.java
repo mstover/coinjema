@@ -2,7 +2,7 @@ package org.coinjema.nontest.noaspect;
 
 import org.coinjema.context.AliasDefinition;
 import org.coinjema.context.DependencyDefinition;
-import org.coinjema.context.Recipe;
+import org.coinjema.context.Cjm;
 import org.coinjema.context.TypeDefinition;
 import org.coinjema.nontest.MockSingleton;
 
@@ -15,9 +15,9 @@ public class AjdtFreeConstructorOriented {
     private final Logger logger;
 
     public AjdtFreeConstructorOriented() {
-        service = Recipe.getDep(new TypeDefinition<>(this,MockSingleton.class));
-        username = Recipe.getDep(new DependencyDefinition<>(this,String.class,"username",null));
-        logger = (Logger) Recipe.getDep(new AliasDefinition<>(this,Logger.class,"log4j"));
+        service = Cjm.getDep(new TypeDefinition<>(this,MockSingleton.class));
+        username = Cjm.getDep(new DependencyDefinition<>(this,String.class,"username",null));
+        logger = (Logger) Cjm.getDep(new AliasDefinition<>(this,Logger.class,"log4j"));
     }
 
     public MockSingleton getService() {

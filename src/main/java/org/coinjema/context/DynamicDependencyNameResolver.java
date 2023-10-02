@@ -8,13 +8,13 @@ import static org.coinjema.logging.CoinjemaLogger.log;
 
 public class DynamicDependencyNameResolver extends AbstractNameResolver {
     int count = -1;
-    CoinjemaDynamic ann;
+    CjmDynamic ann;
     Class objClass;
     Method dynMethod;
     String localName, typeName, globalName;
     private String fixedName = null;
 
-    public DynamicDependencyNameResolver(Class objClass, CoinjemaDynamic ann, Method dynMethod) {
+    public DynamicDependencyNameResolver(Class objClass, CjmDynamic ann, Method dynMethod) {
         this.ann = ann;
         this.objClass = objClass;
         this.dynMethod = dynMethod;
@@ -87,11 +87,11 @@ public class DynamicDependencyNameResolver extends AbstractNameResolver {
         return true;
     }
 
-    private String getMethodName(CoinjemaDynamic ann, Method meth) {
+    private String getMethodName(CjmDynamic ann, Method meth) {
         return ann.method().length() > 0 ? ann.method() : meth.getName();
     }
 
-    private String getTypeName(CoinjemaDynamic ann, Method meth) {
+    private String getTypeName(CjmDynamic ann, Method meth) {
         return ann.type().length() > 0 ? ann.type() : meth.getReturnType().getSimpleName();
     }
 
@@ -100,7 +100,7 @@ public class DynamicDependencyNameResolver extends AbstractNameResolver {
     }
 
     public Object findMatchingUnfinishedObject(Collection<ContextOriented> unfinishedObjects,
-                                               CoinjemaContext cc) {
+                                               CjmContext cc) {
         if (log.isLoggable(Level.FINEST)) {
             log.finest("DynamicDependencyResolver: looking for match with resource: " + getName() + " in context: " + cc);
         }

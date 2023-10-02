@@ -5,27 +5,27 @@ import org.coinjema.context.*;
 import java.util.Properties;
 
 
-@CoinjemaObject(type = "AService")
+@CjmObject(type = "AService")
 public class AdvancedContextObject extends AbstractContextOriented {
 
     Properties props;
     PersistentConfig session;
 
     public AdvancedContextObject() {
-        Recipe.contextualize(this);
+        Cjm.contextualize(this);
     }
 
     public AdvancedContextObject(String context) {
-        this(new CoinjemaContext(context));
+        this(new CjmContext(context));
         System.out.println(((ContextOriented) this).getCoinjemaContext());
     }
 
-    public AdvancedContextObject(CoinjemaContext c) {
+    public AdvancedContextObject(CjmContext c) {
         super(c);
-        Recipe.contextualize(this, c);
+        Cjm.contextualize(this, c);
     }
 
-    @CoinjemaDependency(method = "config")
+    @CjmDependency(method = "config")
     public void setServiceProperties(Properties p) {
         props = p;
     }
@@ -34,7 +34,7 @@ public class AdvancedContextObject extends AbstractContextOriented {
         return props.getProperty(name);
     }
 
-    @CoinjemaDependency(type = "sessionStore")
+    @CjmDependency(type = "sessionStore")
     public void setPersistentSession(PersistentConfig config) {
         this.session = config;
     }

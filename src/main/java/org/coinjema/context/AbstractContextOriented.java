@@ -1,10 +1,10 @@
 package org.coinjema.context;
 
 public class AbstractContextOriented implements ContextOriented {
-    private CoinjemaContext context;
+    private CjmContext context;
     private boolean given;
 
-    public AbstractContextOriented(CoinjemaContext context) {
+    public AbstractContextOriented(CjmContext context) {
         this.context = context;
         this.given = true;
     }
@@ -13,12 +13,12 @@ public class AbstractContextOriented implements ContextOriented {
     }
 
     @Override
-    public CoinjemaContext getCoinjemaContext() {
+    public CjmContext getCoinjemaContext() {
         return context;
     }
 
     @Override
-    public void setCoinjemaContext(CoinjemaContext context) {
+    public void setCoinjemaContext(CjmContext context) {
         this.context = context;
     }
 

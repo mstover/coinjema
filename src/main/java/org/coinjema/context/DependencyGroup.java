@@ -3,10 +3,10 @@ package org.coinjema.context;
 
 
 class DependencyGroup {
-		public CoinjemaContext context;
+		public CjmContext context;
 		public String resourceName;
 		
-		public DependencyGroup(String rn,CoinjemaContext cc)
+		public DependencyGroup(String rn, CjmContext cc)
 		{
 			context = cc;
 			resourceName = rn;

@@ -1,13 +1,13 @@
 package org.coinjema.nontest;
 
 import org.coinjema.context.AbstractContextOriented;
-import org.coinjema.context.CoinjemaDependency;
-import org.coinjema.context.CoinjemaObject;
-import org.coinjema.context.Recipe;
+import org.coinjema.context.CjmDependency;
+import org.coinjema.context.CjmObject;
+import org.coinjema.context.Cjm;
 
 import java.io.*;
 
-@CoinjemaObject(type = "sessionStore")
+@CjmObject(type = "sessionStore")
 public class PersistentConfig extends AbstractContextOriented implements Serializable {
     private static final long serialVersionUID = 1;
     String paramOne = "One";
@@ -17,7 +17,7 @@ public class PersistentConfig extends AbstractContextOriented implements Seriali
 
     public PersistentConfig() {
         super();
-        Recipe.contextualize(this);
+        Cjm.contextualize(this);
     }
 
     /**
@@ -74,7 +74,7 @@ public class PersistentConfig extends AbstractContextOriented implements Seriali
     /**
      * @param mok The mok to set.
      */
-    @CoinjemaDependency(type = "MockSingleton")
+    @CjmDependency(type = "MockSingleton")
     public void setMok(MockSingleton mok) {
         this.mok = mok;
     }
@@ -82,7 +82,7 @@ public class PersistentConfig extends AbstractContextOriented implements Seriali
     private void readObject(ObjectInputStream in) {
         try {
             in.defaultReadObject();
-            Recipe.contextualize(this,getCoinjemaContext());
+            Cjm.contextualize(this,getCoinjemaContext());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

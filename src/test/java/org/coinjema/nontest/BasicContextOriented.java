@@ -1,7 +1,7 @@
 package org.coinjema.nontest;
 
 import org.coinjema.context.*;
-import org.coinjema.context.CoinjemaDependency.Order;
+import org.coinjema.context.CjmDependency.Order;
 
 import java.net.URL;
 import java.util.Properties;
@@ -18,19 +18,19 @@ public class BasicContextOriented extends AbstractContextOriented {
     SimpleContextOriented simple;
 
     public BasicContextOriented() {
-        Recipe.contextualize(this);
+        Cjm.contextualize(this);
     }
 
-    public BasicContextOriented(CoinjemaContext context) {
-        Recipe.contextualize(this, context);
+    public BasicContextOriented(CjmContext context) {
+        Cjm.contextualize(this, context);
     }
 
-    public BasicContextOriented(String init, CoinjemaContext context) {
+    public BasicContextOriented(String init, CjmContext context) {
         this.init = init;
-        Recipe.contextualize(this, context);
+        Cjm.contextualize(this, context);
     }
 
-    @CoinjemaDependency(alias = "log4j")
+    @CjmDependency(alias = "log4j")
     public void setLogger(Logger log) {
         this.log = log;
     }
@@ -39,7 +39,7 @@ public class BasicContextOriented extends AbstractContextOriented {
         return props;
     }
 
-    @CoinjemaDependency(method = "config")
+    @CjmDependency(method = "config")
     public void setConfig(Properties p) {
         props = p;
     }
@@ -52,12 +52,12 @@ public class BasicContextOriented extends AbstractContextOriented {
         return ContextFactory.withContext(getCoinjemaContext(), () -> getMyService().getProperty(key));
     }
 
-    @CoinjemaDependency
+    @CjmDependency
     public void setService(MockSingleton myService) {
         this.myService = myService;
     }
 
-    @CoinjemaDependency(type = "AnnotatedMock")
+    @CjmDependency(type = "AnnotatedMock")
     public void setOtherService(MockSingleton myOtherService) {
         this.myOtherService = myOtherService;
     }
@@ -66,7 +66,7 @@ public class BasicContextOriented extends AbstractContextOriented {
         return redirectedService;
     }
 
-    @CoinjemaDependency(method = "redirectionMock")
+    @CjmDependency(method = "redirectionMock")
     public void setRedirectedService(MockSingleton redirected) {
         this.redirectedService = redirected;
     }
@@ -83,7 +83,7 @@ public class BasicContextOriented extends AbstractContextOriented {
         return paths;
     }
 
-    @CoinjemaDependency
+    @CjmDependency
     public void setPaths(String[] paths) {
         this.paths = paths;
     }
@@ -96,7 +96,7 @@ public class BasicContextOriented extends AbstractContextOriented {
         return obj.getSubObject();
     }
 
-    @CoinjemaDependency(order = Order.LAST)
+    @CjmDependency(order = Order.LAST)
     public void setZLastDependency(String v) {
         if (paths == null) {
             throw new RuntimeException();
@@ -113,7 +113,7 @@ public class BasicContextOriented extends AbstractContextOriented {
     }
 
     public BasicContextOriented getSubObject(String context) {
-        return ContextFactory.withContext(getCoinjemaContext(), () -> new BasicContextOriented(new CoinjemaContext(context)));
+        return ContextFactory.withContext(getCoinjemaContext(), () -> new BasicContextOriented(new CjmContext(context)));
     }
 
     public void testLogging() {
@@ -139,12 +139,12 @@ public class BasicContextOriented extends AbstractContextOriented {
         return home;
     }
 
-    @CoinjemaDependency(alias = "homeURL")
+    @CjmDependency(alias = "homeURL")
     public void setHome(URL home) {
         this.home = home;
     }
 
-    @CoinjemaDependency(alias = "simple")
+    @CjmDependency(alias = "simple")
     public void setSimpleDep(SimpleContextOriented sco) {
         simple = sco;
     }

@@ -1,8 +1,8 @@
 package org.coinjema.nontest;
 
-import org.coinjema.context.CoinjemaContext;
-import org.coinjema.context.CoinjemaDynamic;
-import org.coinjema.context.Recipe;
+import org.coinjema.context.CjmContext;
+import org.coinjema.context.CjmDynamic;
+import org.coinjema.context.Cjm;
 
 import java.util.Properties;
 
@@ -12,18 +12,18 @@ public class SimpleDynamic {
         super();
     }
 
-    public SimpleDynamic(CoinjemaContext cc) {
+    public SimpleDynamic(CjmContext cc) {
 
     }
 
-    @CoinjemaDynamic(alias = "static_dynamic.name")
+    @CjmDynamic(alias = "static_dynamic.name")
     public static String getDynName() {
-        return (String) Recipe.dynamicGetter(null, SimpleDynamic.class, "getDynName");
+        return (String) Cjm.dynamicGetter(null, SimpleDynamic.class, "getDynName");
     }
 
-    @CoinjemaDynamic(method = "simpleProps", type = "Properties")
+    @CjmDynamic(method = "simpleProps", type = "Properties")
     public Properties getProperties() {
-        return (Properties) Recipe.dynamicGetter(this, getClass(), "getProperties");
+        return (Properties) Cjm.dynamicGetter(this, getClass(), "getProperties");
     }
 
 }

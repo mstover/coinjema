@@ -39,7 +39,7 @@ class PropertiesEvaluator implements Evaluator {
         final Map<String, Object> tempParams = new HashMap<>();
         tempParams.putAll(params);
         final SimpleStringResolver resolver = new SimpleStringResolver(res.getName());
-        Object props = RackLoop.loop(parent, rack -> Recipe.getContextualizer().captureDep(tempParams, resolver, rack)).dep;
+        Object props = RackLoop.loop(parent, rack -> Cjm.getContextualizer().captureDep(tempParams, resolver, rack)).dep;
         if (props instanceof Properties) return (Properties) props;
         else return new Properties();
     }

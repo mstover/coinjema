@@ -7,6 +7,6 @@ public interface ResourceNameResolver {
 	public String getName();
 	
 	public <T> T findDependency(NameLoop<T> evaluator);
-	public Object findMatchingUnfinishedObject(Collection<ContextOriented> unfinishedObjects,CoinjemaContext cc);
+	public Object findMatchingUnfinishedObject(Collection<ContextOriented> unfinishedObjects, CjmContext cc);
 
 }

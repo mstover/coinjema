@@ -8,7 +8,7 @@ public class HasGroovyProperties {
 
 	public HasGroovyProperties() {
 		super();
-		this.props = Recipe.getDep(new ObjectDependencyDefinition<>(this,Properties.class,"config","gpropClass"));
+		this.props = Cjm.getDep(new ObjectDependencyDefinition<>(this,Properties.class,"config","gpropClass"));
 	}
 	
 	private final Properties props;

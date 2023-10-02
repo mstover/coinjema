@@ -4,12 +4,12 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * A CoinjemaContext object points to a separate context which may or may not
+ * A CjmContext object points to a separate context which may or may not
  * hold individual config information for the system. It is normally used to
  * create a new object in a different context, so that it receives different
- * configuration information than the calling class. A CoinjemaContext is really
+ * configuration information than the calling class. A CjmContext is really
  * no more than a String, but is used to avoid namespace problems.
- * CoinjemaContext objects are really just pointers to the actual context - you
+ * CjmContext objects are really just pointers to the actual context - you
  * can easily create objects that point to non-existent contexts. As such, they
  * are cheap objects to create and leave for GC.
  * <p>
@@ -18,8 +18,8 @@ import java.io.Serializable;
  *
  * @author mikes
  */
-public final class CoinjemaContext implements Serializable {
-    static final CoinjemaContext rootContext = new CoinjemaContext();
+public final class CjmContext implements Serializable {
+    static final CjmContext rootContext = new CjmContext();
     @Serial
     private static final long serialVersionUID = 1;
     int reverseIndex = Integer.MIN_VALUE;
@@ -27,13 +27,13 @@ public final class CoinjemaContext implements Serializable {
     int hash = 7;
     String name;
 
-    CoinjemaContext() {
+    CjmContext() {
         super();
         name = "";
         calcHash();
     }
 
-    CoinjemaContext(final CoinjemaContext parent, CoinjemaContext child) {
+    CjmContext(final CjmContext parent, CjmContext child) {
         name = parent.getName() + child.getName();
         calcHash();
         reverseIndex = !parent.getName().isEmpty() ? parent.getName()
@@ -46,7 +46,7 @@ public final class CoinjemaContext implements Serializable {
      * @param parent
      * @param subContext
      */
-    public CoinjemaContext(final CoinjemaContext parent, final String subContext) {
+    public CjmContext(final CjmContext parent, final String subContext) {
         this(new StringBuilder(parent.name).append(subContext));
     }
 
@@ -55,11 +55,11 @@ public final class CoinjemaContext implements Serializable {
      *
      * @param n
      */
-    public CoinjemaContext(final String n) {
+    public CjmContext(final String n) {
         this(new StringBuilder((n != null) ? n : ""));
     }
 
-    private CoinjemaContext(String n, boolean prevetted) {
+    private CjmContext(String n, boolean prevetted) {
         name = n;
         calcHash();
         if (n.length() > 2) {
@@ -72,7 +72,7 @@ public final class CoinjemaContext implements Serializable {
     /**
      * Create a context with the given name.
      */
-    private CoinjemaContext(final StringBuilder n) {
+    private CjmContext(final StringBuilder n) {
         int len = n.length();
         if (len > 0) {
             if (n.charAt(len - 1) != '/') {
@@ -100,7 +100,7 @@ public final class CoinjemaContext implements Serializable {
      */
     @Override
     final public boolean equals(final Object obj) {
-        if (obj instanceof CoinjemaContext c) {
+        if (obj instanceof CjmContext c) {
             return ((c.name == null) && (name == null))
                     || ((c.name != null) && (c.name.compareTo(name) == 0));
         }
@@ -111,9 +111,9 @@ public final class CoinjemaContext implements Serializable {
         return name;
     }
 
-    CoinjemaContext getParentContext() {
+    CjmContext getParentContext() {
         if (reverseIndex > -1) {
-            return new CoinjemaContext(name.substring(0, reverseIndex), true);
+            return new CjmContext(name.substring(0, reverseIndex), true);
         } else if (reverseIndex == -1) {
             return rootContext;
         } else {

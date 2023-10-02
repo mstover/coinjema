@@ -5,15 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(value=ElementType.METHOD)
+@Target(value=ElementType.TYPE)
 @Retention(value=RetentionPolicy.RUNTIME)
-public @interface CoinjemaDependency {
-
-    public static enum Order {NA,LAST};
-    
-    String method() default "";
+public @interface CjmObject {
     String type() default "";
-    String alias() default "";
-    Order order() default Order.NA;
-    boolean hasDefault() default false;
+
 }

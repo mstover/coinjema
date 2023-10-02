@@ -2,21 +2,21 @@ package org.coinjema.nontest;
 
 import org.coinjema.context.*;
 
-@CoinjemaObject(type="cyclic")
+@CjmObject(type="cyclic")
 public class CyclicBasic extends AbstractContextOriented {
 
 	public CyclicBasic() {
-		Recipe.contextualize(this);
+		Cjm.contextualize(this);
 	}
 	
-	public CyclicBasic(CoinjemaContext cc)
+	public CyclicBasic(CjmContext cc)
 	{
-		Recipe.contextualize(this,cc);
+		Cjm.contextualize(this,cc);
 	}
 	
 	private CyclicSingleton single;
 	
-	@CoinjemaDependency(type="cyclic.static")
+	@CjmDependency(type="cyclic.static")
 	public void setSingle(CyclicSingleton cs)
 	{
 		single = cs;
