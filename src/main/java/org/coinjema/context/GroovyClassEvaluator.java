@@ -13,20 +13,13 @@ import java.util.Map;
 class GroovyClassEvaluator implements Evaluator {
 
     public Object evaluate(Resource source, Map params) {
-        Reader scriptBytes = new InputStreamReader(source.getInputStream());
+        try(Reader scriptBytes = new InputStreamReader(source.getInputStream())) {
         GroovyClassLoader loader = new GroovyClassLoader(Thread.currentThread()
                 .getContextClassLoader());
-        try {
             return loader.parseClass(scriptBytes, source.getName()).getDeclaredConstructor().newInstance();
         } catch (Throwable e) {
             throw new DependencyInjectionException(
                     "Couldn't evaluate groovy class: " + source + ".groovyClass", e);
-        } finally {
-            try {
-                scriptBytes.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to close config file: " + source, e);
-            }
         }
     }
 

@@ -22,7 +22,6 @@ public class AdvancedContextObject implements ContextOriented {
 
     public AdvancedContextObject(String context) {
         this(new CjmContext(context));
-        System.out.println(((ContextOriented) this).getCoinjemaContext());
     }
 
     public AdvancedContextObject(CjmContext c) {

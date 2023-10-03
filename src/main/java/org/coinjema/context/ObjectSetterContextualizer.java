@@ -40,32 +40,34 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
     }
 
     void contextualize(final ContextOriented obj, final CjmContext context, CjmContext base) {
-        contextualizeIt(obj, context, base);
+        contextualizeIt(obj, Cjm.findBaseContext(base, context));
     }
 
     private void contextualizeIt(final ContextOriented obj,
-                                 final CjmContext context, final CjmContext base) {
+                                 final SpiceRack contextRegistry) {
         FunctorSet functors = functorMap.get(obj.getClass());
-        if (functors != null && contextInitialized.getOrDefault(new ClassContextKey(obj.getClass(), Cjm.findBaseContext(base, context).getContext()), false)) {
-            contextualizeItWithFunctors(obj, context, base, functors);
+        if (functors != null && contextInitialized.getOrDefault(new ClassContextKey(obj.getClass(), contextRegistry.getContext()), false)) {
+            contextualizeItWithFunctors(obj, contextRegistry, functors);
 
         } else {
             boolean tryAgain = false;
             try {
-                boolean haveLock = Cjm.globalSync.tryLock(1, TimeUnit.MILLISECONDS);
+                boolean haveLock = Cjm.globalSync.tryLock(10, TimeUnit.MILLISECONDS);
                 if (haveLock) {
                     try {
                         functors = functorMap.get(obj.getClass());
-                        if (functors == null || !contextInitialized.getOrDefault(new ClassContextKey(obj.getClass(), Cjm.findBaseContext(base, context).getContext()), false)) {
-                            contextualizeClassFirstTime(obj, context, base);
+                        if (functors == null || !contextInitialized.getOrDefault(new ClassContextKey(obj.getClass(), contextRegistry.getContext()), false)) {
+                            contextualizeClassFirstTime(obj, contextRegistry);
                         } else {
                             tryAgain = true;
                         }
                     } finally {
                         Cjm.globalSync.unlock();
                     }
-                } else tryAgain = true;
-                if (tryAgain) contextualizeIt(obj, context, base);
+                } else {
+                    tryAgain = true;
+                }
+                if (tryAgain) contextualizeIt(obj, contextRegistry);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new RuntimeException(e);
@@ -73,24 +75,21 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
         }
     }
 
-    private void contextualizeItWithFunctors(ContextOriented obj, CjmContext context, CjmContext base, FunctorSet functors) {
+    private void contextualizeItWithFunctors(ContextOriented obj, SpiceRack baseContextInput, FunctorSet functors) {
         boolean topLevel = currentTopContext == null;
         if (log.isLoggable(Level.FINER)) {
             log.finer("Base context = "
-                    + (topLevel ? base : currentTopContext)
-                    + " sub-context = " + context);
+                    + (topLevel ? baseContextInput : currentTopContext));
         }
-        final SpiceRack baseContext = Cjm.findBaseContext(topLevel ? base
-                : currentTopContext, context);
+        final SpiceRack baseContext = topLevel ? baseContextInput : SpiceRack.getInstance(currentTopContext);
         if (log.isLoggable(Level.FINER)) {
             log.finer("Resolved context = " + baseContext.getContext());
         }
         obj.setCoinjemaContext(baseContext.getContext());
-        injectFunctors(obj, context, base, functors, baseContext);
+        injectFunctors(obj, functors, baseContext);
     }
 
     private void injectFunctors(final ContextOriented obj,
-                                final CjmContext context, final CjmContext base,
                                 FunctorSet functors, final SpiceRack baseContext) {
         for (DependencyFunctor<Object> injector : functors) {
             if (!functors.isMarked(injector, baseContext.getContext())) {
@@ -103,7 +102,7 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
                 } else {
                     try {
                         Cjm.globalSync.lock();
-                        contextualizeContextFirstTime(functors, obj, context, base);
+                        contextualizeContextFirstTime(functors, obj, baseContext);
                     } finally {
                         Cjm.globalSync.unlock();
                     }
@@ -114,24 +113,21 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
     }
 
     private void contextualizeClassFirstTime(
-            final ContextOriented obj, final CjmContext context,
-            final CjmContext base) {
+            final ContextOriented obj, SpiceRack baseContext) {
         FunctorSet functors = retrieveFunctors(obj);
-        contextualizeContextFirstTime(functors, obj, context, base);
+        contextualizeContextFirstTime(functors, obj, baseContext);
         functorMap.put(obj.getClass(), functors);
-        contextInitialized.put(new ClassContextKey(obj.getClass(), Cjm.findBaseContext(base, context).getContext()), true);
+        contextInitialized.put(new ClassContextKey(obj.getClass(), baseContext.getContext()), true);
     }
 
     private void contextualizeContextFirstTime(
-            FunctorSet functors, final ContextOriented obj,
-            final CjmContext context, final CjmContext base) {
+            FunctorSet functors, final ContextOriented obj, SpiceRack baseContextInput) {
         boolean topLevel = currentTopContext == null;
         if (log.isLoggable(Level.FINER)) {
             log.finer("Base context = "
-                    + (topLevel ? base : currentTopContext)
-                    + " sub-context = " + context);
+                    + (topLevel ? baseContextInput : currentTopContext));
         }
-        SpiceRack baseContext = Cjm.findBaseContext(topLevel ? base : currentTopContext, context);
+        SpiceRack baseContext = topLevel ? baseContextInput : SpiceRack.getInstance(currentTopContext);
         if (log.isLoggable(Level.FINER)) {
             log.finer("Resolved context = " + baseContext.getContext());
         }
@@ -219,36 +215,46 @@ class ObjectSetterContextualizer extends AbstractContextualizer {
         Object dep = findPreviouslyResolvedDep(objClass, meth, resolver, baseContext);
         if (dep != null) return dep;
         try {
-            Cjm.globalSync.lock();
-            Object depAgain = findPreviouslyResolvedDep(objClass, meth, resolver, baseContext);
-            if (depAgain != null) return depAgain;
-            final Map<String, Object> values = new HashMap<String, Object>();
-            values.put("objClass", objClass);
-            values.put("obj", obj);
-            values.put("injector", null);
-            final LinkedList<SpiceRack> racks = new LinkedList<SpiceRack>();
-            DiscoveredResource newDep = RackLoop.loop(baseContext, rack -> {
-                return findDynamicDep(objClass, rack, resolver, values, racks);
-            });
-            if (newDep == null || newDep.dep == null) {
-                newDep = new DiscoveredResource(new SimpleResource(resolver
-                        .getLocalName()), Cjm.DEFAULT_DEPENDENCY);
-            }
-            if (newDep.res == null && resolver.getName() != null) {
-                newDep.addRes(new SimpleResource(resolver.getName(), racks
-                        .getFirst().getScope(resolver.getName(), objClass, null)));
-            }
-            for (SpiceRack rack : racks) {
-                newDep.dep = newDep.rackAllResources(rack, objClass, obj, newDep.dep);
-            }
-            if (newDep.dep == Cjm.DEFAULT_DEPENDENCY) {
-                throw new DependencyInjectionException(
-                        "Failed to find dependency: " + newDep.res);
+            boolean success = Cjm.globalSync.tryLock(10, TimeUnit.MILLISECONDS);
+            if (success) {
+                try {
+                    Object depAgain = findPreviouslyResolvedDep(objClass, meth, resolver, baseContext);
+                    if (depAgain != null) return depAgain;
+                    final Map<String, Object> values = new HashMap<String, Object>();
+                    values.put("objClass", objClass);
+                    values.put("obj", obj);
+                    values.put("injector", null);
+                    final LinkedList<SpiceRack> racks = new LinkedList<SpiceRack>();
+                    DiscoveredResource newDep = RackLoop.loop(baseContext, rack -> {
+                        return findDynamicDep(objClass, rack, resolver, values, racks);
+                    });
+                    if (newDep == null || newDep.dep == null) {
+                        newDep = new DiscoveredResource(new SimpleResource(resolver
+                                .getLocalName()), Cjm.DEFAULT_DEPENDENCY);
+                    }
+                    if (newDep.res == null && resolver.getName() != null) {
+                        newDep.addRes(new SimpleResource(resolver.getName(), racks
+                                .getFirst().getScope(resolver.getName(), objClass, null)));
+                    }
+                    for (SpiceRack rack : racks) {
+                        newDep.dep = newDep.rackAllResources(rack, objClass, obj, newDep.dep);
+                    }
+                    if (newDep.dep == Cjm.DEFAULT_DEPENDENCY) {
+                        throw new DependencyInjectionException(
+                                "Failed to find dependency: " + newDep.res);
+                    } else {
+                        return newDep.dep;
+                    }
+                } finally {
+                    Cjm.globalSync.unlock();
+                }
             } else {
-                return newDep.dep;
+               return findDynamicDependency(obj, objClass, ann, meth, context);
             }
-        } finally {
-            Cjm.globalSync.unlock();
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
         }
     }
 

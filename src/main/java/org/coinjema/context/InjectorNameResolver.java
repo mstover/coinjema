@@ -38,6 +38,31 @@ public class InjectorNameResolver extends AbstractNameResolver {
         count = -1;
     }
 
+    @Override
+    public Object findDependency(NameLoop evaluator) {
+        String name = getLocalName();
+        Object res = evaluator.getDependency(name);
+        if (res != null) {
+            fixedName = name;
+            return res;
+        }
+        name = getTypeName();
+        res = evaluator.getDependency(name);
+        if (res != null) {
+            fixedName = name;
+            return res;
+        }
+        name = getGlobalName();
+        if (name != null)
+            res = evaluator.getDependency(name);
+        if (res != null) {
+            fixedName = name;
+            return res;
+        }
+        fixedName = null;
+        return null;
+    }
+
     public String getLocalName() {
         return localName != null ? localName : (localName = (injector.isAliased() ? injector.getAliasLabel() : getSimpleName(objClass) + "." + injector.getMethodLabel()));
     }
@@ -63,11 +88,11 @@ public class InjectorNameResolver extends AbstractNameResolver {
         }
     }
 
-    private  String getGlobalName() {
+    private String getGlobalName() {
         return globalName != null ? globalName : (globalName = injector.isAliased() ? injector.getInjectedLabel() : null);
     }
 
-    private  String getTypeName() {
+    private String getTypeName() {
         return typeName != null ? typeName : (typeName = injector.isAliased() ? getSimpleName(objClass) + "." + injector.getMethodLabel() : injector.getInjectedLabel());
     }
 

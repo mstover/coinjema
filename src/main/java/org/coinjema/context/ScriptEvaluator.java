@@ -29,6 +29,7 @@ public class ScriptEvaluator {
 		addEvaluator("compmap", new ComponentMapEvaluator());
 		addEvaluator("jser", new JavaEvaluator());
 		addEvaluator("groovySql", new GroovySqlEvaluator());
+		addEvaluator("construct",new ConstructEvaluator());
 	}
 
 	static  DiscoveredResource evaluate(String scriptName,
@@ -36,7 +37,9 @@ public class ScriptEvaluator {
 		Resource res = source.getResource(scriptName);
 		try {
 			if (res != null) {
-				Object dep = evaluators.get(res.getFormat()).evaluate(res,
+				Evaluator evaluator = evaluators.get(res.getFormat());
+				if(evaluator == null) throw new RuntimeException("Not Coinjema evaluator found for format '"+res.getFormat()+"'");
+				Object dep = evaluator.evaluate(res,
 						scriptParameters);
 				if (dep != null) {
 					return new DiscoveredResource(res, dep);
