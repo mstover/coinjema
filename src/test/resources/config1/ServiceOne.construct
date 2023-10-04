@@ -1,4 +1,4 @@
-org.coinjema.nontest.ServiceOne
+org.coinjema.testing.nontest.ServiceOne
 ServiceOne.configName
 ServiceOne.host
 ServiceOne.config

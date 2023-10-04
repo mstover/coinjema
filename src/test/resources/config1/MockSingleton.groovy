@@ -1,3 +1,3 @@
 package config1
 
-new org.coinjema.nontest.MockSingleton(mainValue:"Root Value")
+new org.coinjema.testing.nontest.MockSingleton(mainValue:"Root Value")

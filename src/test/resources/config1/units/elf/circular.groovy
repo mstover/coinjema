@@ -1,3 +1,5 @@
 package config1.units.elf
 
-new org.coinjema.nontest.SimpleContextOrientedB()
+import org.coinjema.testing.nontest.SimpleContextOrientedB
+
+new SimpleContextOrientedB()

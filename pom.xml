@@ -34,6 +34,7 @@
             <artifactId>groovy-all</artifactId>
             <version>4.0.14</version>
             <type>pom</type>
+
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjrt -->
         <dependency>

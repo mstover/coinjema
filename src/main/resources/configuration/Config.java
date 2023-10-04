@@ -1,6 +1,6 @@
 package configuration;
 
-import org.coinjema.context.source.Resource;
+import org.coinjema.cjm.source.Resource;
 
 /**
  * @author michaelstover

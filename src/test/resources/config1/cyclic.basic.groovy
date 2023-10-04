@@ -1,3 +1,5 @@
 package config1
 
-new org.coinjema.nontest.CyclicBasic()
+import org.coinjema.testing.nontest.CyclicBasic
+
+new CyclicBasic()

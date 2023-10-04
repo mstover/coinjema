@@ -23,11 +23,7 @@
 
 package org.coinjema.collections;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Useful for finding all nodes in the tree that represent objects of a

@@ -1,3 +1,5 @@
 package config1
 
-new org.coinjema.nontest.CyclicSingleton()
+import org.coinjema.testing.nontest.CyclicSingleton
+
+new CyclicSingleton()

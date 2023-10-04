@@ -1,3 +1,5 @@
 package config1
 
-new org.coinjema.nontest.CyclicalDynamic()
+import org.coinjema.testing.nontest.CyclicalDynamic
+
+new CyclicalDynamic()

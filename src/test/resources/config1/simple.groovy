@@ -1,3 +1,5 @@
 package config1
 
-new org.coinjema.nontest.SimpleContextOriented()
+import org.coinjema.testing.nontest.SimpleContextOriented
+
+new SimpleContextOriented()
