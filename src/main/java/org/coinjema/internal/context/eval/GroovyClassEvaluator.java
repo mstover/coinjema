@@ -3,6 +3,7 @@ package org.coinjema.internal.context.eval;
 
 import groovy.lang.GroovyClassLoader;
 import org.coinjema.cjm.DependencyInjectionException;
+import org.coinjema.cjm.Evaluator;
 import org.coinjema.cjm.source.Resource;
 
 import java.io.InputStreamReader;

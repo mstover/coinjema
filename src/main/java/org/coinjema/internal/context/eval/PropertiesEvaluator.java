@@ -2,6 +2,7 @@ package org.coinjema.internal.context.eval;
 
 
 import org.coinjema.cjm.DependencyInjectionException;
+import org.coinjema.cjm.Evaluator;
 import org.coinjema.internal.context.InternalCjm;
 import org.coinjema.internal.context.RackLoop;
 import org.coinjema.internal.context.SpiceRack;

@@ -5,6 +5,7 @@ import groovy.lang.GroovyShell;
 import org.coinjema.cjm.Cjm;
 import org.coinjema.cjm.ContextOriented;
 import org.coinjema.cjm.DependencyInjectionException;
+import org.coinjema.cjm.Evaluator;
 import org.coinjema.cjm.source.Resource;
 
 import java.io.Reader;

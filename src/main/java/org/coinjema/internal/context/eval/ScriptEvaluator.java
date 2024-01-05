@@ -1,5 +1,6 @@
 package org.coinjema.internal.context.eval;
 
+import org.coinjema.cjm.Evaluator;
 import org.coinjema.internal.context.DiscoveredResource;
 import org.coinjema.cjm.source.ContextSource;
 import org.coinjema.cjm.source.Resource;
